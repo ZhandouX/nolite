@@ -16,6 +16,8 @@ class ProdukFoto extends Model
         'foto',   // tambahkan ini
     ];
 
+    
+
     public function produk()
     {
         return $this->belongsTo(Produk::class);

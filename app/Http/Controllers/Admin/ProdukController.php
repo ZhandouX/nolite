@@ -22,46 +22,48 @@ class ProdukController extends Controller
         return view('admin.produk.create');
     }
 
-    /* STORE */
     public function store(Request $request)
     {
         $request->validate([
             'nama_produk' => 'required|string|max:500',
-            'warna' => 'required|string|max:250',
+            'warna' => 'required|array',
+            'warna.*' => 'string|max:250',
             'warna_lain' => 'nullable|string|max:250',
             'deskripsi' => 'required|string',
             'harga' => 'required|numeric',
             'jumlah' => 'required|integer',
             'jenis' => 'required|string|max:250',
-            'jenis_lain' => 'nullable|string|max:250',
+            'ukuran' => 'nullable|array',
+            'ukuran.*' => 'string|in:XS,S,M,L,XL,XXL',
             'foto' => 'nullable',
             'foto.*' => 'image|mimes:jpg,jpeg,png',
         ]);
 
-        // Jika warna = Other, ambil dari input manual
-        $warnaFinal = $request->warna === 'Other' ? $request->warna_lain : $request->warna;
+        $warnaFinal = $request->warna;
 
-        // Jika jenis = Other, ambil dari input manual
-        $jenisFinal = $request->jenis === 'Other' ? $request->jenis_lain : $request->jenis;
+        // Jika ada "Other", tambahkan input manual ke array warna
+        if (in_array('Other', $warnaFinal) && $request->filled('warna_lain')) {
+            $warnaFinal = array_diff($warnaFinal, ['Other']); // hapus placeholder "Other"
+            $warnaFinal[] = $request->warna_lain;            // tambah warna manual
+        }
 
         $produk = Produk::create([
             'nama_produk' => $request->nama_produk,
-            'warna' => $warnaFinal,
+            'warna' => $warnaFinal, // langsung simpan array, Laravel cast ke JSON
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'jumlah' => $request->jumlah,
-            'jenis' => $jenisFinal,
+            'jenis' => $request->jenis,   // langsung simpan jenis (tanpa "jenis_lain")
+            'ukuran' => $request->ukuran ?? [], // Simpan ukuran array
         ]);
 
-        // Simpan semua foto (pakai default array [] biar tidak null)
         foreach ($request->file('foto', []) as $file) {
-            $path = $file->store('produk', 'public'); // simpan ke storage/app/public/produk
+            $path = $file->store('produk', 'public');
             $produk->fotos()->create(['foto' => $path]);
         }
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
-
 
     /* SHOW */
     public function show(string $id)
@@ -75,7 +77,7 @@ class ProdukController extends Controller
     public function edit(string $id)
     {
         $produk = Produk::with('fotos')->findOrFail($id);
-        
+
         return view('admin.produk.edit', compact('produk'));
     }
 
@@ -84,29 +86,61 @@ class ProdukController extends Controller
     {
         $request->validate([
             'nama_produk' => 'required|string|max:500',
+            'warna' => 'required|array',
+            'warna.*' => 'string|max:250',
+            'warna_lain' => 'nullable|string|max:250',
+            'deskripsi' => 'required|string',
             'harga' => 'required|numeric',
             'jumlah' => 'required|integer',
             'jenis' => 'required|string|max:250',
-            'foto' => 'nullable|mimes:jpg,jpeg,png'
+            'ukuran' => 'nullable|array',
+            'ukuran.*' => 'string|in:XS,S,M,L,XL,XXL',
+            'foto' => 'nullable',
+            'foto.*' => 'image|mimes:jpg,jpeg,png',
         ]);
 
-        $data = $request->only([
-            'nama_produk',
-            'harga',
-            'jumlah',
-            'jenis'
-        ]);
-
-        if ($request->hasFile('foto')) {
-            $fotoName = time() . '.' . $request->foto->extension();
-            $request->foto->storeAs('public/produk', $fotoName);
-            $data['foto'] = $fotoName;
+        // Warna final
+        $warnaFinal = $request->warna;
+        if (in_array('Other', $warnaFinal) && $request->filled('warna_lain')) {
+            $warnaFinal = array_diff($warnaFinal, ['Other']);
+            $warnaFinal[] = $request->warna_lain;
         }
 
-        $produk->update($data);
+        // Update data produk
+        $produk->update([
+            'nama_produk' => $request->nama_produk,
+            'warna' => $warnaFinal,
+            'deskripsi' => $request->deskripsi,
+            'harga' => $request->harga,
+            'jumlah' => $request->jumlah,
+            'jenis' => $request->jenis,
+            'ukuran' => $request->ukuran ?? [],
+        ]);
+
+        // Upload foto baru
+        if ($request->hasFile('foto')) {
+            foreach ($request->file('foto') as $file) {
+                $path = $file->store('produk', 'public');
+                $produk->fotos()->create(['foto' => $path]);
+            }
+        }
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diubah.');
     }
+
+    /* DISKON */
+    public function updateDiskon(Request $request, Produk $produk)
+    {
+        $request->validate([
+            'diskon' => 'nullable|numeric|min:0|max:100',
+        ]);
+
+        $produk->diskon = $request->diskon ?? 0;
+        $produk->save();
+
+        return response()->json(['success' => true]);
+    }
+
 
     /* DESTROY */
     public function destroy(Produk $produk)

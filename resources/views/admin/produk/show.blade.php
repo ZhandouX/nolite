@@ -1,97 +1,99 @@
 @extends('layouts.admin_app')
 
 @section('content')
-<div class="page-header">
-    <h3 class="page-title"> Detail Produk </h3>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.produk.index') }}">Produk</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $produk->nama_produk }}</li>
-        </ol>
-    </nav>
-</div>
+<div class="container mx-auto px-4 py-6">
+    <div class="mb-6">
+        <h3 class="text-2xl font-semibold mb-2">Detail Produk</h3>
+        <nav class="text-sm text-gray-500" aria-label="breadcrumb">
+            <ol class="list-reset flex">
+                <li><a href="{{ route('admin.produk.index') }}" class="text-blue-600 hover:underline">Produk</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li class="text-gray-700">{{ $produk->nama_produk }}</li>
+            </ol>
+        </nav>
+    </div>
 
-<div class="row">
-    <div class="col-12 grid-margin">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">{{ $produk->nama_produk }}</h4>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h4 class="text-xl font-bold mb-4">{{ $produk->nama_produk }}</h4>
 
-                <div class="row">
-                    {{-- Foto Produk --}}
-                    <div class="col-md-5 mb-3">
-                        @if($produk->fotos->isNotEmpty())
-                            <div class="d-flex flex-wrap">
-                                @foreach($produk->fotos as $foto)
-                                    <img src="{{ asset('storage/' . $foto->foto) }}" 
-                                         class="me-2 mb-2 rounded border"
-                                         style="width: 140px; height: 140px; object-fit: cover;">
-                                @endforeach
-                            </div>
-                        @else
-                            <span class="text-muted fst-italic">Belum ada foto</span>
-                        @endif
+        <div class="md:flex md:gap-6">
+            {{-- Foto Produk --}}
+            <div class="md:w-1/3 mb-4 md:mb-0">
+                @if($produk->fotos->isNotEmpty())
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($produk->fotos as $foto)
+                            <img src="{{ asset('storage/' . $foto->foto) }}" 
+                                 class="w-32 h-32 object-cover rounded border shadow-sm">
+                        @endforeach
                     </div>
+                @else
+                    <span class="text-gray-400 italic">Belum ada foto</span>
+                @endif
+            </div>
 
-                    {{-- Detail Produk --}}
-                    <div class="col-md-7">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tr>
-                                    <th width="160">Nama Produk</th>
-                                    <td>{{ $produk->nama_produk }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Harga</th>
-                                    <td>Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Jumlah</th>
-                                    <td>{{ $produk->jumlah }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Jenis</th>
-                                    <td>{{ $produk->jenis }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Warna</th>
-                                    <td>{{ $produk->warna ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Deskripsi</th>
-                                    <td>{{ $produk->deskripsi }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Dibuat</th>
-                                    <td>{{ $produk->created_at->format('d M Y H:i') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Diupdate</th>
-                                    <td>{{ $produk->updated_at->format('d M Y H:i') }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Tombol Aksi --}}
-                <div class="mt-4">
-                    <a href="{{ route('admin.produk.index') }}" class="btn btn-secondary btn-sm">
-                        <i class="mdi mdi-arrow-left"></i> Kembali
-                    </a>
-                    <a href="{{ route('admin.produk.edit', $produk->id) }}" class="btn btn-warning btn-sm">
-                        <i class="mdi mdi-pencil"></i> Edit
-                    </a>
-                    <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST" class="d-inline"
-                          onsubmit="return confirm('Yakin hapus produk ini beserta semua fotonya?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="mdi mdi-delete"></i> Hapus
-                        </button>
-                    </form>
+            {{-- Detail Produk --}}
+            <div class="md:w-2/3">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Nama Produk</th>
+                                <td class="py-2 px-4">{{ $produk->nama_produk }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Harga</th>
+                                <td class="py-2 px-4">IDR {{ number_format($produk->harga, 0, ',', '.') }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Jumlah</th>
+                                <td class="py-2 px-4">{{ $produk->jumlah }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Jenis</th>
+                                <td class="py-2 px-4">{{ $produk->jenis }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Warna</th>
+                                <td class="py-2 px-4">{{ is_array($produk->warna) ? implode(', ', $produk->warna) : ($produk->warna ?? '-') }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Ukuran</th>
+                                <td class="py-2 px-4">{{ is_array($produk->ukuran) ? implode(', ', $produk->ukuran) : ($produk->ukuran ?? '-') }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Deskripsi</th>
+                                <td class="py-2 px-4">{{ $produk->deskripsi }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Dibuat</th>
+                                <td class="py-2 px-4">{{ $produk->created_at->format('d M Y H:i') }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left py-2 px-4 font-medium">Diupdate</th>
+                                <td class="py-2 px-4">{{ $produk->updated_at->format('d M Y H:i') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
+
+        {{-- Tombol Aksi --}}
+        <div class="mt-6 flex flex-wrap gap-2">
+            <a href="{{ route('admin.produk.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 flex items-center gap-1">
+                <i class="mdi mdi-arrow-left"></i> Kembali
+            </a>
+            <a href="{{ route('admin.produk.edit', $produk->id) }}" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center gap-1">
+                <i class="mdi mdi-pencil"></i> Edit
+            </a>
+            <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST"
+                  onsubmit="return confirm('Yakin hapus produk ini beserta semua fotonya?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-1">
+                    <i class="mdi mdi-delete"></i> Hapus
+                </button>
+            </form>
         </div>
     </div>
 </div>

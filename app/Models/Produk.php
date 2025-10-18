@@ -11,16 +11,28 @@ class Produk extends Model
         'nama_produk',
         'warna',
         'warna_lain',
+        'ukuran',
         'deskripsi',
         'harga',
         'jumlah',
         'jenis',
         'jenis_lain',
-        'foto'
+        'foto',
+        'diskon'
+    ];
+
+    protected $casts = [
+        'warna' => 'array',
+        'ukuran' => 'array',
     ];
 
     public function fotos()
     {
-        return $this->hasMany(ProdukFoto::class);
+        return $this->hasMany(ProdukFoto::class, 'produk_id');
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }

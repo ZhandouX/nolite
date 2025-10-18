@@ -11,10 +11,14 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
+        if ($request->expectsJson()) {
+            return null;
+        }
+
+        // Jika user masih login dan punya role
         if (auth()->check()) {
             $user = auth()->user();
 
-            // Cek Role User
             if ($user->hasRole('admin')) {
                 return route('admin.dashboard');
             } elseif ($user->hasRole('customer')) {
@@ -22,7 +26,7 @@ class Authenticate extends Middleware
             }
         }
 
-        // Jika belum login di arahkan ke halaman login
-        return route('login');
+        // 🔹 Jika session habis atau belum login → arahkan ke landing page dengan parameter modal login
+        return route('landing', ['showLogin' => 'true']);
     }
 }

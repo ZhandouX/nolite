@@ -1,13 +1,9 @@
-// Admin Dashboard JavaScript
+// ADMIN DASHBOARD JAVASCRIPT
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Sidebar Toggle for Mobile
     const toggleSidebar = document.getElementById('toggleSidebar');
     const closeSidebar = document.getElementById('closeSidebar');
     const sidebar = document.getElementById('sidebar');
-    
-    // Create overlay for mobile
     const overlay = document.createElement('div');
     overlay.className = 'sidebar-overlay';
     document.body.appendChild(overlay);
@@ -28,14 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Close sidebar when clicking overlay
     overlay.addEventListener('click', function() {
         sidebar.classList.remove('show');
         overlay.classList.remove('show');
         document.body.style.overflow = '';
     });
     
-    // Close sidebar on window resize if mobile
     window.addEventListener('resize', function() {
         if (window.innerWidth >= 1200) {
             sidebar.classList.remove('show');
@@ -44,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Auto-dismiss alerts
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(function(alert) {
         setTimeout(function() {
@@ -55,25 +48,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
     
-    // Smooth scrolling for sidebar navigation
     const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
     navLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
-            // Only prevent default for dropdown toggles
             if (this.hasAttribute('data-bs-toggle')) {
                 return;
             }
         });
     });
     
-    // Add active class to current page navigation
     const currentPath = window.location.pathname;
     navLinks.forEach(function(link) {
         const href = link.getAttribute('href');
         if (href && currentPath.includes(href.split('/').pop())) {
             link.classList.add('active');
-            
-            // Expand parent dropdown if it's a submenu
             const parentCollapse = link.closest('.collapse');
             if (parentCollapse) {
                 parentCollapse.classList.add('show');
@@ -86,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Search functionality
     const searchInput = document.querySelector('.search-container input');
     if (searchInput) {
         searchInput.addEventListener('keypress', function(e) {
@@ -96,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Search button click
         const searchButton = document.querySelector('.search-container button');
         if (searchButton) {
             searchButton.addEventListener('click', function() {
@@ -108,21 +94,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function performSearch(query) {
         if (query.trim()) {
             console.log('Searching for:', query);
-            // Implement your search logic here
-            // Example: window.location.href = `/admin/search?q=${encodeURIComponent(query)}`;
         }
     }
     
-    // Notification mark as read
     const notificationItems = document.querySelectorAll('.notification-item');
     notificationItems.forEach(function(item) {
         item.addEventListener('click', function() {
             this.style.opacity = '0.6';
-            // Implement mark as read logic here
         });
     });
     
-    // Real-time clock
     function updateClock() {
         const now = new Date();
         const options = {
@@ -133,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-            timeZone: 'Asia/Jayapura' // Waktu Maluku
+            timeZone: 'Asia/Jayapura'
         };
         
         const clockElement = document.getElementById('live-clock');
@@ -142,19 +123,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Update clock every second
     updateClock();
     setInterval(updateClock, 1000);
     
-    // Tooltip initialization
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-    
-    // Popover initialization
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
-    
-    // Form validation
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(function(form) {
         form.addEventListener('submit', function(event) {
@@ -166,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, false);
     });
     
-    // Data table initialization (if using DataTables)
     if (typeof $ !== 'undefined' && $.fn.DataTable) {
         $('.data-table').DataTable({
             responsive: true,
@@ -178,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Confirm delete actions
     const deleteButtons = document.querySelectorAll('.btn-delete');
     deleteButtons.forEach(function(button) {
         button.addEventListener('click', function(e) {
@@ -196,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // File upload preview
     const fileInputs = document.querySelectorAll('input[type="file"]');
     fileInputs.forEach(function(input) {
         input.addEventListener('change', function(e) {
@@ -218,7 +190,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Progress bars animation
     const progressBars = document.querySelectorAll('.progress-bar');
     progressBars.forEach(function(bar) {
         const width = bar.getAttribute('aria-valuenow');
@@ -227,7 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     });
     
-    // Counter animation for stats cards
     const counters = document.querySelectorAll('.stats-card h2');
     counters.forEach(function(counter) {
         const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
@@ -244,7 +214,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
         
-        // Start animation when element is in view
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
@@ -257,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(counter);
     });
     
-    // Lazy loading for images
     const images = document.querySelectorAll('img[data-src]');
     const imageObserver = new IntersectionObserver(function(entries, observer) {
         entries.forEach(function(entry) {
@@ -274,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
         imageObserver.observe(img);
     });
     
-    // Auto-save form data to localStorage (for forms with auto-save class)
     const autoSaveForms = document.querySelectorAll('.auto-save-form');
     autoSaveForms.forEach(function(form) {
         const formId = form.getAttribute('id');
@@ -458,7 +425,6 @@ document.addEventListener('DOMContentLoaded', function() {
             this.disabled = true;
             this.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>${loadingText}`;
             
-            // Reset after 3 seconds (adjust as needed)
             setTimeout(function() {
                 button.disabled = false;
                 button.textContent = originalText;

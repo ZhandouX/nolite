@@ -42,7 +42,8 @@ class AuthenticatedSessionController extends Controller
 
         // Jika role tidak dikenali
         Auth::logout();
-        return redirect('/login')->with('error', 'Role pengguna tidak dikenali. Hubungi administrator.');
+        return redirect('/')
+            ->with('showLoginModal', true);
     }
 
     /**

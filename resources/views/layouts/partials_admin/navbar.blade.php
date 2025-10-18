@@ -32,80 +32,6 @@
             </li>
         </ul>
         <ul class="navbar-nav ms-auto">
-            {{-- CALENDAR --}}
-            <!-- <li class="nav-item d-none d-lg-block">
-                <div class="input-group navbar-date-picker">
-                    <label for="news-date-filter" class="input-group-addon input-group-prepend border-right mb-0">
-                        <span class="icon-calendar input-group-text calendar-icon"></span>
-                    </label>
-                    <input type="text" id="news-date-filter" class="form-control" placeholder="Pilih tanggal..."
-                        autocomplete="off">
-                </div>
-            </li>
-
-            {{-- CATEGORY --}}
-            <li class="nav-item dropdown d-none d-lg-block">
-                <a class="nav-link dropdown-bordered dropdown-toggle-split d-flex align-items-center justify-content-between gap-2"
-                    id="categoryDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                    Pilih Kategori
-                    {{-- ICON --}}
-                    <i class="mdi mdi-chevron-down fs-5 dropdown-icon"></i>
-                </a>
-
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-                    aria-labelledby="categoryDropdown">
-
-                    <div class="dropdown-divider"></div>
-
-                    {{-- ================= SUB-MENU (NEWS CATEGORY) ================= --}}
-                    <a class="dropdown-item dropdown-toggle custom-submenu-toggle d-flex align-items-center justify-content-between"
-                        href="#">
-                        <div class="preview-item-content flex-grow py-2">
-                            <p class="preview-subject ellipsis fw-medium text-dark">Kategori Produk</p>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu custom-submenu">
-                            <a class="dropdown-item preview-item d-flex justify-content-between align-items-center"
-                                href="#">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark"></p>
-                                </div>
-                            </a>
-                    </div>
-
-                    {{-- ================= SUB-MENU (NEWS SUMBER) ================= --}}
-                    <a class="dropdown-item dropdown-toggle custom-submenu-toggle d-flex align-items-center justify-content-between"
-                        href="#">
-                        <div class="preview-item-content flex-grow py-2">
-                            <p class="preview-subject ellipsis fw-medium text-dark">Sumber Berita</p>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu custom-submenu"> 
-                            <a class="dropdown-item preview-item"
-                                href="#">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark"></p>
-                                </div>
-                            </a>
-                    </div>
-
-                    {{-- ================= SUB-MENU (UNIT UTAMA) ================= --}}
-                    <a class="dropdown-item dropdown-toggle custom-submenu-toggle d-flex align-items-center justify-content-between"
-                        href="#">
-                        <div class="preview-item-content flex-grow py-2">
-                            <p class="preview-subject ellipsis fw-medium text-dark">Unit Utama</p>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu custom-submenu">
-                            <a class="dropdown-item preview-item"
-                                href="#">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark"></p>
-                                </div>
-                            </a>
-                    </div>
-                </div>
-            </li> -->
 
             {{-- SEARCH SECTION --}}
             <li class="nav-item">
@@ -153,7 +79,6 @@
                         <p class="mb-1 mt-3 fw-semibold">{{ auth()->user()->name ?? '' }}</p>
                         <p class="fw-light text-muted mb-0">{{ auth()->user()->email ?? '' }}</p>
                     </div>
-                    <!-- <hr class="w-100"> -->
                     <a class="dropdown-item" href="#">
                         <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile
                     </a>
@@ -181,7 +106,6 @@
         position: absolute;
         top: 0;
         right: 100%;
-        /* Muncul di sebelah kiri */
         margin-left: 5px;
         background: #fff;
         border: 1px solid #ddd;
@@ -192,7 +116,6 @@
         animation: fadeInLeft 0.25s ease forwards;
     }
 
-    /* Animasi muncul dari kanan ke kiri */
     @keyframes fadeInLeft {
         from {
             opacity: 0;
@@ -205,17 +128,14 @@
         }
     }
 
-    /* Hover untuk memunculkan submenu */
     .dropdown-menu>.custom-submenu-toggle:hover+.custom-submenu {
         display: block;
     }
 
-    /* Jika parent di-hover, submenu tetap terbuka */
     .dropdown-menu.custom-submenu:hover {
         display: block;
     }
 
-    /* Styling untuk item submenu */
     .dropdown-menu.custom-submenu .dropdown-item {
         padding: 8px 15px;
         transition: all 0.2s ease;
@@ -226,12 +146,10 @@
         color: #fff;
     }
 
-    /* Icon chevron */
     .submenu-icon {
         transition: transform 0.3s ease;
     }
 
-    /* Saat hover, icon bergerak */
     .custom-submenu-toggle:hover .submenu-icon {
         transform: translateX(-3px);
     }
@@ -244,20 +162,17 @@
             toggle.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                // Tutup semua submenu lain
                 document.querySelectorAll('.custom-submenu').forEach(menu => {
                     if (menu !== this.nextElementSibling) {
                         menu.style.display = 'none';
                     }
                 });
 
-                // Toggle submenu saat ini
                 const submenu = this.nextElementSibling;
                 submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
             });
         });
 
-        // Klik di luar dropdown untuk menutup semua submenu
         document.addEventListener('click', function (e) {
             if (!e.target.closest('.nav-item.dropdown')) {
                 document.querySelectorAll('.custom-submenu').forEach(menu => {

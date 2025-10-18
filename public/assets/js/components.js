@@ -1,5 +1,4 @@
 function initDashboardCharts() {
-    // Check if Chart.js is loaded
     if (typeof Chart !== 'undefined') {
         // Sales Chart
         const salesCtx = document.getElementById('salesChart');
@@ -33,7 +32,7 @@ function initDashboardCharts() {
                 }
             });
         }
-        
+
         // Revenue Chart
         const revenueCtx = document.getElementById('revenueChart');
         if (revenueCtx) {
@@ -72,17 +71,14 @@ function initDashboardCharts() {
     }
 }
 
-// Initialize charts when DOM is loaded
 document.addEventListener('DOMContentLoaded', initDashboardCharts);
-
-// Form validation example
 function validateForm(formId) {
     const form = document.getElementById(formId);
     if (form) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             let isValid = true;
             const requiredFields = form.querySelectorAll('[required]');
-            
+
             requiredFields.forEach(field => {
                 if (!field.value.trim()) {
                     isValid = false;
@@ -91,7 +87,7 @@ function validateForm(formId) {
                     field.classList.remove('error');
                 }
             });
-            
+
             if (!isValid) {
                 e.preventDefault();
                 showToast('Please fill all required fields', 'error');
@@ -101,8 +97,7 @@ function validateForm(formId) {
 }
 
 // Initialize form validation
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     validateForm('userForm');
     validateForm('productForm');
-    // Add more forms as needed
 });

@@ -1,6 +1,4 @@
-// Enhanced Modern Dashboard JavaScript - Complete Version
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize application
     initializeApp();
 });
 
@@ -55,16 +53,12 @@ function initializeSidebar(toggleBtn, sidebar) {
                 }, index * 50);
             });
             
-            // Rotate toggle button
             setTimeout(() => {
                 toggleBtn.querySelector('i').style.transform = 'rotate(180deg)';
             }, 200);
             
         } else {
-            // Expand animation
             sidebar.classList.remove('collapsed');
-            
-            // Show text elements with stagger
             setTimeout(() => {
                 const textElements = sidebar.querySelectorAll('.nav-text, .logo-text');
                 textElements.forEach((el, index) => {
