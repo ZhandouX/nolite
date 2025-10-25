@@ -18,7 +18,7 @@
 
         {{-- MANAGEMENT ORDER --}}
         <li class="nav-item ">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('admin.order.index') }}">
                 <i class="menu-icon mdi mdi-cart"></i>
                 <span class="menu-title">Pesanan</span>
             </a>

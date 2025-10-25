@@ -17,7 +17,13 @@ class DashboardController extends Controller
             ->take(6)
             ->get();
 
-        return view('customer.dashboard', compact('produk'));
+        // DISKON
+        $produkDiskon = Produk::with('fotos')
+            ->where('diskon', '>', 0)
+            ->latest()
+            ->get();
+
+        return view('customer.dashboard', compact('produk', 'produkDiskon'));
     }
 
     public function show($id)

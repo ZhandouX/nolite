@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\LandingController;
 use App\Http\Controllers\Customer\KeranjangController;
 use App\Http\Controllers\Customer\AllProdukController;
+use App\Http\Controllers\Customer\WilayahController;
 use App\Http\Controllers\Customer\WishlistController;
+use App\Http\Controllers\Customer\LokasiController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Keranjang;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +30,11 @@ Route::middleware(['auth', 'role:admin'])
         })->name('dashboard');
 
         Route::resource('produk', ProdukController::class);
-        Route::patch('/admin/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('admin.produk.diskon');
+        Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('admin.produk.diskon');
+
+        // ORDER
+        Route::resource('order', AdminOrderController::class);
+        Route::post('/order/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('order.updateStatus');
     });
 
 // MIDDLEWARE: CUSTOMER 
@@ -42,11 +49,18 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
 
+    // ✅ ROUTE BARU - SUCCESS PAGE
+    Route::get('/checkout/success/{id}', function ($id) {
+        $order = \App\Models\Order::with('items')->findOrFail($id);
+        return view('customer.checkout_success', compact('order'));
+    })->name('customer.order.success');
+
     // WISHLIST
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle/{produkId}', [WishlistController::class, 'toggleWishlist'])->name('wishlist.toggle');
-    Route::delete('/wishlist/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.remove');
 });
+
 
 // SEMUA PRODUK
 Route::get('/all-produk/customer', [DashboardController::class, 'allProduk'])->name('customer.allProduk');
@@ -96,7 +110,11 @@ Route::get('/keranjang/cek', function () {
     }
 });
 Route::get('/keranjang/count', [KeranjangController::class, 'count'])->name('keranjang.count');
+Route::patch('keranjang/{id}', [KeranjangController::class, 'updateQuantity']);
 
+// API WILAYAH
+Route::get('/lokasi-form', [LokasiController::class, 'form'])->name('lokasi.form');
+Route::get('/get-kota', [LokasiController::class, 'getKota'])->name('lokasi.getKota');
 
 // AUTH SETTINGS
 Route::middleware('auth')->group(function () {

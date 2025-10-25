@@ -36,4 +36,16 @@ class WishlistController extends Controller
         $wishlists = Wishlist::with('produk')->where('user_id', Auth::id())->get();
         return view('customer.wishlist', compact('wishlists'));
     }
+
+    public function destroy($id)
+    {
+        $wishlist = Wishlist::find($id);
+
+        if ($wishlist) {
+            $wishlist->delete();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
+    }
 }

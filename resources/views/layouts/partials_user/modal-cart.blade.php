@@ -16,10 +16,28 @@
                 <img src="{{ asset('assets/images/no-image.png') }}" alt="No Image"
                     class="w-20 h-20 object-contain rounded-lg">
             @endif
+
             <div>
                 <p class="text-left text-lg font-bold text-black">{{ $item->nama_produk }}</p>
-                <p class="text-left text-black font-bold">IDR {{ number_format($item->harga, 0, ',', '.') }}
-                </p>
+
+                @if($item->diskon && $item->diskon > 0)
+                    @php
+                        $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
+                    @endphp
+                    <div class="flex justify-start items-center gap-3">
+                        <p class="text-gray-400 font-bold line-through">
+                            IDR {{ number_format($item->harga, 0, ',', '.') }}
+                        </p>
+                        <p class="text-red-600 font-bold">
+                            IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
+                            <span class="text-sm text-red-500">({{ $item->diskon }}%)</span>
+                        </p>
+                    </div>
+                @else
+                    <p class="text-black font-bold">
+                        IDR {{ number_format($item->harga, 0, ',', '.') }}
+                    </p>
+                @endif
             </div>
         </div>
 

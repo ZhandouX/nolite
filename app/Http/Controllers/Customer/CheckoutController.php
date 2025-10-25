@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Keranjang;
-use App\Models\Pesanan;
-use App\Models\PesananItem;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Http\Controllers\Customer\LokasiController;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
@@ -28,7 +29,11 @@ class CheckoutController extends Controller
         // Hitung total harga
         $total = collect($checkoutItems)->sum(fn($i) => $i['harga'] * $i['jumlah']);
 
-        return view('customer.checkout', compact('checkoutItems', 'total'));
+        // Ambil daftar provinsi dari LokasiController
+        $lokasi = new LokasiController();
+        $provinsiList = array_keys($lokasi->provinsiKota);
+
+        return view('customer.checkout', compact('checkoutItems', 'total', 'provinsiList'));
     }
 
     /**
@@ -48,15 +53,22 @@ class CheckoutController extends Controller
             ->whereIn('id', $selectedItems)
             ->get()
             ->map(function ($item) {
+                $hargaProduk = $item->produk->harga;
+                $diskon = $item->produk->diskon ?? 0;
+
+                $hargaFinal = $diskon > 0 ? $hargaProduk - ($hargaProduk * $diskon / 100) : $hargaProduk;
+
                 return [
                     'keranjang_id' => $item->id,
                     'produk_id' => $item->produk->id,
                     'nama_produk' => $item->produk->nama_produk,
-                    'harga' => $item->produk->harga,
+                    'harga_asli' => $hargaProduk,
+                    'diskon' => $diskon,
+                    'harga' => $hargaFinal, // harga setelah diskon
                     'warna' => $item->warna,
                     'ukuran' => $item->ukuran,
                     'jumlah' => $item->jumlah,
-                    'subtotal' => $item->produk->harga * $item->jumlah,
+                    'subtotal' => $hargaFinal * $item->jumlah, // subtotal sudah diskon
                 ];
             })->toArray();
 
@@ -71,65 +83,58 @@ class CheckoutController extends Controller
      */
     public function proses(Request $request)
     {
-        $checkoutItems = session('checkout_items', []);
-
-        if (empty($checkoutItems)) {
-            return redirect()->route('keranjang.index')
-                ->with('error', 'Tidak ada produk yang diproses.');
-        }
-
-        // Validasi input pengiriman
         $request->validate([
             'nama_penerima' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
-            'kota' => 'required|string|max:100',
+            'provinsi' => 'required|string',
+            'kota' => 'required|string',
             'alamat_detail' => 'required|string',
             'metode_pembayaran' => 'required|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
-        DB::transaction(function () use ($request, $checkoutItems) {
+        // Ambil item dari session checkout
+        $checkoutItems = session('checkout_items', []);
 
-            $total = collect($checkoutItems)->sum(fn($i) => $i['harga'] * $i['jumlah']);
+        if (empty($checkoutItems)) {
+            return back()->with('error', 'Tidak ada produk di keranjang.');
+        }
 
-            // Simpan pesanan
-            $pesanan = Pesanan::create([
-                'user_id' => Auth::id(),
-                'nama_penerima' => $request->nama_penerima,
-                'no_hp' => $request->no_hp,
-                'email' => $request->email ?? Auth::user()->email,
-                'negara' => $request->negara ?? 'Indonesia',
-                'kota' => $request->kota,
-                'alamat_detail' => $request->alamat_detail,
-                'is_dropship' => $request->has('is_dropship'),
-                'metode_pembayaran' => $request->metode_pembayaran,
-                'total_harga' => $total,
-                'status' => 'Menunggu Pembayaran',
+        // Hitung total subtotal
+        $total = collect($checkoutItems)->sum(fn($item) => $item['subtotal']);
+
+        // Simpan ke tabel orders
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'nama_penerima' => $request->nama_penerima,
+            'no_hp' => $request->no_hp,
+            'provinsi' => $request->provinsi,
+            'kota' => $request->kota,
+            'alamat_detail' => $request->alamat_detail,
+            'email' => $request->email,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'subtotal' => $total,
+            'status' => 'menunggu',
+        ]);
+
+        // Simpan detail produk ke tabel order_items
+        foreach ($checkoutItems as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'produk_id' => $item['produk_id'],
+                'nama_produk' => $item['nama_produk'],
+                'warna' => $item['warna'],
+                'ukuran' => $item['ukuran'],
+                'jumlah' => $item['jumlah'],
+                'subtotal' => $item['subtotal'],
             ]);
+        }
 
-            // Simpan item pesanan
-            foreach ($checkoutItems as $item) {
-                PesananItem::create([
-                    'pesanan_id' => $pesanan->id,
-                    'produk_id' => $item['produk_id'],
-                    'nama_produk' => $item['nama_produk'],
-                    'harga' => $item['harga'],
-                    'warna' => $item['warna'],
-                    'ukuran' => $item['ukuran'],
-                    'jumlah' => $item['jumlah'],
-                    'subtotal' => $item['harga'] * $item['jumlah'],
-                ]);
-            }
+        // Bersihkan session keranjang setelah checkout
+        session()->forget('checkout_items');
 
-            // Hapus dari keranjang user
-            Keranjang::where('user_id', Auth::id())
-                ->whereIn('id', collect($checkoutItems)->pluck('keranjang_id'))
-                ->delete();
-
-            // Bersihkan session
-            session()->forget('checkout_items');
-        });
-
-        return redirect()->route('customer.dashboard')
+        return redirect()->route('customer.order.success', ['id' => $order->id])
             ->with('success', 'Pesanan berhasil dibuat dan menunggu pembayaran!');
     }
 
@@ -138,17 +143,28 @@ class CheckoutController extends Controller
      */
     public function indexDashboard(Request $request)
     {
+        // Ambil produk
         $produk = \App\Models\Produk::findOrFail($request->produk_id);
+
+        // Ambil daftar provinsi dari LokasiController
+        $lokasi = new LokasiController();
+        $provinsiList = array_keys($lokasi->provinsiKota); // karena public property, bisa diakses langsung
+
+        // Hitung harga final setelah diskon
+        $diskon = $produk->diskon ?? 0;
+        $hargaFinal = $diskon > 0 ? $produk->harga - ($produk->harga * $diskon / 100) : $produk->harga;
+
+        $jumlah = $request->jumlah ?? 1;
 
         // Siapkan data checkout tunggal
         $checkoutItem = [
             'produk_id' => $produk->id,
             'nama_produk' => $produk->nama_produk,
-            'harga' => $produk->harga,
+            'harga' => $hargaFinal,
             'warna' => $request->warna ?? null,
             'ukuran' => $request->ukuran ?? null,
-            'jumlah' => $request->jumlah ?? 1,
-            'subtotal' => $produk->harga * ($request->jumlah ?? 1),
+            'jumlah' => $jumlah,
+            'subtotal' => $hargaFinal * $jumlah,
         ];
 
         // Simpan sementara ke session
@@ -157,6 +173,7 @@ class CheckoutController extends Controller
         return view('customer.checkout_dashboard', [
             'checkoutItem' => $checkoutItem,
             'total' => $checkoutItem['subtotal'],
+            'provinsiList' => $provinsiList,
         ]);
     }
 
@@ -176,32 +193,32 @@ class CheckoutController extends Controller
         $request->validate([
             'nama_penerima' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
+            'provinsi' => 'required|string',
             'kota' => 'required|string|max:100',
             'alamat_detail' => 'required|string',
             'metode_pembayaran' => 'required|string',
         ]);
 
-        DB::transaction(function () use ($request, $checkoutItem) {
-            $pesanan = Pesanan::create([
+        $order = DB::transaction(function () use ($request, $checkoutItem) {
+            // Simpan ke tabel orders
+            $order = Order::create([
                 'user_id' => Auth::id(),
                 'nama_penerima' => $request->nama_penerima,
                 'no_hp' => $request->no_hp,
                 'email' => $request->email ?? Auth::user()->email,
-                'negara' => $request->negara ?? 'Indonesia',
+                'provinsi' => $request->provinsi ?? 'Sulawesi Selatan',
                 'kota' => $request->kota,
                 'alamat_detail' => $request->alamat_detail,
-                'is_dropship' => $request->has('is_dropship'),
                 'metode_pembayaran' => $request->metode_pembayaran,
-                'total_harga' => $checkoutItem['subtotal'],
-                'status' => 'Menunggu Pembayaran',
+                'subtotal' => $checkoutItem['subtotal'],
+                'status' => 'menunggu',
             ]);
 
-            // Simpan item pesanan tunggal
-            PesananItem::create([
-                'pesanan_id' => $pesanan->id,
+            // Simpan detail produk ke tabel order_items
+            OrderItem::create([
+                'order_id' => $order->id,
                 'produk_id' => $checkoutItem['produk_id'],
                 'nama_produk' => $checkoutItem['nama_produk'],
-                'harga' => $checkoutItem['harga'],
                 'warna' => $checkoutItem['warna'],
                 'ukuran' => $checkoutItem['ukuran'],
                 'jumlah' => $checkoutItem['jumlah'],
@@ -210,9 +227,13 @@ class CheckoutController extends Controller
 
             // Bersihkan session
             session()->forget('checkout_dashboard');
+
+            return $order;
         });
 
-        return redirect()->route('customer.dashboard')
+        return redirect()->route('customer.order.success', ['id' => $order->id])
             ->with('success', 'Pesanan berhasil dibuat dan menunggu pembayaran!');
+
     }
+
 }

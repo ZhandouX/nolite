@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Order;
 
 class ProfileController extends Controller
 {
@@ -19,15 +20,21 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Ambil semua wishlist milik user beserta produk & foto
+        // Wishlist
         $wishlists = Wishlist::with(['produk.fotos'])
             ->where('user_id', $user->id)
             ->latest()
             ->get();
 
+        // Order user
+        $orders = Order::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('profile.edit', [
             'user' => $user,
             'wishlists' => $wishlists,
+            'orders' => $orders,
         ]);
     }
 
@@ -85,5 +92,20 @@ class ProfileController extends Controller
         return view('profile.settings', [
             'user' => $request->user(),
         ]);
+    }
+
+    public function account()
+    {
+        $user = auth()->user();
+
+        // Ambil order user terbaru
+        $orders = Order::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil wishlist user
+        $wishlists = $user->wishlists()->with('produk.fotos')->get();
+
+        return view('user.account', compact('orders', 'wishlists'));
     }
 }

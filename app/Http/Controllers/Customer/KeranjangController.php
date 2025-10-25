@@ -194,4 +194,16 @@ class KeranjangController extends Controller
 
         return response()->json(['count' => $count]);
     }
+
+    public function updateQuantity(Request $request, $id)
+    {
+        $keranjang = Keranjang::findOrFail($id);
+        $keranjang->jumlah = $request->jumlah;
+        $keranjang->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jumlah produk berhasil diperbarui'
+        ]);
+    }
 }

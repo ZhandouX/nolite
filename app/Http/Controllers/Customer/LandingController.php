@@ -24,15 +24,22 @@ class LandingController extends Controller
             }
         }
 
-        // Ambil 6 produk pertama
+        // 🔹 Ambil 6 produk terbaru
         $produk = Produk::with('fotos')
-                        ->latest()
-                        ->take(6)
-                        ->get();
+            ->latest()
+            ->take(6)
+            ->get();
+
+        // 🔹 Ambil semua produk yang memiliki diskon
+        $produkDiskon = Produk::with('fotos')
+            ->where('diskon', '>', 0)
+            ->latest()
+            ->get();
 
         // 🔹 Tambahkan logika untuk menampilkan modal login otomatis
         $showLoginModal = $request->query('showLogin', false);
 
-        return view('welcome', compact('produk', 'showLoginModal'));
+        // 🔹 Kirim ke view
+        return view('welcome', compact('produk', 'produkDiskon', 'showLoginModal'));
     }
 }

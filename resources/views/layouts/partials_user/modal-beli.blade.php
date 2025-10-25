@@ -19,106 +19,109 @@
             <div>
                 <p class="text-left text-lg font-bold text-black">{{ $item->nama_produk }}</p>
                 <hr class="w-full">
-                <p class="text-left text-black font-bold">IDR {{ number_format($item->harga, 0, ',', '.') }}
-                </p>
+
+                @php
+                    $diskon = $item->diskon ?? 0;
+                    $hargaFinal = $diskon > 0 ? $item->harga - ($item->harga * $diskon / 100) : $item->harga;
+                @endphp
+
+                @if($diskon > 0)
+                    <div class="flex items-center gap-2">
+                        <p class="line-through text-gray-400 font-semibold">
+                            IDR {{ number_format($item->harga, 0, ',', '.') }}
+                        </p>
+                        <p class="text-red-800 font-bold">
+                            IDR {{ number_format($hargaFinal, 0, ',', '.') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-black font-bold">IDR {{ number_format($hargaFinal, 0, ',', '.') }}</p>
+                @endif
             </div>
         </div>
 
         {{-- FORM PEMBELIAN --}}
-        @auth
-            <form action="{{ route('customer.checkout.dashboard') }}" method="GET" class="space-y-4">
-                @csrf
-                <input type="hidden" name="produk_id" value="{{ $item->id }}">
+        <form id="formBeli-{{ $item->id }}" action="{{ route('customer.checkout.dashboard') }}" method="GET"
+            class="space-y-4">
+            @csrf
+            <input type="hidden" name="produk_id" value="{{ $item->id }}">
 
-                {{-- PILIHAN WARNA --}}
-                <div class="mb-4 color-section">
-                    <div class="text-left">
-                        <p class="font-semibold mb-2">Warna:</p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2">
-                        @foreach ($item->warna as $w)
-                            <button type="button"
-                                class="color-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition {{ $loop->first ? 'border-blue-600 bg-blue-50' : '' }}"
-                                data-color="{{ $w }}" data-item="{{ $item->id }}">
-                                {{ $w }}
-                            </button>
-                        @endforeach
-                    </div>
-
-                    <input type="hidden" name="warna" id="selectedColor-{{ $item->id }}"
-                        value="{{ $item->warna[0] ?? '' }}">
+            {{-- PILIHAN WARNA --}}
+            <div class="mb-4 color-section">
+                <div class="text-left">
+                    <p class="font-semibold mb-2">Warna:</p>
                 </div>
 
-                {{-- PILIHAN UKURAN --}}
-                <div class="mb-4 size-section">
-                    <div class="text-left">
-                        <p class="font-semibold mb-2">Ukuran:</p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2">
-                        @foreach ($item->ukuran as $u)
-                            <button type="button"
-                                class="size-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition {{ $loop->first ? 'border-blue-600 bg-blue-50' : '' }}"
-                                data-size="{{ $u }}" data-item="{{ $item->id }}">
-                                {{ $u }}
-                            </button>
-                        @endforeach
-                    </div>
-
-                    <input type="hidden" name="ukuran" id="selectedSize-{{ $item->id }}"
-                        value="{{ $item->ukuran[0] ?? '' }}">
-                </div>
-
-                {{-- SUBTOTAL PRODUCT --}}
-                <div class="flex flex-col space-y-3 border-t border-gray-200 pt-4">
-                    <label class="text-sm font-semibold text-gray-800 text-left">Jumlah</label>
-
-                    <div class="flex items-center justify-center gap-6">
-                        {{-- BUTTON ( - ) --}}
-                        <button type="button" onclick="updateQty(this, -1)"
-                            class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 bg-white hover:bg-gray-100 active:scale-95 transition-all duration-200 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
-                            </svg>
+                <div class="flex flex-wrap gap-2">
+                    @foreach ($item->warna as $w)
+                        <button type="button"
+                            class="color-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition {{ $loop->first ? 'border-blue-600 bg-blue-50' : '' }}"
+                            data-color="{{ $w }}" data-item="{{ $item->id }}">
+                            {{ $w }}
                         </button>
-
-                        {{-- INPUT QTY --}}
-                        <input type="number" name="jumlah" id="buyQty-{{ $item->id }}" value="1" min="1"
-                            max="{{ $item->jumlah }}" onchange="validateQty(this)"
-                            class="w-10 text-center text-lg font-bold text-gray-900 focus:outline-none border-none bg-transparent select-none"
-                            readonly>
-
-                        {{-- BUTTON ( + ) --}}
-                        <button type="button" onclick="updateQty(this, 1)"
-                            class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-400 text-white hover:bg-gray-500 active:scale-95 transition-all duration-200 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <p class="text-xs text-gray-500 text-center sm:text-center">
-                        Stok tersedia: {{ $item->jumlah }}
-                    </p>
+                    @endforeach
                 </div>
 
-                {{-- TOMBOL BELI --}}
-                <button type="submit"
-                    class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-2 rounded-lg transition">
-                    Beli Sekarang
-                </button>
-            </form>
-        @else
-            <p class="text-center text-gray-600 mb-4">Silakan login terlebih dahulu untuk membeli produk ini.
-            </p>
-            <a href="{{ route('login') }}"
-                class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-center">
-                Login Sekarang
-            </a>
-        @endauth
+                <input type="hidden" name="warna" id="selectedColor-{{ $item->id }}"
+                    value="{{ $item->warna[0] ?? '' }}">
+            </div>
+
+            {{-- PILIHAN UKURAN --}}
+            <div class="mb-4 size-section">
+                <div class="text-left">
+                    <p class="font-semibold mb-2">Ukuran:</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    @foreach ($item->ukuran as $u)
+                        <button type="button"
+                            class="size-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition {{ $loop->first ? 'border-blue-600 bg-blue-50' : '' }}"
+                            data-size="{{ $u }}" data-item="{{ $item->id }}">
+                            {{ $u }}
+                        </button>
+                    @endforeach
+                </div>
+
+                <input type="hidden" name="ukuran" id="selectedSize-{{ $item->id }}"
+                    value="{{ $item->ukuran[0] ?? '' }}">
+            </div>
+
+            {{-- JUMLAH PRODUK --}}
+            <div class="flex flex-col space-y-3 border-t border-gray-200 pt-4">
+                <label class="text-sm font-semibold text-gray-800 text-left">Jumlah</label>
+
+                <div class="flex items-center justify-center gap-6">
+                    <button type="button" onclick="updateQty(this, -1)"
+                        class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 bg-white hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                        </svg>
+                    </button>
+
+                    <input type="number" name="jumlah" id="buyQty-{{ $item->id }}" value="1" min="1"
+                        max="{{ $item->jumlah }}" onchange="validateQty(this)"
+                        class="w-10 text-center text-lg font-bold text-gray-900 focus:outline-none border-none bg-transparent select-none"
+                        readonly>
+
+                    <button type="button" onclick="updateQty(this, 1)"
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-400 text-white hover:bg-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </button>
+                </div>
+
+                <p class="text-xs text-gray-500 text-center">Stok tersedia: {{ $item->jumlah }}</p>
+            </div>
+
+            {{-- TOMBOL BELI --}}
+            <button type="submit" onclick="handleBuyNow({{ $item->id }})"
+                class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-2 rounded-lg transition">
+                Beli Sekarang
+            </button>
+        </form>
     </div>
 </div>
 

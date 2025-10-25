@@ -19,99 +19,195 @@
     </div>
 
     {{-- PANEL: CATEGORY --}}
-    <div id="panel-kategori" class="tab-panel hidden mt-10">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 max-w-4xl mx-auto">
 
+    <style>
+        /* --- Fix tampilan mobile --- */
+        @media (max-width: 640px) {
+            .kategori-item {
+                height: 230px !important;
+                position: relative;
+            }
+
+            .kategori-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .kategori-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 10px;
+            }
+
+            .kategori-overlay h3 {
+                color: #fff;
+                font-size: 1.6rem;
+                font-weight: bold;
+                line-height: 1.2;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        /* --- Fix tampilan desktop --- */
+        @media (min-width: 641px) {
+            .kategori-item {
+                position: relative;
+                height: 300px;
+            }
+
+            .kategori-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .kategori-overlay {
+                position: absolute;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                transition: background-color 0.3s ease;
+            }
+
+            .kategori-overlay:hover {
+                background-color: rgba(0, 0, 0, 0.55);
+            }
+
+            .kategori-overlay h3 {
+                color: #fff;
+                font-size: 2rem;
+                font-weight: 700;
+                letter-spacing: 1px;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            }
+        }
+    </style>
+    <div id="panel-kategori" class="tab-panel hidden mt-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
             {{-- T-SHIRT --}}
             <a href="{{ route('customer.kategori-tshirt') }}"
-                class="group block relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all cursor-pointer">
-                <div class="h-80 bg-cover bg-center transform transition-transform duration-500 group-hover:scale-105"
-                    style="background-image: url('https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=80')">
-                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <h3 class="text-3xl font-bold text-white text-center">T-Shirt</h3>
+                class="group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div class="kategori-item">
+                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+                        alt="T-Shirt" />
+                    <div class="kategori-overlay">
+                        <h3>T-SHIRT</h3>
                     </div>
                 </div>
             </a>
 
             {{-- HOODIE --}}
             <a href="{{ route('customer.kategori-hoodie') }}"
-                class="group block relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all cursor-pointer">
-                <div class="h-80 bg-cover bg-center transform transition-transform duration-500 group-hover:scale-105"
-                    style="background-image: url('/assets/images/banner/hoodie-1.jpg')">
-                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <h3 class="text-3xl font-bold text-white text-center">Hoodie</h3>
+                class="group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div class="kategori-item">
+                    <img src="{{ asset('assets/images/banner/hoodie-1.jpg') }}" alt="Hoodie" />
+                    <div class="kategori-overlay">
+                        <h3>HOODIE</h3>
                     </div>
                 </div>
             </a>
 
             {{-- JERSEY --}}
             <a href="{{ route('customer.kategori-jersey') }}"
-                class="group block relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all cursor-pointer">
-                <div class="h-80 bg-cover bg-center transform transition-transform duration-500 group-hover:scale-105"
-                    style="background-image: url('https://images.unsplash.com/photo-1574180045827-681f8a1a9622?auto=format&fit=crop&w=500&q=80')">
-                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <h3 class="text-3xl font-bold text-white text-center">Jersey</h3>
+                class="group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div class="kategori-item">
+                    <img src="https://images.unsplash.com/photo-1574180045827-681f8a1a9622?auto=format&fit=crop&w=600&q=80"
+                        alt="Jersey" />
+                    <div class="kategori-overlay">
+                        <h3>JERSEY</h3>
                     </div>
                 </div>
             </a>
 
         </div>
+
     </div>
 
-    <section id="filtered-category" class="hidden bg-white">
-        {{-- BANNER CATEGORY --}}
-        <div id="category-banner" class="relative w-full overflow-hidden">
-            <img id="category-banner-img" src="/assets/images/default-banner.jpg" alt="Category Banner"
-                class="w-full h-[400px] object-cover">
-            <h2 id="category-banner-title" class="absolute bottom-6 left-8 text-5xl font-bold text-white drop-shadow-lg">
-                Kategori
-            </h2>
-        </div>
 
-        {{-- FILTER & SORT --}}
-        <div class="container mx-auto px-4 py-6 grid grid-cols-2 gap-4">
-            <button
-                class="flex items-center justify-center border-2 border-red-700 text-red-700 rounded-xl py-3 text-lg font-medium hover:bg-red-700 hover:text-white transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10m-6 6h6" />
-                </svg>
-                Filter
-            </button>
-            <button
-                class="flex items-center justify-center border-2 border-red-700 text-red-700 rounded-xl py-3 text-lg font-medium hover:bg-red-700 hover:text-white transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 4h18M6 8h12M9 12h6M12 16h3" />
-                </svg>
-                Sort
-            </button>
-        </div>
-
-        {{-- PRODUCT --}}
-        <div class="container mx-auto px-4 pb-12">
-            <div id="filtered-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-            </div>
-        </div>
-    </section>
-
-    {{-- PANEL: PRODUCT: FILTERED --}}
-    <div id="filtered-category" class="hidden">
-        <div id="category-banner" class="relative h-96 bg-cover bg-center rounded-3xl shadow-lg mb-12"></div>
-        <h2 class="text-3xl font-bold text-center mb-8 text-gray-800" id="category-title"></h2>
-        <div id="filtered-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    </div>
 
     {{-- PANEL: DISKON --}}
-    <div id="panel-diskon" class="tab-panel hidden mt-10">
-        <p class="text-center text-gray-600 text-lg">Belum ada produk diskon saat ini.</p>
+    <div id="panel-diskon" class="tab-panel hidden px-10 py-10">
+        @if($produkDiskon->isEmpty())
+            <p class="text-center text-gray-600 text-lg">Belum ada produk diskon saat ini.</p>
+        @else
+            <div class="product-grid grid md:grid-cols-3 gap-8">
+                @foreach($produkDiskon as $item)
+                    <div
+                        class="group bg-white rounded-lg overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+
+                        {{-- LABEL DISKON --}}
+                        <div class="absolute top-3 left-3 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full z-10">
+                            -{{ $item->diskon }}%
+                        </div>
+
+                        {{-- IMAGE --}}
+                        <a href="{{ route('produk.detail', $item->id) }}" class="block overflow-hidden rounded-t-2xl bg-gray-50">
+                            @if($item->fotos->isNotEmpty())
+                                <img src="{{ asset('storage/' . $item->fotos->first()->foto) }}" alt="{{ $item->nama_produk }}"
+                                    class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
+                            @else
+                                <img src="{{ asset('assets/images/no-image.png') }}" alt="{{ $item->nama_produk }}"
+                                    class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
+                            @endif
+                        </a>
+
+                        {{-- INFO PRODUK --}}
+                        <div class="p-6 flex flex-col gap-3">
+                            <h3 class="text-xl font-bold text-gray-900 line-clamp-1 text-center">{{ $item->nama_produk }}</h3>
+
+                            {{-- HARGA DISKON --}}
+                            <div>
+                                @php
+                                    $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
+                                @endphp
+                                <div class="flex justify-center items-center gap-3">
+                                    <p class="text-sm text-gray-500 line-through text-center">
+                                        IDR {{ number_format($item->harga, 0, ',', '.') }}
+                                    </p>
+                                    <p class="text-lg text-red-800 font-bold text-center">
+                                        IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- BUTTONS --}}
+                            <div class="flex gap-2 mt-3">
+                                <button onclick="openModal('productModal-{{ $item->id }}')"
+                                    class="bg-gray-700 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </button>
+
+                                <button onclick="openModal('productBeliModal-{{ $item->id }}')"
+                                    class="bg-gray-700 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0">
+                                    Beli
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 
     {{-- PANEL: ALL PRODUCT --}}
-    <section id="panel-all" class="product-section py-16 bg-gradient-to-b from-white to-gray-50 tab-panel block">
-
-        <div class="container mx-auto px-4">
+    <section id="panel-all" class="product-section py-10 bg-gradient-to-b from-white to-gray-50 tab-panel block">
+        <div class="container mx-auto">
 
             {{-- GRID PRODUCT --}}
             <div class="product-grid grid md:grid-cols-3 gap-8">
@@ -134,11 +230,27 @@
                         </a>
 
                         <div class="p-6 flex flex-col gap-3">
-                            <h3 class="text-xl font-bold text-gray-900 line-clamp-1">{{ $item->nama_produk }}</h3>
-                            <p class="text-lg text-black font-bold">
-                                IDR {{ number_format($item->harga, 0, ',', '.') }}
-                            </p>
-                            <div class="flex gap-2 w-full mt-2">
+                            <h3 class="text-xl font-bold text-gray-900 line-clamp-1 text-center">{{ $item->nama_produk }}</h3>
+
+                            @if($item->diskon && $item->diskon > 0)
+                                @php
+                                    $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
+                                @endphp
+                                <div class="flex justify-center items-center gap-3">
+                                    <p class="text-lg text-gray-400 line-through">
+                                        IDR {{ number_format($item->harga, 0, ',', '.') }}
+                                    </p>
+                                    <p class="text-lg text-red-800 font-bold">
+                                        IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                    </p>
+                                </div>
+                            @else
+                                <p class="text-lg text-black font-bold text-center">
+                                    IDR {{ number_format($item->harga, 0, ',', '.') }}
+                                </p>
+                            @endif
+
+                            <div class="flex gap-2 w-full mt-2 justify-center">
                                 {{-- CART --}}
                                 <button
                                     class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
@@ -152,14 +264,14 @@
 
                                 {{-- BUY --}}
                                 <button
-                                    class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
+                                    class="bg-gray-700 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
                                     onclick="openModal('productBeliModal-{{ $item->id }}')">
-                                    <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                                        stroke="currentColor" stroke-width="2">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                                    </svg> -->
-                                    <span>Beli</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                    </svg>
+                                    <span> Beli</span>
                                 </button>
                             </div>
                         </div>
@@ -263,43 +375,43 @@
                     const foto = item.fotos?.length ? `/storage/${item.fotos[0].foto}` : `/assets/images/no-image.png`;
 
                     const card = `
-                                                        <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                                                            data-id="${item.id}" data-nama="${item.nama_produk}" data-harga="${item.harga}"
-                                                            data-foto="${foto}" data-category="${item.kategori ?? 'umum'}">
+                                                                    <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                                                                        data-id="${item.id}" data-nama="${item.nama_produk}" data-harga="${item.harga}"
+                                                                        data-foto="${foto}" data-category="${item.kategori ?? 'umum'}">
 
-                                                            <a href="/produk/detail/${item.id}" class="block overflow-hidden rounded-t-2xl bg-gray-50">
-                                                                <img src="${foto}" alt="${item.nama_produk}" class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
-                                                            </a>
+                                                                        <a href="/produk/detail/${item.id}" class="block overflow-hidden rounded-t-2xl bg-gray-50">
+                                                                            <img src="${foto}" alt="${item.nama_produk}" class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
+                                                                        </a>
 
-                                                            <div class="p-6 flex flex-col gap-3">
-                                                                <h3 class="text-center text-xl font-bold text-gray-900 line-clamp-1">${item.nama_produk}</h3>
-                                                                <p class="text-center text-lg text-black font-bold">
-                                                                    IDR ${new Intl.NumberFormat('id-ID').format(item.harga)}
-                                                                </p>
+                                                                        <div class="p-6 flex flex-col gap-3">
+                                                                            <h3 class="text-center text-xl font-bold text-gray-900 line-clamp-1">${item.nama_produk}</h3>
+                                                                            <p class="text-center text-lg text-black font-bold">
+                                                                                IDR ${new Intl.NumberFormat('id-ID').format(item.harga)}
+                                                                            </p>
 
-                                                                <div class="flex gap-2 w-full mt-2">
-                                                                    <!-- CART -->
-                                                                    <button
-                                                                        class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
-                                                                        onclick="openModal('productModal-${item.id}')" title="Tambah ke Keranjang">
-                                                                        <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
-                                                                            <path stroke-linecap='round' stroke-linejoin='round'
-                                                                                d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'/>
-                                                                        </svg>
-                                                                    </button>
+                                                                            <div class="flex gap-2 w-full mt-2">
+                                                                                <!-- CART -->
+                                                                                <button
+                                                                                    class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
+                                                                                    onclick="openModal('productModal-${item.id}')" title="Tambah ke Keranjang">
+                                                                                    <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+                                                                                        <path stroke-linecap='round' stroke-linejoin='round'
+                                                                                            d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'/>
+                                                                                    </svg>
+                                                                                </button>
 
-                                                                    <!-- BUY -->
-                                                                    <button
-                                                                        class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
-                                                                        onclick="openModal('productBeliModal-${item.id}')">
-                                                                        <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
-                                                                            <path stroke-linecap='round' stroke-linejoin='round' d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'/>
-                                                                        </svg>
-                                                                        <span>Beli Sekarang</span>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>`;
+                                                                                <!-- BUY -->
+                                                                                <button
+                                                                                    class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
+                                                                                    onclick="openModal('productBeliModal-${item.id}')">
+                                                                                    <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+                                                                                        <path stroke-linecap='round' stroke-linejoin='round' d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'/>
+                                                                                    </svg>
+                                                                                    <span>Beli Sekarang</span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>`;
                     grid.insertAdjacentHTML('beforeend', card);
                 });
             };

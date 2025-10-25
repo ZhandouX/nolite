@@ -4,54 +4,67 @@
 
 @section('content')
     <div class="bg-gray-50 min-h-screen py-12 px-4 pt-24">
-        <form method="POST" action="{{ route('logout') }}" class="absolute right-6">
-            @csrf
-            <button type="submit"
-                class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg shadow hover:bg-red-700 active:bg-red-800 transition">
-                <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout
-            </button>
-        </form>
+        <!-- <form method="POST" action="{{ route('logout') }}" class="absolute right-6">
+                @csrf
+                <button type="submit"
+                    class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg shadow hover:bg-red-700 active:bg-red-800 transition">
+                    <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout
+                </button>
+            </form> -->
         <div class="max-w-md mx-auto">
-
             {{-- PROFILE CARD --}}
-            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 text-center relative">
+            <div
+                class="bg-white/90 backdrop-blur-md rounded-3xl shadow-lg p-8 pt-16 border border-gray-100 text-center relative overflow-hidden">
 
-                {{-- PHOTO PROFILE --}}
+                {{-- SAMPUL --}}
                 <div
-                    class="w-24 h-24 mx-auto rounded-full bg-gray-600 flex items-center justify-center text-white text-3xl font-semibold shadow-md">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) . strtoupper(substr(strstr(Auth::user()->name, ' ') ? strstr(Auth::user()->name, ' ') : Auth::user()->name, 1, 1)) }}
+                    class="absolute top-0 left-0 w-full h-24 rounded-t-3xl bg-gradient-to-r from-gray-700 via-gray-600 to-gray-800">
+                </div>
+
+                {{-- FOTO PROFIL (Inisial) --}}
+                <div class="relative w-32 h-32 mx-auto rounded-full border-4 border-white bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white text-6xl font-bold    "
+                    style="margin-top:-1.5rem;">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
 
                 {{-- INFO USER --}}
-                <h2 class="mt-4 text-xl font-semibold text-gray-800">{{ Auth::user()->name }}</h2>
+                <h2 class="mt-5 text-2xl font-semibold text-gray-800">{{ Auth::user()->name }}</h2>
                 <p class="text-gray-500 text-sm">{{ Auth::user()->email }}</p>
-                <p class="text-xs text-gray-400 mt-2">Member since {{ Auth::user()->created_at->format('F Y') }}</p>
+                <p class="text-xs text-gray-400 mt-1">
+                    Pengguna Sejak
+                    {{ \Carbon\Carbon::parse(Auth::user()->created_at)->locale('id')->translatedFormat('F Y') }}
+                </p>
 
-                {{-- OPTIONS BUTTON --}}
-                <div class="mt-6">
+                {{-- OPTIONS --}}
+                <div class="mt-6 relative">
                     <button id="optionsButton"
-                        class="px-4 py-2 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-400 transition inline-flex items-center justify-center">
-                        Options
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
+                        class="px-5 py-2.5 bg-gray-600 text-white rounded-xl text-sm font-medium shadow-sm hover:bg-gray-700 transition inline-flex items-center">
+                        <i class="fa-solid fa-gear mr-2"></i> Pengaturan
                     </button>
 
-                    {{-- OPTIONS DROPDOWN --}}
+                    {{-- DROPDOWN (muncul di atas tombol) --}}
                     <div id="optionsMenu"
-                        class="hidden absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 z-10">
+                        class="hidden absolute left-1/2 transform -translate-x-1/2 bottom-full mb-3 w-52 bg-white rounded-xl shadow-lg border border-gray-100 z-10 overflow-hidden">
                         <button onclick="openModal('updateProfileModal')"
-                            class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50">
-                            <i class="fa-solid fa-user mr-2"></i> Ubah Profil
+                            class="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-50 text-sm">
+                            <i class="fa-solid fa-user mr-2 text-gray-500"></i> Ubah Profil
                         </button>
                         <button onclick="openModal('updatePasswordModal')"
-                            class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50">
-                            <i class="fa-solid fa-lock mr-2"></i> Ganti Password
+                            class="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-50 text-sm">
+                            <i class="fa-solid fa-lock mr-2 text-gray-500"></i> Ganti Password
                         </button>
                         <button onclick="openDeleteModal()"
-                            class="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50">
+                            class="block w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm">
                             <i class="fa-regular fa-trash-can mr-2"></i> Hapus Akun
                         </button>
+                        <button onclick="document.getElementById('logoutForm').submit()"
+                            class="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-red-50 text-sm text-red-600">
+                            <i class="fa-solid fa-right-from-bracket mr-2"></i> Keluar
+                        </button>
+
+                        <form id="logoutForm" method="POST" action="{{ route('logout') }}" class="hidden">
+                            @csrf
+                        </form>
                     </div>
                 </div>
             </div>

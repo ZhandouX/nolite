@@ -10,19 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('pesanan_items', function (Blueprint $table) {
+        Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('pesanan_id')->constrained()->onDelete('cascade');
-            $table->foreignId('produk_id')->constrained()->onDelete('cascade');
-
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('produk_id')->constrained('produks')->onDelete('cascade');
             $table->string('nama_produk');
             $table->string('warna')->nullable();
             $table->string('ukuran')->nullable();
-            $table->integer('jumlah')->default(0);
-            $table->decimal('harga', 15, 2);
+            $table->integer('jumlah');
             $table->decimal('subtotal', 15, 2);
-
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('pesanan_items');
+        Schema::dropIfExists('order_items');
     }
 };

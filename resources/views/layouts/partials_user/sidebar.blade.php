@@ -5,6 +5,7 @@
         <span class="close-btn" id="closeSidebar">&times;</span>
     </div>
     <ul class="sidebar-links">
+        <li><a href="{{ route('customer.dashboard') }}">Beranda</a></li>
         <li><a href="{{ route('customer.allProduk') }}">Produk</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle">Men</a>
