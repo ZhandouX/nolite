@@ -143,26 +143,36 @@ class CheckoutController extends Controller
      */
     public function indexDashboard(Request $request)
     {
+        // Validasi data input
+        $validated = $request->validate([
+            'produk_id' => 'required|exists:produks,id',
+            'jumlah' => 'nullable|integer|min:1',
+            'warna' => 'nullable|string|max:50',
+            'ukuran' => 'nullable|string|max:50',
+        ]);
+
         // Ambil produk
-        $produk = \App\Models\Produk::findOrFail($request->produk_id);
+        $produk = \App\Models\Produk::findOrFail($validated['produk_id']);
 
-        // Ambil daftar provinsi dari LokasiController
+        // Ambil daftar provinsi
         $lokasi = new LokasiController();
-        $provinsiList = array_keys($lokasi->provinsiKota); // karena public property, bisa diakses langsung
+        $provinsiList = array_keys($lokasi->provinsiKota);
 
-        // Hitung harga final setelah diskon
+        // Hitung harga final
         $diskon = $produk->diskon ?? 0;
-        $hargaFinal = $diskon > 0 ? $produk->harga - ($produk->harga * $diskon / 100) : $produk->harga;
+        $hargaFinal = $diskon > 0
+            ? $produk->harga - ($produk->harga * $diskon / 100)
+            : $produk->harga;
 
-        $jumlah = $request->jumlah ?? 1;
+        $jumlah = $validated['jumlah'] ?? 1;
 
         // Siapkan data checkout tunggal
         $checkoutItem = [
             'produk_id' => $produk->id,
             'nama_produk' => $produk->nama_produk,
             'harga' => $hargaFinal,
-            'warna' => $request->warna ?? null,
-            'ukuran' => $request->ukuran ?? null,
+            'warna' => $validated['warna'] ?? null,
+            'ukuran' => $validated['ukuran'] ?? null,
             'jumlah' => $jumlah,
             'subtotal' => $hargaFinal * $jumlah,
         ];
@@ -233,7 +243,6 @@ class CheckoutController extends Controller
 
         return redirect()->route('customer.order.success', ['id' => $order->id])
             ->with('success', 'Pesanan berhasil dibuat dan menunggu pembayaran!');
-
     }
 
 }

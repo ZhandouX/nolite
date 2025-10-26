@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="container mx-auto px-4 md:px-10 py-8 pt-24">
-
         <div class="flex flex-col md:flex-row gap-8">
 
             {{-- SIDEBAR FILTER DESKTOP --}}
@@ -21,7 +20,7 @@
                     </div>
                 </div>
 
-                {{-- FILTER & SORT BUTTONS MOBILE (Bawah Banner) --}}
+                {{-- FILTER & SORT BUTTONS MOBILE --}}
                 <div class="flex gap-2 mb-4 justify-between md:hidden">
                     {{-- FILTER BUTTON MOBILE --}}
                     <button id="mobileOpenFilterBtn"
@@ -128,7 +127,7 @@
                                     @endphp
                                     <button type="button"
                                         class="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center rounded-full 
-                                                                               bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
+                                                                                           bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
                                         onclick="event.preventDefault(); toggleWishlist({{ $item->id }})">
                                         <i id="heart-icon-{{ $item->id }}"
                                             class="fa-solid fa-heart {{ $isFavorited ? 'text-red-500 scale-110' : 'text-gray-400' }} transition-all duration-300 text-lg"></i>
@@ -255,122 +254,13 @@
 
 @push('script')
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-
-            // =======================
-            // SORT DROPDOWN (Desktop)
-            // =======================
-            const sortDropdownBtn = document.getElementById('sortDropdownBtn');
-            const sortDropdownMenu = document.getElementById('sortDropdownMenu');
-
-            if (sortDropdownBtn) {
-                sortDropdownBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    sortDropdownMenu.classList.toggle('hidden');
-                });
-
-                document.addEventListener('click', (e) => {
-                    if (!sortDropdownMenu.contains(e.target) && !sortDropdownBtn.contains(e.target)) {
-                        sortDropdownMenu.classList.add('hidden');
-                    }
-                });
+        window.Laravel = {
+            csrfToken: "{{ csrf_token() }}",
+            routes: {
+                wishlistToggle: "{{ url('/wishlist/toggle') }}",
+                allCategory: "{{ url('produk') }}",
             }
-
-            // =======================
-            // FILTER MODAL MOBILE
-            // =======================
-            const mobileOpenFilterBtn = document.getElementById('mobileOpenFilterBtn');
-            const mobileFilterModal = document.getElementById('mobileFilterModal');
-            const closeMobileFilterBtn = document.getElementById('closeMobileFilterBtn');
-
-            mobileOpenFilterBtn.addEventListener('click', () => mobileFilterModal.classList.remove('hidden'));
-            closeMobileFilterBtn.addEventListener('click', () => mobileFilterModal.classList.add('hidden'));
-            mobileFilterModal.addEventListener('click', e => {
-                if (e.target === mobileFilterModal) mobileFilterModal.classList.add('hidden');
-            });
-
-            // =======================
-            // SORT MODAL (Mobile)
-            // =======================
-            const openSortBtn = document.getElementById('openSortBtn');
-            const sortModal = document.getElementById('sortModal');
-            const closeSortModal = document.getElementById('closeSortModal');
-
-            openSortBtn.addEventListener('click', () => sortModal.classList.remove('hidden'));
-            closeSortModal.addEventListener('click', () => sortModal.classList.add('hidden'));
-            sortModal.addEventListener('click', e => {
-                if (e.target === sortModal) sortModal.classList.add('hidden');
-            });
-
-            // =======================
-            // WISHLIST TOGGLE
-            // =======================
-            window.toggleWishlist = function (produkId) {
-                fetch(`/wishlist/toggle/${produkId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    },
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        const icon = document.getElementById(`heart-icon-${produkId}`);
-                        if (data.status === 'added') {
-                            icon.classList.remove('text-gray-300');
-                            icon.classList.add('text-red-500');
-                        } else {
-                            icon.classList.remove('text-red-500');
-                            icon.classList.add('text-gray-300');
-                        }
-                    })
-                    .catch(err => console.error(err));
-            };
-
-            // =======================
-            // WISHLIST TOGGLE
-            // =======================
-            window.toggleWishlist = function (produkId) {
-                fetch(`/wishlist/toggle/${produkId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    },
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        const icon = document.getElementById(`heart-icon-${produkId}`);
-                        if (data.status === 'added') {
-                            icon.classList.remove('text-gray-300');
-                            icon.classList.add('text-red-500');
-                        } else {
-                            icon.classList.remove('text-red-500');
-                            icon.classList.add('text-gray-300');
-                        }
-                    })
-                    .catch(err => console.error(err));
-            };
-
-            // =======================
-            // CATEGORY RADIO TOGGLE
-            // =======================
-            window.handleCategoryClick = function (radio, categoryUrl, allUrl) {
-                if (radio.dataset.waschecked === "true") {
-                    radio.checked = false;
-                    radio.dataset.waschecked = "false";
-                    window.location.href = allUrl;
-                } else {
-                    document.querySelectorAll('input[name="kategori"]').forEach(el => el.dataset.waschecked = "false");
-                    radio.dataset.waschecked = "true";
-                    window.location.href = categoryUrl;
-                }
-            };
-
-            document.querySelectorAll('input[name="kategori"]').forEach(el => {
-                if (el.checked) el.dataset.waschecked = "true";
-            });
-
-        });
+        };
     </script>
+    <script src="{{ asset('assets/js/user/kategori.js') }}"></script>
 @endpush

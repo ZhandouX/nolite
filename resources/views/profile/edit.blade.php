@@ -292,7 +292,9 @@
     <!-- Modal order -->
     <script>
         function openOrderModal(orderId) {
-            const orderDiv = document.querySelector(`.order - data[data - id='${orderId}']`);
+            const orderDiv = document.querySelector(`.order-data[data-id='${orderId}']`);
+            if (!orderDiv) return console.error('Order data not found');
+
             const items = JSON.parse(orderDiv.getAttribute('data-items'));
             const status = orderDiv.getAttribute('data-status');
             const subtotal = orderDiv.getAttribute('data-subtotal');
@@ -310,20 +312,20 @@
                     : '{{ asset('assets/images/no-image.png') }}';
 
                 itemsContainer.innerHTML += `
-                    <div class="flex items-center border rounded-md p-3" >
-                                <div class="w-20 h-20 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
-                                    <img src="${foto}" class="w-full h-full object-cover" alt="">
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-800">${item.nama_produk}</p>
-                                    <p class="text-sm text-gray-500">Warna: ${item.warna} • Ukuran: ${item.ukuran}</p>
-                                    <p class="text-sm text-gray-500">Jumlah: ${item.jumlah}</p>
-                                </div>
-                                <div class="font-semibold text-gray-800">
-                                    Rp${Number(item.subtotal).toLocaleString('id-ID')}
-                                </div>
-                            </div >
-                        `;
+                <div class="flex items-center border rounded-md p-3">
+                    <div class="w-20 h-20 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
+                        <img src="${foto}" class="w-full h-full object-cover" alt="">
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-800">${item.nama_produk}</p>
+                        <p class="text-sm text-gray-500">Warna: ${item.warna} • Ukuran: ${item.ukuran}</p>
+                        <p class="text-sm text-gray-500">Jumlah: ${item.jumlah}</p>
+                    </div>
+                    <div class="font-semibold text-gray-800">
+                        Rp${Number(item.subtotal).toLocaleString('id-ID')}
+                    </div>
+                </div>
+            `;
             });
 
             document.getElementById('orderModal').classList.remove('hidden');

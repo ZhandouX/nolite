@@ -29,8 +29,8 @@
                         @foreach($produk->fotos as $key => $foto)
                             <img src="{{ asset('storage/' . $foto->foto) }}" alt="thumb{{ $key + 1 }}"
                                 class="thumb w-24 h-24 object-contain rounded-lg cursor-pointer border-2 
-                                                                                                                                                                                                                                {{ $key === 0 ? 'border-red-800' : 'border-gray-200' }} 
-                                                                                                                                                                                                                                hover:border-red-600 transition-all duration-300"
+                                                                                                                                                                                                                                                                                                                                                {{ $key === 0 ? 'border-red-800' : 'border-gray-200' }} 
+                                                                                                                                                                                                                                                                                                                                                hover:border-red-600 transition-all duration-300"
                                 onclick="setMainImage(this.src)" />
                         @endforeach
                     @else
@@ -40,50 +40,45 @@
             </div>
 
             {{-- MODAL IMAGE --}}
-            <div id="modalImage" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50 p-4">
-                <div class="relative w-full max-w-4xl bg-white rounded-2xl overflow-hidden">
-                    <button onclick="closeModal('modalImage')"
-                        class="absolute top-2 right-2 text-white text-3xl z-20">&times;</button>
-
-                    {{-- LARGE IMAGE --}}
-                    <div class="relative">
-                        <img id="modalImgContent" src="" alt="Full Image"
-                            class="w-full max-h-[600px] object-contain transition-all duration-300" />
-
-                        {{-- PREV --}}
-                        <button id="prevImage"
-                            class="absolute top-1/2 left-2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70">
-                            &#10094;
-                        </button>
-
-                        {{-- NEXT --}}
-                        <button id="nextImage"
-                            class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70">
-                            &#10095;
-                        </button>
-                    </div>
-
-                    {{-- THUMBNAIL LIST --}}
-                    <div class="flex justify-center gap-2 p-4 overflow-x-auto">
-                        @foreach($produk->fotos as $key => $foto)
-                            <img src="{{ asset('storage/' . $foto->foto) }}"
-                                class="modal-thumb w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-gray-200 hover:border-blue-600 transition-all"
-                                data-index="{{ $key }}">
-                        @endforeach
-                    </div>
-                </div>
-            </div>
+            @include('layouts.partials_user.modals.image-views')
 
             {{-- PRODUCT INFORMATION --}}
             <div class="product-info">
-                <span class="badge bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">Tersedia</span>
+                <span class="badge bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                    {{ $produk->jumlah > 0 ? 'Tersedia' : 'Stok Habis' }}
+                </span>
+
                 <h2 class="text-3xl font-bold text-gray-800 mt-3">{{ $produk->nama_produk }}</h2>
+
+                {{-- STOK --}}
+                <p class="mt-1 text-gray-600 text-sm">
+                    <strong>Stok:</strong> {{ $produk->jumlah ?? 0 }} {{ $produk->jumlah > 0 ? 'tersedia' : '(habis)' }}
+                </p>
+
+                @php
+                    $diskon = $produk->diskon ?? 0;
+                    $hargaFinal = $diskon > 0
+                        ? $produk->harga - ($produk->harga * $diskon / 100)
+                        : $produk->harga;
+                @endphp
 
                 {{-- PRICE --}}
                 <p class="price mt-3">
-                    <span class="text-red-800 text-2xl font-bold">
-                        IDR {{ number_format($produk->harga, 0, ',', '.') }}
-                    </span>
+                    @if($diskon > 0)
+                        <span class="text-gray-400 line-through font-semibold mr-2">
+                            IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                        </span>
+                        <span class="text-red-800 text-2xl font-bold">
+                            IDR {{ number_format($hargaFinal, 0, ',', '.') }}
+                        </span>
+                        <span class="ml-1 bg-red-600 text-white text-xs font-semibold px-2 py-0.5 rounded-md align-middle">
+                            -{{ $diskon }}%
+                        </span>
+                    @else
+                        <span class="text-red-800 text-2xl font-bold">
+                            IDR {{ number_format($hargaFinal, 0, ',', '.') }}
+                        </span>
+                    @endif
                 </p>
 
                 {{-- FORM TAMBAH KE KERANJANG LANGSUNG --}}
@@ -167,13 +162,31 @@
                             </svg>
                         </button>
                     </div>
-                    <button type="button" onclick="addToCart('{{ $produk->id }}')"
-                        class="w-full bg-gray-900 hover:bg-gray-600 text-white font-semibold py-3 rounded-xl transition-all duration-200">
-                        Tambahkan ke Keranjang
-                    </button>
+
+                    {{-- BUTTONS --}}
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" onclick="addToCart('{{ $produk->id }}')"
+                            class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-3 rounded-xl transition-all duration-200">
+                            Tambahkan ke Keranjang
+                        </button>
+
+                        <form method="POST" action="{{ route('customer.checkout.dashboard') }}"
+                            onsubmit="syncCheckout('{{ $produk->id }}')">
+                            @csrf
+                            <input type="hidden" name="produk_id" value="{{ $produk->id }}">
+                            <input type="hidden" name="jumlah" id="checkoutQty-{{ $produk->id }}" value="1">
+                            <input type="hidden" name="warna" id="checkoutColor-{{ $produk->id }}">
+                            <input type="hidden" name="ukuran" id="checkoutSize-{{ $produk->id }}">
+
+                            <button type="submit"
+                                class="w-full bg-red-700 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition-all duration-200">
+                                Beli Sekarang
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                {{-- PRODUCT DESKRIPTION --}}
+                {{-- PRODUCT DESCRIPTION --}}
                 <div class="product-desc mt-10">
                     <h3 class="text-xl font-bold mb-2 text-gray-800">Deskripsi Produk</h3>
                     <p class="text-gray-600 leading-relaxed">
@@ -181,7 +194,7 @@
                     </p>
                 </div>
 
-                {{-- SENDING --}}
+                {{-- DELIVERY --}}
                 <div class="delivery mt-10">
                     <h3 class="text-xl font-bold mb-2 text-gray-800">Pengiriman</h3>
                     <p><strong>Area:</strong> Indonesia</p>
@@ -280,6 +293,16 @@
                 if (parseInt(qtyInput.value) > 1) {
                     qtyInput.value = parseInt(qtyInput.value) - 1;
                 }
+            }
+
+            function syncCheckout(id) {
+                const selectedColor = document.querySelector(`#selectedColor-${id}`)?.value;
+                const selectedSize = document.querySelector(`#selectedSize-${id}`)?.value;
+                const qty = document.querySelector(`#qty-${id}`)?.value || 1;
+
+                document.querySelector(`#checkoutColor-${id}`).value = selectedColor || '';
+                document.querySelector(`#checkoutSize-${id}`).value = selectedSize || '';
+                document.querySelector(`#checkoutQty-${id}`).value = qty;
             }
 
             function addToCart(id) {

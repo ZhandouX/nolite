@@ -28,27 +28,6 @@ document.querySelectorAll(".dropdown-toggle").forEach((toggle) => {
   });
 });
 
-// === Tabs / Kategori Filter ===
-const tabButtons = document.querySelectorAll(".tab");
-const allProducts = document.querySelectorAll(".product");
-
-tabButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    tabButtons.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    const category = btn.dataset.category;
-
-    allProducts.forEach((prod) => {
-      if (category === "all" || prod.dataset.category === category) {
-        prod.style.display = "block";
-      } else {
-        prod.style.display = "none";
-      }
-    });
-  });
-});
-
 // === Simple Search Filter ===
 const searchInput = document.querySelector(".search-bar input");
 

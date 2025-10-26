@@ -46,7 +46,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('customer.checkout.view');
     Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('customer.checkout.proses');
-    Route::get('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
+    Route::post('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
 
     // ✅ ROUTE BARU - SUCCESS PAGE
