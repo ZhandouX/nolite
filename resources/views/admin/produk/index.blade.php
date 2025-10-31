@@ -108,7 +108,7 @@
                                     <a href="{{ route('admin.produk.edit', $produk->id) }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
                                     <a href="#"
-                                        onclick="openDiscountModal({{ $produk->id }}, {!! json_encode($produk->nama_produk) !!}, {{ $produk->diskon ?? 0 }})"
+                                        onclick="openDiscountModal({{ $produk->id }}, {{ $produk->diskon ?? 0 }})"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Beri Diskon</a>
                                     <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST"
                                         onsubmit="return confirm('Hapus produk ini beserta semua fotonya?')">

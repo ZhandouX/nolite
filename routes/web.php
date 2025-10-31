@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Keranjang;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 
 // DEFAULT LANDING PAGE
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -27,15 +28,30 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+        // PRODUK
         Route::resource('produk', ProdukController::class);
         Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('admin.produk.diskon');
 
         // ORDER
         Route::resource('order', AdminOrderController::class);
         Route::post('/order/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('order.updateStatus');
+
+        // KELOLA PENGGUNA
+        Route::controller(UserController::class)
+            ->prefix('users')
+            ->name('users.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');                // daftar
+                Route::get('/{user}', 'show')->name('show');            // detail
+                Route::patch('/{user}/block', 'block')->name('block');  // blokir
+                Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
+                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
+                Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
+            });
     });
 
-// MIDDLEWARE: CUSTOMER 
+
+// MIDDLEWARE: CUSTOMER
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/dashboard/customer', [DashboardController::class, 'index'])
         ->name('customer.dashboard');
