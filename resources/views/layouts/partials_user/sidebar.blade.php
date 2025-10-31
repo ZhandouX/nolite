@@ -1,18 +1,27 @@
+<style>
+    @media (max-width: 640px) {
+        #sidebar-inner .header-logo {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            height: 44px;
+        }
+    }
+</style>
 <!-- SIDEBAR -->
 <div id="sidebar"
-    class="fixed top-0 left-0 w-[250px] h-full bg-white text-black transform -translate-x-full transition-transform duration-300 ease-in-out z-[200]">
-
-    <!-- HEADER LOGO -->
-    <div class="w-full bg-black flex items-center justify-between px-4 py-4 border-b border-gray-700">
-        <div class="flex items-center gap-3">
-            <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="Logo Nolite"
-                class="w-10 h-10 object-contain" />
-            <h2 class="text-base font-semibold text-white">Nolite Aspiciens</h2>
+    class="sidebar-fix fixed top-0 left-0 w-[250px] h-full bg-white text-black transform -translate-x-full transition-transform duration-300 ease-in-out z-[200]">
+    <div id="sidebar-inner">
+        <div class="header-logo w-full bg-black flex items-center justify-between px-4 py-4 border-b border-gray-700">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="Logo Nolite"
+                    class="w-10 h-10 object-contain" />
+                <h2 class="text-base font-semibold text-white">Nolite Aspiciens</h2>
+            </div>
+            <button id="closeSidebar"
+                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-800 text-white hover:text-white transition">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
         </div>
-        <button id="closeSidebar"
-            class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-800 text-white hover:text-white transition">
-            <i class="fa-solid fa-bars text-lg"></i>
-        </button>
     </div>
 
     <!-- NAVIGATION -->

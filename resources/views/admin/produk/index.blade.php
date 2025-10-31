@@ -107,8 +107,7 @@
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lihat</a>
                                     <a href="{{ route('admin.produk.edit', $produk->id) }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
-                                    <a href="#"
-                                        onclick="openDiscountModal({{ $produk->id }}, {!! json_encode($produk->nama_produk) !!}, {{ $produk->diskon ?? 0 }})"
+                                    <a href="#" onclick="openDiscountModal({{ $produk->id }}, {{ $produk->diskon ?? 0 }})"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Beri Diskon</a>
                                     <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST"
                                         onsubmit="return confirm('Hapus produk ini beserta semua fotonya?')">
@@ -160,9 +159,9 @@
 @endsection
 
 @push('scripts')
-    {{-- SCRIPT --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Toggle dropdown
+        // === Dropdown ===
         function toggleDropdown(id) {
             document.querySelectorAll('[id^="dropdown-"]').forEach(el => el.classList.add('hidden'));
             const el = document.getElementById(`dropdown-${id}`);
@@ -170,7 +169,6 @@
             el.classList.toggle('hidden');
         }
 
-        // Tutup dropdown jika klik di luar
         document.addEventListener('click', function (e) {
             const isActionButton = e.target.closest('[onclick^="toggleDropdown("]') !== null;
             const isInsideDropdown = e.target.closest('[id^="dropdown-"]') !== null;
@@ -179,7 +177,7 @@
             }
         });
 
-        // Modal Diskon
+        // === Modal Diskon ===
         function openDiscountModal(id, nama = '', diskon = 0) {
             document.getElementById('discountProdukId').value = id;
             document.getElementById('discountPercent').value = diskon;
@@ -191,7 +189,7 @@
             document.getElementById('discountModal').classList.add('hidden');
         }
 
-        // PATCH via Fetch
+        // === PATCH via Fetch ===
         document.getElementById('discountForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const id = document.getElementById('discountProdukId').value;
@@ -208,17 +206,31 @@
                 .then(async res => {
                     let data;
                     try { data = await res.json(); } catch (err) { data = null; }
+
                     if (res.ok && data && data.success) {
-                        alert('Diskon berhasil diperbarui!');
-                        location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Diskon produk berhasil diperbarui.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => location.reload());
                     } else {
                         const msg = (data && data.message) ? data.message : 'Gagal memperbarui diskon.';
-                        alert(msg);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: msg
+                        });
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Terjadi kesalahan jaringan. Coba lagi.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Kesalahan Jaringan',
+                        text: 'Terjadi kesalahan jaringan. Coba lagi nanti.'
+                    });
                 });
         });
 
