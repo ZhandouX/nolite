@@ -11,12 +11,14 @@ class UserController extends Controller
     // 📋 Daftar pengguna + filter
     public function index(Request $request)
     {
-        $query = User::query();
+        $query = User::where('id', '!=', auth()->id()); // exclude admin / diri sendiri
 
         // 🔍 Pencarian
         if ($request->filled('search')) {
-            $query->where('name', 'like', "%{$request->search}%")
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
                   ->orWhere('email', 'like', "%{$request->search}%");
+            });
         }
 
         // 🔽 Filter status
@@ -26,12 +28,12 @@ class UserController extends Controller
 
         $users = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        // Statistik
+        // Statistik tanpa menghitung admin
         $stats = [
-            'total' => User::count(),
-            'aktif' => User::where('status', 'aktif')->count(),
-            'nonaktif' => User::where('status', 'nonaktif')->count(),
-            'diblokir' => User::where('status', 'diblokir')->count(),
+            'total' => User::where('id', '!=', auth()->id())->count(),
+            'aktif' => User::where('status', 'aktif')->where('id', '!=', auth()->id())->count(),
+            'nonaktif' => User::where('status', 'nonaktif')->where('id', '!=', auth()->id())->count(),
+            'diblokir' => User::where('status', 'diblokir')->where('id', '!=', auth()->id())->count(),
         ];
 
         return view('admin.users.index', compact('users', 'stats'));
