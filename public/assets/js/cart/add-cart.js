@@ -13,6 +13,7 @@ function closeModal(id) {
     if (modal) modal.classList.add('hidden');
 }
 
+// Tambah Keranjang
 function addToCart(id) {
     const warna = document.querySelector(`#selectedColor-${id}`)?.value;
     const ukuran = document.querySelector(`#selectedSize-${id}`)?.value;
@@ -36,11 +37,11 @@ function addToCart(id) {
         return;
     }
 
-    fetch("{{ route('keranjang.store') }}", {
+    fetch(window.Laravel.routes.keranjangStore, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            "X-CSRF-TOKEN": window.Laravel.csrfToken
         },
         body: JSON.stringify({
             produk_id: id,

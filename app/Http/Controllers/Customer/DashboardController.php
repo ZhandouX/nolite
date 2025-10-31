@@ -96,34 +96,34 @@ class DashboardController extends Controller
 
     public function tshirtCategory()
     {
-        $produk = Produk::with('fotos')
+        $produks = Produk::with('fotos')
             ->where('jenis', 'T-Shirt')
             ->latest()
             ->take(6)
             ->get();
 
-        return view('customer.kategori-tshirt', compact('produk'));
+        return view('customer.kategori-tshirt', compact('produks'));
     }
 
     public function hoodieCategory()
     {
-        $produk = Produk::with('fotos')
+        $produks = Produk::with('fotos')
             ->where('jenis', 'Hoodie')
             ->latest()
             ->take(6)
             ->get();
 
-        return view('customer.kategori-hoodie', compact('produk'));
+        return view('customer.kategori-hoodie', compact('produks'));
     }
 
     public function jerseyCategory()
     {
-        $produk = Produk::with('fotos')
+        $produks = Produk::with('fotos')
             ->where('jenis', 'Jersey')
             ->latest()
             ->take(6)
             ->get();
 
-        return view('customer.kategori-jersey', compact('produk'));
+        return view('customer.kategori-jersey', compact('produks'));
     }
 }

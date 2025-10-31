@@ -102,7 +102,7 @@
 
                 {{-- PRODUK GRID --}}
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-                    @forelse($produk as $item)
+                    @forelse($produks as $item)
                         <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                             data-id="{{ $item->id }}" data-nama="{{ $item->nama_produk }}" data-harga="{{ $item->harga }}"
                             data-foto="{{ $item->fotos->isNotEmpty() ? asset('storage/' . $item->fotos->first()->foto) : asset('assets/images/no-image.png') }}"
@@ -250,17 +250,4 @@
             }
         }
     </style>
-@endpush
-
-@push('script')
-    <script>
-        window.Laravel = {
-            csrfToken: "{{ csrf_token() }}",
-            routes: {
-                wishlistToggle: "{{ url('/wishlist/toggle') }}",
-                allCategory: "{{ url('produk') }}",
-            }
-        };
-    </script>
-    <script src="{{ asset('assets/js/user/kategori.js') }}"></script>
 @endpush

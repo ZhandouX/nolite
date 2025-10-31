@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Keranjang;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Produk;
 use App\Http\Controllers\Customer\LokasiController;
 use Illuminate\Support\Facades\DB;
 
@@ -101,45 +102,80 @@ class CheckoutController extends Controller
             return back()->with('error', 'Tidak ada produk di keranjang.');
         }
 
-        // Hitung total subtotal
-        $total = collect($checkoutItems)->sum(fn($item) => $item['subtotal']);
+        // Gunakan transaksi biar aman
+        try {
+            \DB::beginTransaction();
 
-        // Simpan ke tabel orders
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'nama_penerima' => $request->nama_penerima,
-            'no_hp' => $request->no_hp,
-            'provinsi' => $request->provinsi,
-            'kota' => $request->kota,
-            'alamat_detail' => $request->alamat_detail,
-            'email' => $request->email,
-            'metode_pembayaran' => $request->metode_pembayaran,
-            'subtotal' => $total,
-            'status' => 'menunggu',
-        ]);
+            // Hitung total subtotal
+            $total = collect($checkoutItems)->sum(fn($item) => $item['subtotal']);
 
-        // Simpan detail produk ke tabel order_items
-        foreach ($checkoutItems as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'produk_id' => $item['produk_id'],
-                'nama_produk' => $item['nama_produk'],
-                'warna' => $item['warna'],
-                'ukuran' => $item['ukuran'],
-                'jumlah' => $item['jumlah'],
-                'subtotal' => $item['subtotal'],
+            // Simpan order utama
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'nama_penerima' => $request->nama_penerima,
+                'no_hp' => $request->no_hp,
+                'provinsi' => $request->provinsi,
+                'kota' => $request->kota,
+                'alamat_detail' => $request->alamat_detail,
+                'email' => $request->email ?? Auth::user()->email,
+                'metode_pembayaran' => $request->metode_pembayaran,
+                'subtotal' => $total,
+                'status' => 'menunggu',
             ]);
+
+            // Loop semua item checkout
+            foreach ($checkoutItems as $item) {
+                $produk = Produk::find($item['produk_id']);
+
+                if (!$produk) {
+                    throw new \Exception('Produk dengan ID ' . $item['produk_id'] . ' tidak ditemukan.');
+                }
+
+                if ($produk->jumlah < $item['jumlah']) {
+                    throw new \Exception('Stok produk "' . $produk->nama_produk . '" tidak mencukupi.');
+                }
+
+                // Simpan detail order
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'produk_id' => $item['produk_id'],
+                    'nama_produk' => $item['nama_produk'],
+                    'warna' => $item['warna'],
+                    'ukuran' => $item['ukuran'],
+                    'jumlah' => $item['jumlah'],
+                    'subtotal' => $item['subtotal'],
+                ]);
+
+                // Kurangi stok
+                $produk->jumlah -= $item['jumlah'];
+                $produk->save();
+
+                Keranjang::where('user_id', Auth::id())
+                    ->where('produk_id', $item['produk_id'])
+                    ->when(isset($item['ukuran']), function ($q) use ($item) {
+                        $q->where('ukuran', $item['ukuran']);
+                    })
+                    ->when(isset($item['warna']), function ($q) use ($item) {
+                        $q->where('warna', $item['warna']);
+                    })
+                    ->delete();
+            }
+
+            // Hapus session checkout
+            session()->forget('checkout_items');
+
+            \DB::commit();
+
+            return redirect()->route('customer.order.success', ['id' => $order->id])
+                ->with('success', 'Pesanan berhasil dibuat, stok diperbarui, dan produk dihapus dari keranjang!');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-
-        // Bersihkan session keranjang setelah checkout
-        session()->forget('checkout_items');
-
-        return redirect()->route('customer.order.success', ['id' => $order->id])
-            ->with('success', 'Pesanan berhasil dibuat dan menunggu pembayaran!');
     }
 
     /**
-     * Menampilkan halaman checkout langsung dari dashboard (beli langsung tanpa keranjang)
+     * Menampilkan halaman checkout langsung(beli langsung tanpa keranjang)
      */
     public function indexDashboard(Request $request)
     {
@@ -188,7 +224,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Proses checkout langsung dari dashboard
+     * Proses checkout langsung
      */
     public function prosesDashboard(Request $request)
     {
@@ -210,6 +246,19 @@ class CheckoutController extends Controller
         ]);
 
         $order = DB::transaction(function () use ($request, $checkoutItem) {
+
+            // Ambil data produk dari database
+            $produk = Produk::find($checkoutItem['produk_id']);
+
+            if (!$produk) {
+                throw new \Exception('Produk tidak ditemukan');
+            }
+
+            // Cek stok cukup atau tidak
+            if ($produk->jumlah < $checkoutItem['jumlah']) {
+                throw new \Exception('Stok produk tidak mencukupi.');
+            }
+
             // Simpan ke tabel orders
             $order = Order::create([
                 'user_id' => Auth::id(),
@@ -235,6 +284,10 @@ class CheckoutController extends Controller
                 'subtotal' => $checkoutItem['subtotal'],
             ]);
 
+            // Kurangi stok produk
+            $produk->jumlah -= $checkoutItem['jumlah'];
+            $produk->save();
+
             // Bersihkan session
             session()->forget('checkout_dashboard');
 
@@ -244,5 +297,4 @@ class CheckoutController extends Controller
         return redirect()->route('customer.order.success', ['id' => $order->id])
             ->with('success', 'Pesanan berhasil dibuat dan menunggu pembayaran!');
     }
-
 }

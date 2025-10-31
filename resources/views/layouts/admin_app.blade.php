@@ -25,8 +25,6 @@
     {{-- THEMES --}}
     <link rel="stylesheet" href="{{ asset('assets/css/themes/dark.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/themes/light.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/themes/gradient.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/themes/purple.css') }}">
 
     <!-- DATEPICKR CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -60,6 +58,35 @@
 
         {{-- SPINNER ICON --}}
         @include('layouts.partials_admin.spinner-setting')
+
+        <!-- Floating Button Pesanan Menunggu -->
+        <button id="pesananButton"
+            class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-xl flex items-center gap-3 pl-4 pr-5 py-3 transition-all duration-300 group z-[9999]">
+
+            <div class="relative">
+                <i class="fa-solid fa-bell text-2xl"></i>
+
+                {{-- Badge di atas ikon --}}
+                @if (!empty($jumlahMenunggu) && $jumlahMenunggu > 0)
+                    <span
+                        class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full shadow">
+                        {{ $jumlahMenunggu }}
+                    </span>
+                @endif
+            </div>
+
+            <span class="text-sm font-medium tracking-wide">Pesanan Terbaru</span>
+        </button>
+
+        {{-- Tooltip teks saat hover --}}
+        <span
+            class="absolute right-16 bg-gray-800 text-white text-sm rounded-lg py-1.5 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg">
+            Pesanan Menunggu
+        </span>
+        </button>
+
+        <!-- Modal Pesanan Menunggu -->
+        @include('layouts.partials_admin.modals.order')
     </div>
 
     {{-- LIBRARY JAVASCRIPT --}}
@@ -73,6 +100,30 @@
     <script src="{{ asset('assets/js/todolist.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.cookie.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+
+    <!-- Script Modal -->
+    <script>
+        const pesananButton = document.getElementById('pesananButton');
+        const pesananModal = document.getElementById('pesananModal');
+        const closeModal = document.getElementById('closeModal');
+
+        pesananButton.addEventListener('click', () => {
+            pesananModal.classList.remove('hidden');
+            pesananModal.classList.add('flex');
+        });
+
+        closeModal.addEventListener('click', () => {
+            pesananModal.classList.remove('flex');
+            pesananModal.classList.add('hidden');
+        });
+
+        pesananModal.addEventListener('click', (e) => {
+            if (e.target === pesananModal) {
+                pesananModal.classList.remove('flex');
+                pesananModal.classList.add('hidden');
+            }
+        });
+    </script>
 
     {{-- TOGGLE THEME --}}
     <script src="{{ asset('assets/js/toggle-theme.js') }}"></script>

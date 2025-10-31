@@ -23,10 +23,6 @@
                     {{-- LIGHT --}}
                     <button type="button" class="theme-btn light-btn" title="Light Mode"
                         onclick="window.themeManager.setTheme('light')"></button>
-
-                    {{-- GRADIENT --}}
-                    <button type="button" class="theme-btn gradient-btn" title="Gradient Mode"
-                        onclick="window.themeManager.setTheme('gradient')"></button>
                 </div>
             </div>
 

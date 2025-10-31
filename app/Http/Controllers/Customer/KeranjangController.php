@@ -99,7 +99,7 @@ class KeranjangController extends Controller
         } else {
             // Ambil dari SESSION
             $items = session()->get('keranjang', []);
-        }
+        }        
 
         return view('customer.keranjang', compact('keranjang', 'items'));
     }

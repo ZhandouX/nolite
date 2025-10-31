@@ -19,7 +19,6 @@
     </div>
 
     {{-- PANEL: CATEGORY --}}
-
     <style>
         /* --- Fix tampilan mobile --- */
         @media (max-width: 640px) {
@@ -123,16 +122,14 @@
             <a href="{{ route('customer.kategori-jersey') }}"
                 class="group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
                 <div class="kategori-item">
-                    <img src="https://images.unsplash.com/photo-1574180045827-681f8a1a9622?auto=format&fit=crop&w=600&q=80"
+                    <img src="{{ asset('assets/images/banner/jersey.jpg') }}"
                         alt="Jersey" />
                     <div class="kategori-overlay">
                         <h3>JERSEY</h3>
                     </div>
                 </div>
             </a>
-
         </div>
-
     </div>
 
 
@@ -313,15 +310,6 @@
 @endsection
 
 @push('script')
-    <script>
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-        }
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
-    </script>
-
     <script>
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {

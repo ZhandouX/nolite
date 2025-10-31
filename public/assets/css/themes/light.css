@@ -1294,11 +1294,6 @@
     box-shadow: var(--bs-shadow);
 }
 
-[data-bs-theme="light"] .card:hover {
-    border: 2px solid var(--bs-primary);
-    box-shadow: var(--bs-shadow-hover);
-}
-
 /* Card Title */
 [data-bs-theme="light"] .card-title {
     color: #212529 !important;

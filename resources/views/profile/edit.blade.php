@@ -12,7 +12,8 @@
                     Hi {{ Auth::user()->name ?? 'User' }}
                 </h1>
                 <a href="{{ route('profile.settings') }}"
-                    class="border border-red-900 text-red-900 px-4 py-2 rounded hover:bg-red-900 hover:text-white transition">
+                    class="border border-red-900 text-red-900 px-4 py-2 rounded-lg hover:bg-gray-600 hover:text-white transition">
+                    <i class="fa-solid fa-gear mr-2"></i>
                     Settings
                 </a>
             </div>
@@ -154,17 +155,26 @@
                                 @foreach($wishlists as $item)
                                     <div id="wishlist-item-{{ $item->id }}"
                                         class="border rounded-xl bg-white shadow-sm hover:shadow-md transition overflow-hidden group relative">
+
                                         {{-- Gambar produk --}}
-                                        <a href="{{ route('produk.detail', $item->produk->id) }}" class="block relative">
-                                            @if($item->produk->fotos->isNotEmpty())
-                                                <img src="{{ asset('storage/' . $item->produk->fotos->first()->foto) }}"
-                                                    alt="{{ $item->produk->nama_produk }}"
-                                                    class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
-                                            @else
-                                                <img src="{{ asset('assets/images/no-image.png') }}" alt="No image"
-                                                    class="w-full h-48 object-contain p-4">
-                                            @endif
-                                        </a>
+                                        <div class="relative">
+                                            <a href="{{ route('produk.detail', $item->produk->id) }}" class="block">
+                                                @if($item->produk->fotos->isNotEmpty())
+                                                    <img src="{{ asset('storage/' . $item->produk->fotos->first()->foto) }}"
+                                                        alt="{{ $item->produk->nama_produk }}"
+                                                        class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
+                                                @else
+                                                    <img src="{{ asset('assets/images/no-image.png') }}" alt="No image"
+                                                        class="w-full h-48 object-contain p-4">
+                                                @endif
+                                            </a>
+
+                                            {{-- Tombol hapus wishlist (pojok kanan atas gambar) --}}
+                                            <button type="button" data-id="{{ $item->id }}"
+                                                class="remove-wishlist w-10 h-10 absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm rounded-full shadow hover:scale-110 transition">
+                                                <i class="fa-solid fa-heart text-red-500 mt-1 text-2xl"></i>
+                                            </button>
+                                        </div>
 
                                         {{-- Info produk --}}
                                         <div class="p-4 text-center">
@@ -175,12 +185,6 @@
                                                 IDR {{ number_format($item->produk->harga, 0, ',', '.') }}
                                             </p>
                                         </div>
-
-                                        {{-- Tombol hapus wishlist (AJAX) --}}
-                                        <button type="button" data-id="{{ $item->id }}"
-                                            class="remove-wishlist bg-transparent p-2 rounded-full shadow hover:scale-110 transition absolute top-3 right-3">
-                                            <i class="fa-solid fa-heart text-red-500"></i>
-                                        </button>
                                     </div>
                                 @endforeach
                             </div>
@@ -312,20 +316,20 @@
                     : '{{ asset('assets/images/no-image.png') }}';
 
                 itemsContainer.innerHTML += `
-                <div class="flex items-center border rounded-md p-3">
-                    <div class="w-20 h-20 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
-                        <img src="${foto}" class="w-full h-full object-cover" alt="">
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-semibold text-gray-800">${item.nama_produk}</p>
-                        <p class="text-sm text-gray-500">Warna: ${item.warna} • Ukuran: ${item.ukuran}</p>
-                        <p class="text-sm text-gray-500">Jumlah: ${item.jumlah}</p>
-                    </div>
-                    <div class="font-semibold text-gray-800">
-                        Rp${Number(item.subtotal).toLocaleString('id-ID')}
-                    </div>
-                </div>
-            `;
+                        <div class="flex items-center border rounded-md p-3">
+                            <div class="w-20 h-20 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
+                                <img src="${foto}" class="w-full h-full object-cover" alt="">
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800">${item.nama_produk}</p>
+                                <p class="text-sm text-gray-500">Warna: ${item.warna} • Ukuran: ${item.ukuran}</p>
+                                <p class="text-sm text-gray-500">Jumlah: ${item.jumlah}</p>
+                            </div>
+                            <div class="font-semibold text-gray-800">
+                                Rp${Number(item.subtotal).toLocaleString('id-ID')}
+                            </div>
+                        </div>
+                    `;
             });
 
             document.getElementById('orderModal').classList.remove('hidden');

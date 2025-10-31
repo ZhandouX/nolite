@@ -5,30 +5,35 @@
                 <span class="icon-menu"></span>
             </button>
         </div>
-        <div>
+        <!-- <div>
             <a class="navbar-brand brand-logo d-flex align-items-center" href="#">
                 <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="logo"
                     style="height:40px; width:auto; margin-right:10px;">
-                <h2 class="text-white mb-0">Nolite</h2>
             </a>
             <a class="navbar-brand brand-logo-mini" href="#">
                 <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="logo" />
             </a>
-        </div>
+        </div> -->
     </div>
 
     <div class="navbar-menu-wrapper d-flex align-items-top">
         {{-- WELCOME TEXT --}}
         <ul class="navbar-nav">
-            <li class="nav-item fw-semibold d-none d-lg-block ms-0">
-                <h1 class="welcome-text">Halo!
-                    <span class="text-black fw-bold">{{ auth()->user()->name ?? 'Administrator' }}</span>
-                </h1>
-                <h3 class="welcome-sub-text">Selamat Datang di Nolite Shop
-                    <strong class="text-dark">
-                        <i class="mdi mdi-account-tie-hat"></i>
-                    </strong>
-                </h3>
+            <li class="nav-item fw-semibold d-none d-lg-flex align-items-center ms-0">
+                {{-- LOGO --}}
+                <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="Logo Nolite" class="me-2 -ml-6"
+                    style="height:50px; width:auto;">
+                <div>
+                    <h1 class="welcome-text mb-0">
+                        <span class="text-black fw-bold">Nolite Aspiciens</span>
+                    </h1>
+                    <h3 class="welcome-sub-text mb-0">
+                        Admin: {{ auth()->user()->name ?? 'Administrator' }}
+                        <strong class="text-dark">
+                            <i class="mdi mdi-account-tie-hat"></i>
+                        </strong>
+                    </h3>
+                </div>
             </li>
         </ul>
         <ul class="navbar-nav ms-auto">

@@ -4,9 +4,9 @@
         {{-- LEFT FOOTER --}}
         <div class="flex-1 min-w-[220px] flex flex-col items-center md:items-start ml-0 md:-ml-10">
             <p class="italic text-sm leading-relaxed text-white max-w-[260px] text-center md:text-left">
-                “Diciptakan untuk jiwa-jiwa yang menemukan kenyamanan <br />
-                dalam kegelapan, menolak norma, <br />
-                dan berani tampil berbeda”
+                “Born for souls who find solace <br />
+                 in the dark, reject the ordinary, <br />
+                and embrace their bold uniqueness.”
             </p>
             <div class="flex gap-4 mt-4 justify-center md:justify-start">
                 <a href="#" class="w-9 h-9 rounded-full overflow-hidden hover:scale-110 transition-transform">

@@ -1,24 +1,38 @@
-// === Sidebar Toggle ===
+// === Sidebar Toggle (Tailwind Version) ===
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
 const menuBtn = document.getElementById("menuBtn");
 const closeSidebar = document.getElementById("closeSidebar");
 const backToTopButton = document.getElementById("backToTop");
 
-menuBtn.addEventListener("click", () => {
-  sidebar.classList.add("active");
-  overlay.classList.add("active");
-});
+if (menuBtn && sidebar && overlay) {
+  menuBtn.addEventListener("click", () => {
+    // Sidebar muncul
+    sidebar.classList.remove("-translate-x-full");
+    sidebar.classList.add("translate-x-0");
 
-closeSidebar.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  overlay.classList.remove("active");
-});
+    // Overlay aktif
+    overlay.classList.remove("opacity-0", "pointer-events-none");
+    overlay.classList.add("opacity-100", "pointer-events-auto");
+  });
 
-overlay.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  overlay.classList.remove("active");
-});
+  closeSidebar.addEventListener("click", () => {
+    // Sidebar sembunyi
+    sidebar.classList.remove("translate-x-0");
+    sidebar.classList.add("-translate-x-full");
+
+    // Overlay nonaktif
+    overlay.classList.remove("opacity-100", "pointer-events-auto");
+    overlay.classList.add("opacity-0", "pointer-events-none");
+  });
+
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("translate-x-0");
+    sidebar.classList.add("-translate-x-full");
+    overlay.classList.remove("opacity-100", "pointer-events-auto");
+    overlay.classList.add("opacity-0", "pointer-events-none");
+  });
+}
 
 // === Dropdown Sidebar ===
 document.querySelectorAll(".dropdown-toggle").forEach((toggle) => {
@@ -72,6 +86,7 @@ function toggleFooterPayment() {
   icon.classList.toggle("rotate-180");
 }
 
+// === Back To Top Button ===
 window.addEventListener("scroll", () => {
   if (window.pageYOffset > 300) {
     backToTopButton.classList.remove("hidden");
@@ -86,6 +101,7 @@ backToTopButton.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+// === Re-initialize Lucide (safe call) ===
 if (typeof lucide !== "undefined") {
   lucide.createIcons();
 }

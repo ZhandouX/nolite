@@ -16,84 +16,14 @@
 
 <body>
     {{-- SIDEBAR --}}
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="Logo Nolite" class="logo-img" />
-            <h2>Nolite Aspiciens</h2>
-            <span class="close-btn" id="closeSidebar">&times;</span>
-        </div>
-        <ul class="sidebar-links">
-            <li><a href="{{ route('customer.allProduk') }}">Produk</a></li>
-            <!-- Dropdown Men -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Men</a>
-                <ul class="dropdown-menu">
-                    <li><a href="#men-tshirt">T-Shirt</a></li>
-                    <li><a href="#men-shoes">Hoodie</a></li>
-                    <li><a href="#men-jacket">Jersey</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+    @include('layouts.partials_user.sidebar')
 
     {{-- OVERLAY --}}
     <div id="overlay"></div>
 
     {{-- HEADER --}}
     <header>
-        <div class="left-header">
-            <span id="menuBtn">&#9776;</span>
-        </div>
-        <div class="logo">
-            <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="Logo Nolite" class="logo-img" />
-            Nolite Aspiciens
-        </div>
-        <nav class="nav-icons flex items-center gap-5 relative">
-            {{-- SEARCH --}}
-            <button type="button" class="text-white-700 hover:text-gray-300 transition">
-                <i data-lucide="search" class="w-6 h-6"></i>
-            </button>
-
-            {{-- CART --}}
-            <a href="{{ route('keranjang.index') }}" class="text-white-700 hover:text-gray-300 transition relative">
-                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-
-                @php
-                    if (Auth::check()) {
-                        $jumlahKeranjang = \App\Models\Keranjang::where('user_id', Auth::id())->count();
-                    } else {
-                        $jumlahKeranjang = count(session('keranjang', []));
-                    }
-                @endphp
-
-                <span id="cartBadge" class="absolute -top-1 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 
-                    {{ $jumlahKeranjang > 0 ? '' : 'hidden' }}">
-                    {{ $jumlahKeranjang }}
-                </span>
-
-            </a>
-
-            {{-- USER MENU --}}
-            <div class="relative">
-                @auth
-                    {{-- Jika SUDAH login --}}
-                    @php $user = Auth::user(); @endphp
-
-                    {{-- Tombol User (langsung ke Dashboard sesuai role) --}}
-                    <a href="{{ $user->hasRole('admin') ? route('admin.dashboard') : route('customer.dashboard') }}"
-                        class="text-white-700 hover:text-gray-300 transition flex items-center justify-center w-8 h-8 rounded-full hover:border-blue-500">
-                        <i data-lucide="user" class="w-5 h-5"></i>
-                    </a>
-
-                @else
-                    {{-- Jika BELUM login → Klik membuka modal login --}}
-                    <button type="button" onclick="openLoginModal()"
-                        class="text-white-700 hover:text-gray-300 transition flex items-center justify-center w-8 h-8 rounded-full hover:border-blue-500">
-                        <i data-lucide="user" class="w-5 h-5"></i>
-                    </button>
-                @endauth
-            </div>
-        </nav>
+        @include('layouts.partials_user.navbar')
     </header>
 
     {{-- HERO SLIDER --}}

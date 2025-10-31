@@ -4,7 +4,7 @@
 <div class="max-w-6xl mx-auto p-4 sm:p-6">
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-gray-800 border-b pb-3">Tambah Produk</h2>
 
-    {{-- Error Global --}}
+    {{-- ERROR GLOBAL --}}
     @if ($errors->any())
         <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
             <strong>Oops!</strong> Ada beberapa masalah:
@@ -20,9 +20,9 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100">
         @csrf
 
-        {{-- Kolom Kiri --}}
+        {{-- KOLOM KIRI --}}
         <div class="space-y-5 sm:space-y-6">
-            {{-- Nama Produk --}}
+            {{-- NAMA PRODUK --}}
             <div>
                 <label for="nama_produk" class="block text-sm font-semibold text-gray-700">Nama Produk</label>
                 <input type="text" name="nama_produk" id="nama_produk"
@@ -33,7 +33,7 @@
                 @enderror
             </div>
 
-            {{-- Harga --}}
+            {{-- HARGA --}}
             <div>
                 <label for="harga" class="block text-sm font-semibold text-gray-700">Harga</label>
                 <input type="number" name="harga" id="harga"
@@ -44,7 +44,7 @@
                 @enderror
             </div>
 
-            {{-- Jumlah --}}
+            {{-- JUMLAH --}}
             <div>
                 <label for="jumlah" class="block text-sm font-semibold text-gray-700">Jumlah</label>
                 <input type="number" name="jumlah" id="jumlah"
@@ -55,7 +55,7 @@
                 @enderror
             </div>
 
-            {{-- Jenis --}}
+            {{-- JENIS --}}
             <div>
                 <label for="jenis" class="block text-sm font-semibold text-gray-700">Jenis</label>
                 <select name="jenis" id="jenis"
@@ -70,7 +70,7 @@
                 @enderror
             </div>
 
-            {{-- Warna --}}
+            {{-- WARNA --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Warna</label>
 
@@ -131,7 +131,7 @@
                 @enderror
             </div>
 
-            {{-- Ukuran --}}
+            {{-- UKURAN --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Ukuran</label>
                 <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3">
@@ -155,9 +155,9 @@
             </div>
         </div>
 
-        {{-- Kolom Kanan --}}
+        {{-- KOLOM KANAN --}}
         <div class="space-y-5 sm:space-y-6">
-            {{-- Foto Produk --}}
+            {{-- FOTO PRODUK --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Produk</label>
                 <div id="upload-area" class="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer transition-all duration-300 hover:border-blue-500 hover:bg-blue-50/50 bg-gradient-to-br from-gray-50 to-white">
@@ -183,7 +183,7 @@
                 <p id="file-error" class="text-xs sm:text-sm text-red-500 mt-1 hidden"></p>
             </div>
 
-            {{-- Deskripsi --}}
+            {{-- DESKRIPSI --}}
             <div>
                 <label for="deskripsi" class="block text-sm font-semibold text-gray-700">Deskripsi</label>
                 <textarea name="deskripsi" id="deskripsi" rows="6"
@@ -194,7 +194,7 @@
                 @enderror
             </div>
 
-            {{-- Tombol Aksi --}}
+            {{-- TOMBOL AKSI --}}
             <div class="flex flex-col sm:flex-row gap-3 pt-3 sm:pt-4 border-t">
                 <button type="submit"
                     class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-medium rounded-lg shadow hover:bg-green-700 transition">

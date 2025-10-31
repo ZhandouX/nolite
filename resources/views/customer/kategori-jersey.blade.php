@@ -16,7 +16,7 @@
                 {{-- BANNER --}}
                 <div class="banner-container">
                     <img
-                        src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1400&q=80">
+                        src="{{ asset('assets/images/banner/jersey.jpg') }}">
                     <div class="banner-overlay">
                         <h1>Jersey</h1>
                     </div>
@@ -102,7 +102,7 @@
 
                 {{-- PRODUK GRID --}}
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-                    @forelse($produk as $item)
+                    @forelse($produks as $item)
                         <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                             data-id="{{ $item->id }}">
                             <a href="{{ route('produk.detail', $item->id) }}"
@@ -178,9 +178,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        @include('layouts.partials_user.modal-beli', ['item' => $item])
-                        @include('layouts.partials_user.modal-cart', ['item' => $item])
                     @empty
                         <p class="text-gray-500 col-span-2 md:col-span-3 text-center">Produk tidak ditemukan.</p>
                     @endforelse
@@ -244,17 +241,4 @@
             }
         }
     </style>
-@endpush
-
-@push('script')
-    <script>
-        window.Laravel = {
-            csrfToken: "{{ csrf_token() }}",
-            routes: {
-                wishlistToggle: "{{ url('/wishlist/toggle') }}",
-                allCategory: "{{ url('produk') }}",
-            }
-        };
-    </script>
-    <script src="{{ asset('assets/js/user/kategori.js') }}"></script>
 @endpush

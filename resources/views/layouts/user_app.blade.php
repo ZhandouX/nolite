@@ -49,6 +49,10 @@
     </button>
 
     {{-- MODALS --}}
+    @foreach($produkTerbaru as $item)
+        @include('layouts.partials_user.modal-beli', ['item' => $item])
+        @include('layouts.partials_user.modal-cart', ['item' => $item])
+    @endforeach
     @include('layouts.partials_user.modals.login')
     @include('layouts.partials_user.modals.register')
 
@@ -66,11 +70,13 @@
                 keranjangStore: "{{ route('keranjang.store') }}",
                 keranjangBase: "{{ url('keranjang') }}",
                 keranjangCek: "{{ url('/keranjang/cek') }}",
+                wishlistToggle: "{{ url('/wishlist/toggle') }}",
+                allCategory: "{{ url('produk') }}"
             }
         };
     </script>
     <script src="{{ asset('assets/js/user/keranjang-popup.js') }}"></script>
-
+    <!-- <script src="{{ asset('assets/js/user/kategori.js') }}"></script> -->
     @if (session('showLoginModal'))
         <script>
             document.addEventListener('DOMContentLoaded', function () {

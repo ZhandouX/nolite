@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\ProdukController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\LandingController;
 use App\Http\Controllers\Customer\KeranjangController;
-use App\Http\Controllers\Customer\AllProdukController;
-use App\Http\Controllers\Customer\WilayahController;
+use App\Http\Controllers\Customer\ProdukCustomerController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\LokasiController;
 use App\Http\Controllers\ProfileController;
@@ -25,9 +25,7 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('produk', ProdukController::class);
         Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('admin.produk.diskon');
@@ -49,7 +47,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
 
-    // ✅ ROUTE BARU - SUCCESS PAGE
+    // SUCCESS PAGE
     Route::get('/checkout/success/{id}', function ($id) {
         $order = \App\Models\Order::with('items')->findOrFail($id);
         return view('customer.checkout_success', compact('order'));
@@ -67,6 +65,9 @@ Route::get('/all-produk/customer', [DashboardController::class, 'allProduk'])->n
 
 // DETAIL PRODUK
 Route::get('/produk/{id}', [DashboardController::class, 'show'])->name('produk.detail');
+
+Route::get('/search-produk', [ProdukCustomerController::class, 'search'])->name('produk.search');
+
 
 // KATEGORI
 Route::get('/kategori-tshirt/customer', [DashboardController::class, 'tshirtCategory'])->name('customer.kategori-tshirt');
