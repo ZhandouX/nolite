@@ -107,7 +107,12 @@
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lihat</a>
                                     <a href="{{ route('admin.produk.edit', $produk->id) }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+<<<<<<< HEAD
                                     <a href="#" onclick="openDiscountModal({{ $produk->id }}, {{ $produk->diskon ?? 0 }})"
+=======
+                                    <a href="#"
+                                        onclick="openDiscountModal({{ $produk->id }}, {{ $produk->diskon ?? 0 }})"
+>>>>>>> ddc90c490ada53271f5745efbe6d1e9a9ada3545
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Beri Diskon</a>
                                     <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST"
                                         onsubmit="return confirm('Hapus produk ini beserta semua fotonya?')">

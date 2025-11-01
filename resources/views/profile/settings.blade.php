@@ -4,13 +4,6 @@
 
 @section('content')
     <div class="bg-gray-50 min-h-screen py-12 px-4 pt-24">
-        <!-- <form method="POST" action="{{ route('logout') }}" class="absolute right-6">
-                @csrf
-                <button type="submit"
-                    class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg shadow hover:bg-red-700 active:bg-red-800 transition">
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout
-                </button>
-            </form> -->
         <div class="max-w-md mx-auto">
             {{-- PROFILE CARD --}}
             <div

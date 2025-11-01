@@ -7,6 +7,7 @@ use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\LandingController;
 use App\Http\Controllers\Customer\KeranjangController;
+use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProdukCustomerController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\LokasiController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Keranjang;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 
 // DEFAULT LANDING PAGE
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -27,15 +29,30 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+        // PRODUK
         Route::resource('produk', ProdukController::class);
         Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('admin.produk.diskon');
 
         // ORDER
         Route::resource('order', AdminOrderController::class);
         Route::post('/order/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('order.updateStatus');
+
+        // KELOLA PENGGUNA
+        Route::controller(UserController::class)
+            ->prefix('users')
+            ->name('users.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');                // daftar
+                Route::get('/{user}', 'show')->name('show');            // detail
+                Route::patch('/{user}/block', 'block')->name('block');  // blokir
+                Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
+                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
+                Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
+            });
     });
 
-// MIDDLEWARE: CUSTOMER 
+
+// MIDDLEWARE: CUSTOMER
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/dashboard/customer', [DashboardController::class, 'index'])
         ->name('customer.dashboard');
@@ -46,6 +63,9 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('customer.checkout.proses');
     Route::post('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
+
+    // ORDER
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 
     // SUCCESS PAGE
     Route::get('/checkout/success/{id}', function ($id) {

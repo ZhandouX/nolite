@@ -33,7 +33,7 @@
             <div class="bg-white rounded-lg shadow-sm p-6 relative hover:shadow-md transition">
 
                 <!-- Dropdown top right -->
-                <div class="absolute top-6 right-6">
+                <div class="absolute top-8 right-20 md:top-6 md:right-6">
                     <select id="statusFilter" class="border border-gray-300 rounded px-3 py-1 text-sm">
                         <option value="all">Semua Status</option>
                         <option value="menunggu">Menunggu</option>
@@ -79,16 +79,11 @@
                             </div>
                         </div>
                     @else
-                        <!-- Header Section -->
-                        <div class="mb-6">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-2">My Orders</h2>
-                            <p class="text-gray-500 text-sm">Track and manage your purchases</p>
-                        </div>
 
                         <!-- Scrollable Orders Grid -->
                         <div id="ordersGrid"
                             class="max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                                 @foreach($orders as $order)
                                     <div class="order-card group bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
                                         data-status="{{ strtolower($order->status) }}" onclick="openOrderModal({{ $order->id }})">
@@ -112,24 +107,27 @@
                                                 </div>
                                             @endif
 
-                                            {{-- Status Badge --}}
-                                            <div class="absolute top-3 right-3">
-                                                <span class="px-3 py-1 text-xs font-semibold rounded-full backdrop-blur-sm
-                                                {{ $order->status === 'completed' ? 'bg-green-500/90 text-white' : '' }}
-                                                {{ $order->status === 'pending' ? 'bg-yellow-500/90 text-white' : '' }}
-                                                {{ $order->status === 'processing' ? 'bg-blue-500/90 text-white' : '' }}
-                                                {{ $order->status === 'cancelled' ? 'bg-red-500/90 text-white' : '' }}">
+                                            {{-- BADGE STATUS --}}
+                                            <div class="absolute top-3 right-8 md:right-3 z-20 py-2 md:py-0">
+                                                <span
+                                                    class="px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold rounded-full backdrop-blur-sm shadow-sm
+                                                    {{ $order->status === 'selesai' ? 'bg-green-500/90 text-white' : '' }}
+                                                    {{ $order->status === 'menunggu' ? 'bg-yellow-500/90 text-white' : '' }}
+                                                    {{ $order->status === 'diproses' ? 'bg-blue-500/90 text-white' : '' }}
+                                                    {{ $order->status === 'dikirim' ? 'bg-purple-500/90 text-white' : '' }}
+                                                    {{ $order->status === 'batal' ? 'bg-red-500/90 text-white' : '' }}">
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </div>
 
-                                            {{-- Item Count Badge --}}
-                                            <div class="absolute bottom-3 left-3">
+                                            {{-- BADGE JUMLAH PESANAN (item) --}}
+                                            <div class="absolute bottom-3 left-6 md:left-3">
                                                 <span
-                                                    class="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium rounded-full shadow-sm">
-                                                    {{ $order->items->count() }} {{ $order->items->count() > 1 ? 'items' : 'item' }}
+                                                    class="px-3 py-1 bg-red-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-full shadow-sm min-w-[60px] text-center">
+                                                    {{ $order->items->count() }} {{ $order->items->count() > 1 ? 'pcs' : 'item' }}
                                                 </span>
                                             </div>
+
                                         </div>
 
                                         {{-- Content Section --}}
@@ -145,10 +143,10 @@
 
                                             <div class="space-y-2">
                                                 <div class="flex items-baseline gap-1">
+                                                    <span class="text-sm font-medium text-gray-500">IDR</span>
                                                     <span class="text-2xl font-bold text-red-900">
                                                         {{ number_format($order->subtotal, 0, ',', '.') }}
                                                     </span>
-                                                    <span class="text-sm font-medium text-gray-500">IDR</span>
                                                 </div>
 
                                                 <p class="text-xs text-gray-500">
@@ -170,22 +168,25 @@
                         </div>
                     @endif
 
-                    <!-- Modal -->
+                    <!-- ORDER MODAL -->
                     <div id="orderModal"
-                        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                        class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-6">
                         <div
-                            class="bg-white w-full max-w-3xl max-h-[85vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-fadeIn">
+                            class="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-gray-200 animate-fadeIn">
 
-                            {{-- Modal Header --}}
+                            <!-- HEADER -->
                             <div
-                                class="bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-5 flex items-center justify-between">
-                                <div>
-                                    <h2 class="text-2xl font-bold">Order #<span id="modalOrderId"></span></h2>
-                                    <p class="text-red-100 text-sm mt-1">Status: <span id="modalOrderStatus"
-                                            class="font-semibold"></span></p>
+                                class="bg-gradient-to-r from-red-900 via-red-800 to-red-700 text-white px-6 py-5 flex items-center justify-between">
+                                <div class="space-y-1">
+                                    <h2 class="text-xl md:text-2xl font-bold tracking-wide">
+                                        Order #<span id="modalOrderId"></span>
+                                    </h2>
+                                    <p class="text-sm text-red-100">
+                                        Status: <span id="modalOrderStatus" class="font-semibold"></span>
+                                    </p>
                                 </div>
                                 <button onclick="closeOrderModal()"
-                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors">
+                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors duration-200">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M6 18L18 6M6 6l12 12" />
@@ -193,27 +194,37 @@
                                 </button>
                             </div>
 
-                            {{-- Modal Body --}}
-                            <div class="flex-1 overflow-y-auto p-6">
-                                <h3 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                    <svg class="w-5 h-5 text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- BODY -->
+                            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                                <!-- Section Title -->
+                                <div class="flex items-center gap-2 border-b border-gray-200 pb-3">
+                                    <svg class="w-6 h-6 text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                     </svg>
-                                    Order Items
-                                </h3>
-                                <div id="modalOrderItems" class="space-y-3"></div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Order Items</h3>
+                                </div>
+
+                                <!-- Items -->
+                                <div id="modalOrderItems" class="space-y-4">
+                                </div>
                             </div>
 
-                            {{-- Modal Footer --}}
-                            <div class="border-t border-gray-200 bg-gray-50 px-6 py-5">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-gray-600 font-medium">Total Amount</span>
-                                    <div class="text-right">
-                                        <div class="flex items-baseline gap-1">
-                                            <span class="text-3xl font-bold text-red-900" id="modalOrderSubtotal"></span>
-                                            <span class="text-sm font-medium text-gray-500">IDR</span>
-                                        </div>
+                            <!-- FOOTER -->
+                            <div
+                                class="border-t border-gray-100 bg-gray-50 px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+                                <a id="detailOrderLink" href="#"
+                                    class="text-red-900 font-semibold hover:text-red-700 hover:underline transition">
+                                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                                    Lihat Detail Pesanan
+                                    <i class="fa-solid fa-arrow-left ml-2"></i>
+                                </a>
+
+                                <div class="text-center md:text-right">
+                                    <p class="text-gray-500 text-sm">Total Amount</p>
+                                    <div class="flex items-baseline justify-center md:justify-end gap-1">
+                                        <span class="text-sm text-gray-500">IDR</span>
+                                        <span class="text-3xl font-bold text-red-900" id="modalOrderSubtotal">Rp 0</span>
                                     </div>
                                 </div>
                             </div>
@@ -224,23 +235,25 @@
                 <!-- Wishlist Content -->
                 <div id="wishlist" class="tab-content hidden text-gray-700">
                     @if($wishlists->isEmpty())
-                        <div class="text-center text-gray-500">
+                        <div class="text-center text-gray-500 py-10">
                             <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="No wishlist"
-                                class="mx-auto w-14 mb-3 opacity-60">
-                            <p>No items in Wishlist</p>
-                            <small>Add products to your wishlist to view them here.</small>
-                            <br><br>
-                            <a href="{{ route('customer.allProduk') }}" class="text-red-900 font-medium hover:underline">
+                                class="mx-auto w-full mb-3 opacity-70">
+                            <p class="text-base">No items in Wishlist</p>
+                            <small class="block text-sm mb-3">Add products to your wishlist to view them here.</small>
+                            <a href="{{ route('customer.allProduk') }}"
+                                class="inline-block px-4 py-2 bg-red-900 text-white rounded-lg hover:bg-red-700 transition font-medium">
                                 Browse Products
                             </a>
                         </div>
                     @else
                         <!-- Scrollable Wishlist Grid -->
-                        <div class="max-h-96 overflow-y-auto pr-2">
-                            <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <div class="max-h-[480px] overflow-y-auto pr-2">
+                            <div id="wishlist-grid"
+                                class="product-grid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 justify-items-center px-2 sm:px-4">
+
                                 @foreach($wishlists as $item)
                                     <div id="wishlist-item-{{ $item->id }}"
-                                        class="border rounded-xl bg-white shadow-sm hover:shadow-md transition overflow-hidden group relative">
+                                        class="w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group relative">
 
                                         {{-- Gambar produk --}}
                                         <div class="relative">
@@ -248,31 +261,33 @@
                                                 @if($item->produk->fotos->isNotEmpty())
                                                     <img src="{{ asset('storage/' . $item->produk->fotos->first()->foto) }}"
                                                         alt="{{ $item->produk->nama_produk }}"
-                                                        class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
+                                                        class="w-full h-40 sm:h-44 md:h-48 object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl">
                                                 @else
                                                     <img src="{{ asset('assets/images/no-image.png') }}" alt="No image"
-                                                        class="w-full h-48 object-contain p-4">
+                                                        class="w-full h-40 sm:h-44 md:h-48 object-contain p-4 rounded-t-2xl">
                                                 @endif
                                             </a>
 
-                                            {{-- Tombol hapus wishlist (pojok kanan atas gambar) --}}
+                                            {{-- Tombol hapus wishlist --}}
                                             <button type="button" data-id="{{ $item->id }}"
-                                                class="remove-wishlist w-10 h-10 absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm rounded-full shadow hover:scale-110 transition">
-                                                <i class="fa-solid fa-heart text-red-500 mt-1 text-2xl"></i>
+                                                class="remove-wishlist absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow hover:scale-110 transition duration-200">
+                                                <i class="fa-solid fa-heart text-red-500 text-lg"></i>
                                             </button>
                                         </div>
 
                                         {{-- Info produk --}}
-                                        <div class="p-4 text-center">
-                                            <h3 class="font-semibold text-gray-800 text-sm truncate">
+                                        <div class="p-2 sm:p-3 text-center">
+                                            <h3
+                                                class="font-semibold text-gray-800 text-xs sm:text-sm truncate leading-tight group-hover:text-red-800 transition-colors">
                                                 {{ $item->produk->nama_produk }}
                                             </h3>
-                                            <p class="text-red-600 font-bold mt-1">
+                                            <p class="text-red-600 font-bold text-sm sm:text-base mt-1">
                                                 IDR {{ number_format($item->produk->harga, 0, ',', '.') }}
                                             </p>
                                         </div>
                                     </div>
                                 @endforeach
+
                             </div>
                         </div>
                     @endif
@@ -423,52 +438,72 @@
     <script>
         function openOrderModal(orderId) {
             const orderDiv = document.querySelector(`.order-data[data-id='${orderId}']`);
-            if (!orderDiv) return console.error('Order data not found');
+            if (!orderDiv) return console.error('❌ Order data not found');
 
-            const items = JSON.parse(orderDiv.getAttribute('data-items'));
-            const status = orderDiv.getAttribute('data-status');
-            const subtotal = orderDiv.getAttribute('data-subtotal');
+            // Ambil data dari atribut
+            const items = JSON.parse(orderDiv.getAttribute('data-items') || '[]');
+            const status = orderDiv.getAttribute('data-status') || '-';
+            const subtotal = orderDiv.getAttribute('data-subtotal') || 0;
 
+            // Isi data dasar modal
             document.getElementById('modalOrderId').textContent = orderId;
             document.getElementById('modalOrderStatus').textContent = status;
             document.getElementById('modalOrderSubtotal').textContent = Number(subtotal).toLocaleString('id-ID');
+            document.getElementById('detailOrderLink').href = `/orders/${orderId}`;
 
+            // Area item
             const itemsContainer = document.getElementById('modalOrderItems');
             itemsContainer.innerHTML = '';
 
+            // Render setiap item
             items.forEach(item => {
-                const foto = item.produk.fotos.length
-                    ? '{{ asset('storage') }}/' + item.produk.fotos[0].foto
-                    : '{{ asset('assets/images/no-image.png') }}';
+                // Pastikan relasi produk & foto aman
+                const produk = item.produk || {};
+                const fotos = produk.fotos || [];
+                const fotoUrl = fotos.length
+                    ? `{{ asset('storage') }}/${fotos[0].foto}`
+                    : `{{ asset('assets/images/no-image.png') }}`;
 
+                const namaProduk = produk.nama_produk || item.nama_produk || 'Produk tidak diketahui';
+                const warna = item.warna || '-';
+                const ukuran = item.ukuran || '-';
+                const jumlah = item.jumlah || 0;
+                const subtotalItem = item.subtotal || 0;
+
+                // Tambahkan ke HTML modal
                 itemsContainer.innerHTML += `
-                            <div class="flex items-center border rounded-md p-3">
-                                <div class="w-20 h-20 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
-                                    <img src="${foto}" class="w-full h-full object-cover" alt="">
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-800">${item.nama_produk}</p>
-                                    <p class="text-sm text-gray-500">Warna: ${item.warna} • Ukuran: ${item.ukuran}</p>
-                                    <p class="text-sm text-gray-500">Jumlah: ${item.jumlah}</p>
-                                </div>
-                                <div class="font-semibold text-gray-800">
-                                    Rp${Number(item.subtotal).toLocaleString('id-ID')}
-                                </div>
-                            </div>
-                        `;
+                                            <div class="flex items-center border border-gray-200 rounded-lg p-3 bg-white hover:shadow-md transition-all">
+                                                <div class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
+                                                    <img src="${fotoUrl}" class="w-full h-full object-cover" alt="${namaProduk}">
+                                                </div>
+                                                <div class="flex-1">
+                                                    <p class="font-semibold text-gray-800">${namaProduk}</p>
+                                                    <p class="text-sm text-gray-500 mt-1">Warna: ${warna} • Ukuran: ${ukuran}</p>
+                                                    <p class="text-sm text-gray-500">Jumlah: ${jumlah}</p>
+                                                </div>
+                                                <div class="text-right font-semibold text-gray-800">
+                                                    Rp${Number(subtotalItem).toLocaleString('id-ID')}
+                                                </div>
+                                            </div>
+                                        `;
             });
 
-            document.getElementById('orderModal').classList.remove('hidden');
-            document.getElementById('orderModal').classList.add('flex');
+            // Tampilkan modal
+            const modal = document.getElementById('orderModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function closeOrderModal() {
-            document.getElementById('orderModal').classList.add('hidden');
-            document.getElementById('orderModal').classList.remove('flex');
+            const modal = document.getElementById('orderModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
+        // Klik luar modal untuk menutup
         document.getElementById('orderModal').addEventListener('click', function (e) {
             if (e.target === this) closeOrderModal();
         });
     </script>
+
 @endpush

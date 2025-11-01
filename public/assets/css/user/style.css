@@ -170,9 +170,8 @@ header .nav-links a {
   gap: 20px;
 }
 
-.product {
+.product-cards {
   border: 1px solid #ddd;
-  padding: 15px;
   background: #fff;
   transition: transform 0.3s;
   position: relative;
@@ -597,19 +596,29 @@ header .nav-links a {
   /* Produk Grid */
   .product-grid {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
+    gap: 12px;
   }
 
-  .product img {
-    height: 180px;
+  .product-cards {
+    height: auto;
+    max-width: 200px;
   }
 
-  .product h3 {
+  .product-cards img {
+    height: 188px;
+    width: 100%;
+    object-fit: cover;
+    margin-top: 0px;
+  }
+
+  .product-cards h3 {
     font-size: 12px;
+    margin-top: 2px;
+    padding: 0;
   }
 
-  .product p {
-    font-size: 10px;
+  .product-cards p {
+    font-size: 14px;
   }
 
   .buy-btn {

@@ -128,7 +128,7 @@
                             </a>
 
                             <div class="pb-4 pl-4 pr-4 pt-0 flex flex-col gap-3">
-                                <h3 class="text-lg md:text-xl text-center font-bold text-gray-900 line-clamp-1 pt-2">
+                                <h3 class="text-sm md:text-xl text-center font-bold text-gray-900 line-clamp-1 pt-2">
                                     {{ $item->nama_produk }}
                                 </h3>
 
@@ -137,20 +137,20 @@
                                         $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
                                     @endphp
                                     <div class="flex justify-center items-center gap-2">
-                                        <p class="text-gray-400 font-bold line-through">
+                                        <p class="text-gray-400 text-[12px] md:text-[16px] font-bold line-through">
                                             IDR {{ number_format($item->harga, 0, ',', '.') }}
                                         </p>
-                                        <p class="text-red-600 font-bold">
+                                        <p class="text-red-600 text-[12px] md:text-[16px] font-bold">
                                             IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
                                         </p>
                                     </div>
                                 @else
-                                    <p class="text-lg text-center text-black font-bold">
+                                    <p class="text-sm md:text-lg text-center text-black font-bold">
                                         IDR {{ number_format($item->harga, 0, ',', '.') }}
                                     </p>
                                 @endif
 
-                                <div class="flex gap-2 w-full mt-2 pb-4">
+                                <div class="flex gap-1 md:gap-2 w-full pb-2">
                                     <button
                                         class="bg-gray-600 text-white p-2 md:p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
                                         onclick="openModal('productModal-{{ $item->id }}')" title="Tambah ke Keranjang">

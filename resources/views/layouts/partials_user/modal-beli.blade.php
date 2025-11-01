@@ -4,7 +4,9 @@
 
         {{-- CLOSE --}}
         <button type="button" onclick="closeModal('productBeliModal-{{ $item->id }}')"
-            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+            <i class="fa-solid fa-circle-xmark text-sm md:text-xl"></i>
+        </button>
 
         {{-- CARD PRODUK --}}
         <div class="flex items-center gap-4 mb-5 mt-5 bg-gray-100 rounded-lg p-2">
