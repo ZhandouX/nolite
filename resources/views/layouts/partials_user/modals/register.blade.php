@@ -1,10 +1,14 @@
 <div id="registerModal"
     class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-[9999] transition-opacity duration-300">
     <div class="bg-transparent relative w-full max-w-md p-0">
+
+        <!-- Tombol Close -->
         <button type="button" onclick="closeRegisterModal()"
             class="absolute -top-4 -right-4 bg-white text-gray-700 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center shadow-lg text-xl z-[10000]">
             &times;
         </button>
+
+        <!-- ===== Konten Register ===== -->
         <div class="form-container w-full max-w-md">
             <div class="form-header">
                 <h1 class="text-2xl font-bold mb-2">Register</h1>
@@ -14,7 +18,7 @@
                 <form id="registerForm" method="POST" action="{{ route('register') }}">
                     @csrf
 
-                    {{-- NAMA --}}
+                    <!-- Name -->
                     <div class="form-group">
                         <div class="input-container">
                             <input id="registerName" type="text" name="name" required placeholder=" " class="form-input"
@@ -26,7 +30,7 @@
                         @enderror
                     </div>
 
-                    {{-- EMAIL --}}
+                    <!-- Email -->
                     <div class="form-group">
                         <div class="input-container">
                             <input id="registerEmail" type="email" name="email" required placeholder=" "
@@ -38,7 +42,7 @@
                         @enderror
                     </div>
 
-                    {{-- PASSWORD --}}
+                    <!-- Password -->
                     <div class="form-group">
                         <div class="input-container">
                             <input id="registerPassword" type="password" name="password" required placeholder=" "
@@ -57,7 +61,7 @@
                         @enderror
                     </div>
 
-                    {{-- CONFIRM PASSWORD --}}
+                    <!-- Confirm Password -->
                     <div class="form-group">
                         <div class="input-container">
                             <input id="registerPasswordConfirmation" type="password" name="password_confirmation"
@@ -70,8 +74,10 @@
                         @enderror
                     </div>
 
+                    <!-- Tombol Register -->
                     <button type="submit" class="submit-btn">Buat Akun Baru</button>
 
+                    <!-- Link ke Login -->
                     <div class="login-link">
                         <p class="text-sm text-gray-600">
                             Sudah punya akun?
@@ -84,6 +90,8 @@
                 </form>
             </div>
         </div>
+
+        <!-- Pesan Sukses -->
         <div class="success-message hidden" id="registerSuccess">
             <i class="fas fa-check-circle"></i>
             <span>Akun berhasil dibuat!</span>
