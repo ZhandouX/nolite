@@ -16,21 +16,36 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
+    // app/Http/Controllers/ProfileController.php
+
     public function edit(Request $request): View
     {
         $user = $request->user();
 
-        // Wishlist
+        // Ambil Wishlist user
         $wishlists = Wishlist::with(['produk.fotos'])
             ->where('user_id', $user->id)
             ->latest()
             ->get();
 
-        // Order user
-        $orders = Order::with('items.produk.fotos') // ✅ eager load sampai ke foto
+        // Ambil Order user + relasi item, produk, foto, dan ulasan (filter berdasarkan user)
+        $orders = Order::with([
+            'items.produk.fotos',
+            'items.ulasan' => function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            },
+        ])
             ->where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->get();
+
+        // Tambahkan flag apakah order sudah memiliki ulasan (cek per order jika ada satu item yang punya ulasan)
+        $orders->each(function ($order) {
+            $order->sudah_diulas = $order->items->contains(function ($item) {
+                // $item->ulasan adalah object (hasOne) atau null
+                return !empty($item->ulasan);
+            });
+        });
 
         return view('profile.edit', [
             'user' => $user,
@@ -48,7 +63,6 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('success', 'Item removed from wishlist.');
     }
-
 
     /**
      * Update the user's profile information.

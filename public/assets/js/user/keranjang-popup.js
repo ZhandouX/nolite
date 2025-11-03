@@ -58,20 +58,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 'Accept': 'application/json',
             },
         })
-        .then(res => res.json())
-        .then(data => {
-            const icon = document.getElementById(`heart-icon-${produkId}`);
-            if (icon) {
-                if (data.status === 'added') {
-                    icon.classList.remove('text-gray-300');
-                    icon.classList.add('text-red-500');
-                } else {
-                    icon.classList.remove('text-red-500');
-                    icon.classList.add('text-gray-300');
+            .then(res => res.json())
+            .then(data => {
+                const icon = document.getElementById(`heart-icon-${produkId}`);
+                if (icon) {
+                    if (data.status === 'added') {
+                        icon.classList.remove('text-gray-300');
+                        icon.classList.add('text-red-500');
+                    } else {
+                        icon.classList.remove('text-red-500');
+                        icon.classList.add('text-gray-300');
+                    }
                 }
-            }
-        })
-        .catch(err => console.error(err));
+            })
+            .catch(err => console.error(err));
     };
 
     // =======================
@@ -120,10 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const checkoutBtn = document.getElementById('checkout-btn');
         const selectedItems = document.getElementById('selected-items');
 
-        if(subtotalEl) subtotalEl.textContent = formatIDR(total);
-        if(totalEl) totalEl.textContent = formatIDR(total);
-        if(checkoutBtn) checkoutBtn.disabled = selected.length === 0;
-        if(selectedItems) selectedItems.value = JSON.stringify(selected);
+        if (subtotalEl) subtotalEl.textContent = formatIDR(total);
+        if (totalEl) totalEl.textContent = formatIDR(total);
+        if (checkoutBtn) checkoutBtn.disabled = selected.length === 0;
+        if (selectedItems) selectedItems.value = JSON.stringify(selected);
     }
 
     document.querySelectorAll('.select-item').forEach(cb => cb.addEventListener('change', updateTotal));
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(res => res.json())
             .then(data => {
                 const container = document.getElementById('cartPopupContainer');
-                if(!container) return;
+                if (!container) return;
                 container.innerHTML = '';
 
                 if (data.items && data.items.length > 0) {
@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showCartPopup(totalProduk) {
         const container = document.getElementById('cartPopupContainer');
-        if(!container) return;
+        if (!container) return;
         container.innerHTML = '';
 
         const popup = document.createElement('div');
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function closePopup(e, btn) {
         e.stopPropagation();
-        if(btn?.parentElement) btn.parentElement.remove();
+        if (btn?.parentElement) btn.parentElement.remove();
     }
 
     function animateCartBadge(total) {
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // =======================
     // ADD TO CART
     // =======================
-    window.addToCart = function(id) {
+    window.addToCart = function (id) {
         const warna = document.querySelector(`#selectedColor-${id}`)?.value;
         const ukuran = document.querySelector(`#selectedSize-${id}`)?.value;
         const qty = parseInt(document.querySelector(`#qty-${id}`)?.value || 1);
@@ -226,30 +226,30 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({ produk_id: id, warna: warna, ukuran: ukuran, jumlah: qty })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) {
-                Swal.fire({ icon: 'error', title: 'Gagal!', text: data.error, confirmButtonColor: '#ef4444' });
-            } else {
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: data.message,
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    toast: true,
-                    position: 'top-end'
-                });
-                closeModal(`productModal-${id}`);
-                refreshCartPopup();
-            }
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    Swal.fire({ icon: 'error', title: 'Gagal!', text: data.error, confirmButtonColor: '#ef4444' });
+                } else {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: data.message,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                    closeModal(`productModal-${id}`);
+                    refreshCartPopup();
+                }
+            });
     };
 
     // =======================
     // QUANTITY HANDLER (updateQuantity tetap dipakai)
     // =======================
-    window.updateQuantity = function(id, change) {
+    window.updateQuantity = function (id, change) {
         const qtyEl = document.getElementById(`qty-${id}`);
         let currentQty = parseInt(qtyEl.textContent) || 0;
         let newQty = currentQty + change;
@@ -268,6 +268,30 @@ document.addEventListener("DOMContentLoaded", function () {
             checkbox.dispatchEvent(new Event('change'));
         }
 
+        // 🧠 CEK apakah user login atau tidak
+        if (!window.Laravel.isLoggedIn) {
+            // Update session via route keranjang/session/update
+            fetch(`${window.Laravel.routes.keranjangSessionUpdate}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': window.Laravel.csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ key: id, jumlah: newQty })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) {
+                        Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message });
+                        qtyEl.textContent = currentQty;
+                    } else {
+                        refreshCartPopup();
+                    }
+                });
+            return;
+        }
+
+        // 🧩 Kalau login, baru PATCH ke database
         fetch(`${window.Laravel.routes.keranjangBase}/${id}`, {
             method: 'PATCH',
             headers: {
@@ -277,22 +301,18 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({ jumlah: newQty })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (!data.success) {
-                Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message });
-                qtyEl.textContent = currentQty;
-                if (checkbox) {
-                    checkbox.dataset.jumlah = currentQty;
-                    checkbox.dispatchEvent(new Event('change'));
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message });
+                    qtyEl.textContent = currentQty;
+                } else {
+                    refreshCartPopup();
                 }
-            } else {
-                refreshCartPopup();
-            }
-        });
+            });
     };
 
-    window.hapusKeranjang = function(id) {
+    window.hapusKeranjang = function (id) {
         Swal.fire({
             title: 'Hapus item ini?',
             text: "Produk akan dihapus dari keranjangmu.",
@@ -308,24 +328,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken, 'Accept': 'application/json' }
                 })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        const itemEl = document.querySelector(`.item-keranjang[data-id='${id}']`);
-                        if (itemEl) itemEl.remove();
-                        updateTotal();
-                        refreshCartPopup();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Dihapus!',
-                            text: data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                            toast: true,
-                            position: 'top-end'
-                        });
-                    }
-                });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            const itemEl = document.querySelector(`.item-keranjang[data-id='${id}']`);
+                            if (itemEl) itemEl.remove();
+                            updateTotal();
+                            refreshCartPopup();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Dihapus!',
+                                text: data.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                                toast: true,
+                                position: 'top-end'
+                            });
+                        }
+                    });
             }
         });
     };
@@ -333,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // =======================
     // QTY IN MODAL / PRODUCT PAGE
     // =======================
-    window.incrementQty = function(id) {
+    window.incrementQty = function (id) {
         const qtyEl = document.getElementById(`qty-${id}`);
         const max = parseInt(qtyEl?.max || 999);
         if (!qtyEl) return;
@@ -343,7 +363,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateQtyData(id);
     };
 
-    window.decrementQty = function(id) {
+    window.decrementQty = function (id) {
         const qtyEl = document.getElementById(`qty-${id}`);
         if (!qtyEl) return;
 
@@ -352,7 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateQtyData(id);
     };
 
-    window.validateQty = function(id) {
+    window.validateQty = function (id) {
         const qtyEl = document.getElementById(`qty-${id}`);
         if (!qtyEl) return;
 

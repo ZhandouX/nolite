@@ -118,10 +118,17 @@
             </div>
 
             {{-- TOMBOL BELI --}}
-            <button type="submit"
-                class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-2 rounded-lg transition">
-                Beli Sekarang
-            </button>
+            @auth
+                <button type="submit"
+                    class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-2 rounded-lg transition">
+                    Beli Sekarang
+                </button>
+            @else
+                <button type="button" onclick="openLoginModal()"
+                    class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-2 rounded-lg transition">
+                    Beli Sekarang
+                </button>
+            @endauth
         </form>
     </div>
 </div>

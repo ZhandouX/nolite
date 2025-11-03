@@ -109,10 +109,10 @@
                                 class="block overflow-hidden rounded-t-2xl bg-gray-50 relative">
                                 @if($item->fotos->isNotEmpty())
                                     <img src="{{ asset('storage/' . $item->fotos->first()->foto) }}" alt="{{ $item->nama_produk }}"
-                                        class="w-full h-40 md:h-60 object-cover group-hover:scale-105 transition-transform duration-500">
+                                        class="w-full h-50 md:h-60 object-cover group-hover:scale-105 transition-transform duration-500">
                                 @else
                                     <img src="{{ asset('assets/images/no-image.png') }}" alt="{{ $item->nama_produk }}"
-                                        class="w-full h-40 md:h-50 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
+                                        class="w-full h-50 md:h-50 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
                                 @endif
 
                                 @auth
@@ -154,7 +154,7 @@
                                     </p>
                                 @endif
 
-                                <div class="flex gap-2 w-full mt-2 pb-4">
+                                <div class="flex gap-2 w-full">
                                     <button
                                         class="bg-gray-600 text-white p-2 md:p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
                                         onclick="openModal('productModal-{{ $item->id }}')" title="Tambah ke Keranjang">
@@ -241,4 +241,27 @@
             }
         }
     </style>
+@endpush
+
+@push('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const radios = document.querySelectorAll('#filterTipeForm input[name="tipe"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    switch (radio.value) {
+                        case 'all':
+                            window.location.href = "{{ route('customer.allProduk') }}";
+                            break;
+                        case 'unggulan':
+                            window.location.href = "{{ route('customer.unggulan') }}";
+                            break;
+                        case 'diskon':
+                            window.location.href = "{{ route('customer.diskon') }}";
+                            break;
+                    }
+                });
+            });
+        });
+    </script>
 @endpush

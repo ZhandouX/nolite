@@ -39,10 +39,11 @@ class KeranjangController extends Controller
                 $keranjang[$key]['jumlah'] += $data['jumlah'];
             } else {
                 $keranjang[$key] = [
-                    'produk_id' => $produk->id, // <- FIX: harus pakai $produk->id
+                    'produk_id' => $produk->id,
                     'nama_produk' => $produk->nama_produk,
+                    'deskripsi' => $produk->deskripsi,
                     'harga' => $produk->harga,
-                    'foto' => $produk->fotos->first()->foto ?? null, // ✅ ambil foto pertama dari relasi
+                    'foto' => $produk->fotos->first()->foto ?? null,
                     'warna' => $data['warna'],
                     'ukuran' => $data['ukuran'],
                     'jumlah' => $data['jumlah'],
@@ -99,7 +100,7 @@ class KeranjangController extends Controller
         } else {
             // Ambil dari SESSION
             $items = session()->get('keranjang', []);
-        }        
+        }
 
         return view('customer.keranjang', compact('keranjang', 'items'));
     }
@@ -145,6 +146,7 @@ class KeranjangController extends Controller
         ], 404);
     }
 
+    // KIRIM DATA CHECKOUT
     public function kirimKeCheckout(Request $request)
     {
         $selectedItems = $request->input('selected_items', []); // ID item yang dipilih
@@ -205,5 +207,22 @@ class KeranjangController extends Controller
             'success' => true,
             'message' => 'Jumlah produk berhasil diperbarui'
         ]);
+    }
+
+    public function updateSession(Request $request)
+    {
+        $key = $request->key;
+        $jumlah = (int) $request->jumlah;
+
+        $cart = session()->get('keranjang', []);
+
+        if (isset($cart[$key])) {
+            $cart[$key]['jumlah'] = $jumlah;
+            session()->put('keranjang', $cart);
+
+            return response()->json(['success' => true, 'message' => 'Jumlah diperbarui']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Item tidak ditemukan di session']);
     }
 }

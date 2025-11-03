@@ -38,6 +38,18 @@ class Produk extends Model
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'produk_id');
+    }
+
+    public function getTerjualAttribute()
+    {
+        return $this->orderItems()
+            ->whereHas('order', fn($q) => $q->where('status', 'selesai'))
+            ->sum('jumlah');
+    }
+
+    public function ulasan()
+    {
+        return $this->hasMany(Ulasan::class, 'produk_id')->with('user', 'fotos');
     }
 }

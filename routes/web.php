@@ -9,6 +9,7 @@ use App\Http\Controllers\Customer\LandingController;
 use App\Http\Controllers\Customer\KeranjangController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProdukCustomerController;
+use App\Http\Controllers\Customer\UlasanController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\LokasiController;
 use App\Http\Controllers\ProfileController;
@@ -29,6 +30,10 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+        // HAPUS FOTO DARI STORAGE
+        Route::delete('/produk/foto/{id}', [ProdukController::class, 'hapusFoto'])
+            ->name('admin.produk.foto.hapus');
+
         // PRODUK
         Route::resource('produk', ProdukController::class);
         Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('admin.produk.diskon');
@@ -42,13 +47,13 @@ Route::middleware(['auth', 'role:admin'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-                Route::get('/', 'index')->name('index');                // daftar
-                Route::get('/{user}', 'show')->name('show');            // detail
-                Route::patch('/{user}/block', 'block')->name('block');  // blokir
-                Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
-                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
-                Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
-            });
+            Route::get('/', 'index')->name('index');                // daftar
+            Route::get('/{user}', 'show')->name('show');            // detail
+            Route::patch('/{user}/block', 'block')->name('block');  // blokir
+            Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
+            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
+            Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
+        });
     });
 
 
@@ -66,12 +71,16 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     // ORDER
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-
     // SUCCESS PAGE
     Route::get('/checkout/success/{id}', function ($id) {
         $order = \App\Models\Order::with('items')->findOrFail($id);
         return view('customer.checkout_success', compact('order'));
     })->name('customer.order.success');
+
+    // ULASAN
+    Route::post('/ulasan', [UlasanController::class, 'store'])->name('customer.ulasan.store');
+    Route::get('/ulasan/{order}', [UlasanController::class, 'show'])->name('customer.ulasan.show');
+    Route::put('/ulasan/{ulasan}', [UlasanController::class, 'update'])->name('ulasan.update');
 
     // WISHLIST
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -82,6 +91,8 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
 // SEMUA PRODUK
 Route::get('/all-produk/customer', [DashboardController::class, 'allProduk'])->name('customer.allProduk');
+Route::get('/produk/unggulan', [DashboardController::class, 'unggulanProduk'])->name('customer.unggulan');
+Route::get('/produk/diskon', [DashboardController::class, 'diskonProduk'])->name('customer.diskon');
 
 // DETAIL PRODUK
 Route::get('/produk/{id}', [DashboardController::class, 'show'])->name('produk.detail');
@@ -132,6 +143,8 @@ Route::get('/keranjang/cek', function () {
 });
 Route::get('/keranjang/count', [KeranjangController::class, 'count'])->name('keranjang.count');
 Route::patch('keranjang/{id}', [KeranjangController::class, 'updateQuantity']);
+Route::post('/keranjang/session/update', [KeranjangController::class, 'updateSession'])
+    ->name('keranjang.session.update');
 
 // API WILAYAH
 Route::get('/lokasi-form', [LokasiController::class, 'form'])->name('lokasi.form');

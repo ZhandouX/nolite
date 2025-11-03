@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    {{-- PRODUCT CATEGORY --}}
+    {{-- CATEGORY --}}
     <div class="mb-6">
         <h2 class="font-semibold mb-2 text-sm">Kategori</h2>
 
@@ -34,15 +34,25 @@
         @endforeach
     </div>
 
-    {{-- PRODUCT TYPE --}}
-    <div class="mb-6">
-        <h2 class="font-semibold mb-2 text-sm">Tipe Produk</h2>
-        <label class="text-sm"><input type="radio" name="tipe" value="" {{ request('tipe') == '' ? 'checked' : '' }}> Semua</label><br>
-        <label class="text-sm"><input type="radio" name="tipe" value="unggulan" {{ request('tipe') == 'unggulan' ? 'checked' : '' }}> Unggulan</label><br>
-        <label class="text-sm"><input type="radio" name="tipe" value="diskon" {{ request('tipe') == 'diskon' ? 'checked' : '' }}> Diskon</label>
+    {{-- TYPE --}}
+    <div id="filterTipeForm" class="space-y-1">
+        <label class="text-sm block">
+            <input type="radio" name="tipe" value="all" {{ request()->routeIs('customer.allProduk') ? 'checked' : '' }}>
+            Semua
+        </label>
+
+        <label class="text-sm block">
+            <input type="radio" name="tipe" value="unggulan" {{ request()->routeIs('customer.unggulan') ? 'checked' : '' }}>
+            Unggulan
+        </label>
+
+        <label class="text-sm block">
+            <input type="radio" name="tipe" value="diskon" {{ request()->routeIs('customer.diskon') ? 'checked' : '' }}>
+            Diskon
+        </label>
     </div>
 
-    {{-- MIN & MAX PRICES --}}
+    {{-- PRICES --}}
     <div class="mb-6">
         <h2 class="font-semibold mb-2 text-sm">Harga</h2>
         <input type="number" name="harga_min" placeholder="Min" value="{{ request('harga_min') }}"
@@ -51,7 +61,7 @@
             class="w-full border rounded-md p-1 text-sm">
     </div>
 
-    {{-- SIZES SELECTED --}}
+    {{-- SIZES --}}
     <div class="mb-6">
         <h2 class="font-semibold mb-2 text-sm">Ukuran</h2>
         @foreach(['S', 'M', 'L', 'XL'] as $size)

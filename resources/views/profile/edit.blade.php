@@ -9,7 +9,7 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-2xl font-semibold">
-                    Hi {{ Auth::user()->name ?? 'User' }}
+                    Hai {{ Auth::user()->name ?? 'User' }}
                 </h1>
                 <a href="{{ route('profile.settings') }}"
                     class="border border-red-900 text-red-900 px-4 py-2 rounded-lg hover:bg-gray-600 hover:text-white transition">
@@ -18,21 +18,10 @@
                 </a>
             </div>
 
-            <!-- Vouchers Card -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6 hover:shadow-md transition">
-                <h3 class="text-xl font-semibold text-center mb-4">My Vouchers</h3>
-                <div class="text-center text-gray-500">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No vouchers"
-                        class="mx-auto w-14 mb-3 opacity-60">
-                    <p>No vouchers available</p>
-                    <small>You don't have any vouchers at the moment</small>
-                </div>
-            </div>
-
-            <!-- Orders/Wishlist Card -->
+            <!-- Orders & Wishlist -->
             <div class="bg-white rounded-lg shadow-sm p-6 relative hover:shadow-md transition">
 
-                <!-- Dropdown top right -->
+                <!-- Dropdown -->
                 <div class="absolute top-8 right-20 md:top-6 md:right-6">
                     <select id="statusFilter" class="border border-gray-300 rounded px-3 py-1 text-sm">
                         <option value="all">Semua Status</option>
@@ -57,8 +46,7 @@
 
                 <!-- Orders Content -->
                 <div id="orders" class="tab-content block">
-
-                    @if($orders->isEmpty())
+                    @if ($orders->isEmpty())
                         <div class="flex flex-col items-center justify-center py-16 px-4">
                             <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-12 text-center max-w-md">
                                 <div
@@ -70,34 +58,26 @@
                                 <p class="text-gray-500 text-sm mb-6">Start shopping to see your orders here</p>
                                 <a href="{{ route('customer.allProduk') }}"
                                     class="inline-flex items-center gap-2 bg-red-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-800 transition-all duration-200 shadow-sm hover:shadow-md">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                    </svg>
+                                    <i class="fa-solid fa-magnifying-glass"></i>
                                     Browse Products
                                 </a>
                             </div>
                         </div>
                     @else
-
-                        <!-- Scrollable Orders Grid -->
                         <div id="ordersGrid"
                             class="max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-                                @foreach($orders as $order)
+                                @foreach ($orders as $order)
+                                    @php
+                                        $firstItem = $order->items->first();
+                                        $foto = $firstItem->produk->fotos->first()->foto ?? null;
+                                    @endphp
                                     <div class="order-card group bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
                                         data-status="{{ strtolower($order->status) }}" onclick="openOrderModal({{ $order->id }})">
 
-                                        {{-- Info produk pertama --}}
-                                        @php
-                                            $firstItem = $order->items->first();
-                                            $foto = $firstItem->produk->fotos->first()->foto ?? null;
-                                        @endphp
-
-                                        {{-- Image Section --}}
                                         <div
                                             class="relative w-full h-52 bg-gradient-to-br from-gray-100 to-gray-50 overflow-hidden">
-                                            @if($foto)
+                                            @if ($foto)
                                                 <img src="{{ asset('storage/' . $foto) }}" alt="{{ $firstItem->nama_produk }}"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                             @else
@@ -107,40 +87,32 @@
                                                 </div>
                                             @endif
 
-                                            {{-- BADGE STATUS --}}
                                             <div class="absolute top-3 right-8 md:right-3 z-20 py-2 md:py-0">
                                                 <span
-                                                    class="px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold rounded-full backdrop-blur-sm shadow-sm
-                                                    {{ $order->status === 'selesai' ? 'bg-green-500/90 text-white' : '' }}
-                                                    {{ $order->status === 'menunggu' ? 'bg-yellow-500/90 text-white' : '' }}
-                                                    {{ $order->status === 'diproses' ? 'bg-blue-500/90 text-white' : '' }}
-                                                    {{ $order->status === 'dikirim' ? 'bg-purple-500/90 text-white' : '' }}
-                                                    {{ $order->status === 'batal' ? 'bg-red-500/90 text-white' : '' }}">
+                                                    class="px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold rounded-full
+                                                                            {{ $order->status === 'selesai' ? 'bg-green-500/90 text-white' : '' }}
+                                                                            {{ $order->status === 'menunggu' ? 'bg-yellow-500/90 text-white' : '' }}
+                                                                            {{ $order->status === 'diproses' ? 'bg-blue-500/90 text-white' : '' }}
+                                                                            {{ $order->status === 'dikirim' ? 'bg-purple-500/90 text-white' : '' }}
+                                                                            {{ $order->status === 'batal' ? 'bg-red-500/90 text-white' : '' }}">
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </div>
 
-                                            {{-- BADGE JUMLAH PESANAN (item) --}}
                                             <div class="absolute bottom-3 left-6 md:left-3">
                                                 <span
-                                                    class="px-3 py-1 bg-red-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-full shadow-sm min-w-[60px] text-center">
-                                                    {{ $order->items->count() }} {{ $order->items->count() > 1 ? 'pcs' : 'item' }}
+                                                    class="px-3 py-1 bg-red-900/90 text-white text-xs font-medium rounded-full shadow-sm min-w-[60px] text-center">
+                                                    {{ $order->items->count() }}
+                                                    {{ $order->items->count() > 1 ? 'pcs' : 'item' }}
                                                 </span>
                                             </div>
-
                                         </div>
 
-                                        {{-- Content Section --}}
                                         <div class="p-5">
                                             <div class="flex items-center justify-between mb-3">
                                                 <h3 class="font-bold text-gray-800 text-base">Order #{{ $order->id }}</h3>
-                                                <svg class="w-5 h-5 text-gray-400 group-hover:text-red-900 transition-colors"
-                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M9 5l7 7-7 7" />
-                                                </svg>
+                                                <i class="fa-solid fa-chevron-right text-gray-400 group-hover:text-red-900"></i>
                                             </div>
-
                                             <div class="space-y-2">
                                                 <div class="flex items-baseline gap-1">
                                                     <span class="text-sm font-medium text-gray-500">IDR</span>
@@ -148,19 +120,20 @@
                                                         {{ number_format($order->subtotal, 0, ',', '.') }}
                                                     </span>
                                                 </div>
-
                                                 <p class="text-xs text-gray-500">
                                                     {{ $firstItem->nama_produk }}
-                                                    @if($order->items->count() > 1)
-                                                        <span class="font-medium">+{{ $order->items->count() - 1 }} more</span>
+                                                    @if ($order->items->count() > 1)
+                                                        <span class="font-medium">+{{ $order->items->count() - 1 }}
+                                                            more</span>
                                                     @endif
                                                 </p>
                                             </div>
                                         </div>
 
-                                        {{-- Hidden Data --}}
                                         <div class="order-data hidden" data-id="{{ $order->id }}" data-status="{{ $order->status }}"
-                                            data-subtotal="{{ $order->subtotal }}" data-items='@json($order->items)'>
+                                            data-subtotal="{{ $order->subtotal }}"
+                                            data-sudah-diulas="{{ $order->sudah_diulas ? 'true' : 'false' }}"
+                                            data-items='@json($order->items)'>
                                         </div>
                                     </div>
                                 @endforeach
@@ -168,64 +141,87 @@
                         </div>
                     @endif
 
-                    <!-- ORDER MODAL -->
+                    {{-- === ORDER MODAL === --}}
                     <div id="orderModal"
                         class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-6">
                         <div
                             class="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-gray-200 animate-fadeIn">
-
-                            <!-- HEADER -->
                             <div
                                 class="bg-gradient-to-r from-red-900 via-red-800 to-red-700 text-white px-6 py-5 flex items-center justify-between">
-                                <div class="space-y-1">
-                                    <h2 class="text-xl md:text-2xl font-bold tracking-wide">
-                                        Order #<span id="modalOrderId"></span>
-                                    </h2>
-                                    <p class="text-sm text-red-100">
-                                        Status: <span id="modalOrderStatus" class="font-semibold"></span>
-                                    </p>
+                                <div>
+                                    <h2 class="text-2xl font-bold">Order #<span id="modalOrderId"></span></h2>
+                                    <p class="text-sm text-red-100">Status: <span id="modalOrderStatus"
+                                            class="font-semibold"></span></p>
                                 </div>
                                 <button onclick="closeOrderModal()"
-                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors duration-200">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
+                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 transition">
+                                    <i class="fa-solid fa-xmark text-xl"></i>
                                 </button>
                             </div>
 
-                            <!-- BODY -->
                             <div class="flex-1 overflow-y-auto p-6 space-y-6">
-                                <!-- Section Title -->
-                                <div class="flex items-center gap-2 border-b border-gray-200 pb-3">
-                                    <svg class="w-6 h-6 text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                    </svg>
-                                    <h3 class="text-lg font-semibold text-gray-800">Order Items</h3>
-                                </div>
+                                <div id="modalOrderItems" class="space-y-4"></div>
 
-                                <!-- Items -->
-                                <div id="modalOrderItems" class="space-y-4">
+                                {{-- === FORM ULASAN === --}}
+                                <div id="ulasanContainer" class="border-t border-gray-200 pt-4 mt-6 hidden">
+                                    <form id="ulasanForm" action="{{ route('customer.ulasan.store') }}" method="POST"
+                                        enctype="multipart/form-data" class="hidden">
+                                        @csrf
+                                        <input type="hidden" name="order_id" id="ulasanOrderId">
+                                        <input type="hidden" name="produk_id" id="ulasanProdukId">
+                                        <input type="hidden" name="order_item_id" id="ulasanOrderItemId">
+
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                            <i class="fa-solid fa-star text-yellow-500"></i> Tulis Ulasan
+                                        </h3>
+
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                                            <select name="rating" class="w-full border rounded-lg p-2">
+                                                <option value="">Pilih Rating</option>
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Komentar</label>
+                                            <textarea name="komentar" rows="3" class="w-full border rounded-lg p-2"
+                                                placeholder="Tulis pendapatmu..."></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Upload Foto
+                                                (maks 5MB/gambar)</label>
+                                            <input type="file" name="fotos[]" multiple accept="image/*"
+                                                onchange="validateImages(this)" class="w-full border rounded-lg p-2">
+                                        </div>
+
+                                        <button type="submit"
+                                            class="bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition">
+                                            Kirim Ulasan
+                                        </button>
+                                    </form>
+
+                                    <div id="lihatUlasanBtn" class="hidden text-center">
+                                        <a href="#" id="ulasanShowLink"
+                                            class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-lg transition">
+                                            <i class="fa-solid fa-eye"></i> Lihat Ulasan Anda
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- FOOTER -->
                             <div
                                 class="border-t border-gray-100 bg-gray-50 px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
                                 <a id="detailOrderLink" href="#"
                                     class="text-red-900 font-semibold hover:text-red-700 hover:underline transition">
-                                    <i class="fa-solid fa-arrow-right mr-2"></i>
-                                    Lihat Detail Pesanan
-                                    <i class="fa-solid fa-arrow-left ml-2"></i>
+                                    <i class="fa-solid fa-arrow-right mr-2"></i> Lihat Detail Pesanan
                                 </a>
-
-                                <div class="text-center md:text-right">
+                                <div>
                                     <p class="text-gray-500 text-sm">Total Amount</p>
-                                    <div class="flex items-baseline justify-center md:justify-end gap-1">
-                                        <span class="text-sm text-gray-500">IDR</span>
-                                        <span class="text-3xl font-bold text-red-900" id="modalOrderSubtotal">Rp 0</span>
-                                    </div>
+                                    <p class="text-3xl font-bold text-red-900" id="modalOrderSubtotal">Rp 0</p>
                                 </div>
                             </div>
                         </div>
@@ -233,65 +229,7 @@
                 </div>
 
                 <!-- Wishlist Content -->
-                <div id="wishlist" class="tab-content hidden text-gray-700">
-                    @if($wishlists->isEmpty())
-                        <div class="text-center text-gray-500 py-10">
-                            <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="No wishlist"
-                                class="mx-auto w-full mb-3 opacity-70">
-                            <p class="text-base">No items in Wishlist</p>
-                            <small class="block text-sm mb-3">Add products to your wishlist to view them here.</small>
-                            <a href="{{ route('customer.allProduk') }}"
-                                class="inline-block px-4 py-2 bg-red-900 text-white rounded-lg hover:bg-red-700 transition font-medium">
-                                Browse Products
-                            </a>
-                        </div>
-                    @else
-                        <!-- Scrollable Wishlist Grid -->
-                        <div class="max-h-[480px] overflow-y-auto pr-2">
-                            <div id="wishlist-grid"
-                                class="product-grid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 justify-items-center px-2 sm:px-4">
-
-                                @foreach($wishlists as $item)
-                                    <div id="wishlist-item-{{ $item->id }}"
-                                        class="w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group relative">
-
-                                        {{-- Gambar produk --}}
-                                        <div class="relative">
-                                            <a href="{{ route('produk.detail', $item->produk->id) }}" class="block">
-                                                @if($item->produk->fotos->isNotEmpty())
-                                                    <img src="{{ asset('storage/' . $item->produk->fotos->first()->foto) }}"
-                                                        alt="{{ $item->produk->nama_produk }}"
-                                                        class="w-full h-40 sm:h-44 md:h-48 object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl">
-                                                @else
-                                                    <img src="{{ asset('assets/images/no-image.png') }}" alt="No image"
-                                                        class="w-full h-40 sm:h-44 md:h-48 object-contain p-4 rounded-t-2xl">
-                                                @endif
-                                            </a>
-
-                                            {{-- Tombol hapus wishlist --}}
-                                            <button type="button" data-id="{{ $item->id }}"
-                                                class="remove-wishlist absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow hover:scale-110 transition duration-200">
-                                                <i class="fa-solid fa-heart text-red-500 text-lg"></i>
-                                            </button>
-                                        </div>
-
-                                        {{-- Info produk --}}
-                                        <div class="p-2 sm:p-3 text-center">
-                                            <h3
-                                                class="font-semibold text-gray-800 text-xs sm:text-sm truncate leading-tight group-hover:text-red-800 transition-colors">
-                                                {{ $item->produk->nama_produk }}
-                                            </h3>
-                                            <p class="text-red-600 font-bold text-sm sm:text-base mt-1">
-                                                IDR {{ number_format($item->produk->harga, 0, ',', '.') }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endforeach
-
-                            </div>
-                        </div>
-                    @endif
-                </div>
+                @include('layouts.partials_user._wishlist-section')
             </div>
         </div>
     </div>
@@ -434,61 +372,78 @@
         });
     </script>
 
-    <!-- Modal order -->
     <script>
+        function validateImages(input) {
+            const maxSize = 5 * 1024 * 1024;
+            for (const file of input.files) {
+                if (file.size > maxSize) {
+                    alert(`File "${file.name}" melebihi 5MB!`);
+                    input.value = '';
+                    break;
+                }
+            }
+        }
+
         function openOrderModal(orderId) {
             const orderDiv = document.querySelector(`.order-data[data-id='${orderId}']`);
-            if (!orderDiv) return console.error('❌ Order data not found');
+            if (!orderDiv) return;
 
-            // Ambil data dari atribut
             const items = JSON.parse(orderDiv.getAttribute('data-items') || '[]');
             const status = orderDiv.getAttribute('data-status') || '-';
             const subtotal = orderDiv.getAttribute('data-subtotal') || 0;
+            const sudahDiulas = orderDiv.getAttribute('data-sudah-diulas') === 'true';
 
-            // Isi data dasar modal
+            const formUlasan = document.getElementById('ulasanForm');
+            const lihatUlasanBtn = document.getElementById('lihatUlasanBtn');
+            const ulasanContainer = document.getElementById('ulasanContainer');
+
+            ulasanContainer.classList.remove('hidden');
+
+            if (status.toLowerCase() === 'selesai' && !sudahDiulas) {
+                formUlasan.classList.remove('hidden');
+                lihatUlasanBtn.classList.add('hidden');
+                const firstItem = items[0] || {};
+                document.getElementById('ulasanOrderId').value = orderId;
+                document.getElementById('ulasanProdukId').value = firstItem.produk_id || '';
+                document.getElementById('ulasanOrderItemId').value = firstItem.id || '';
+            } else if (sudahDiulas) {
+                formUlasan.classList.add('hidden');
+                lihatUlasanBtn.classList.remove('hidden');
+                document.getElementById('ulasanShowLink').href = `/ulasan/${orderId}`;
+            } else {
+                ulasanContainer.classList.add('hidden');
+            }
+
             document.getElementById('modalOrderId').textContent = orderId;
             document.getElementById('modalOrderStatus').textContent = status;
             document.getElementById('modalOrderSubtotal').textContent = Number(subtotal).toLocaleString('id-ID');
             document.getElementById('detailOrderLink').href = `/orders/${orderId}`;
 
-            // Area item
             const itemsContainer = document.getElementById('modalOrderItems');
             itemsContainer.innerHTML = '';
 
-            // Render setiap item
             items.forEach(item => {
-                // Pastikan relasi produk & foto aman
                 const produk = item.produk || {};
                 const fotos = produk.fotos || [];
                 const fotoUrl = fotos.length
                     ? `{{ asset('storage') }}/${fotos[0].foto}`
                     : `{{ asset('assets/images/no-image.png') }}`;
-
-                const namaProduk = produk.nama_produk || item.nama_produk || 'Produk tidak diketahui';
-                const warna = item.warna || '-';
-                const ukuran = item.ukuran || '-';
-                const jumlah = item.jumlah || 0;
-                const subtotalItem = item.subtotal || 0;
-
-                // Tambahkan ke HTML modal
                 itemsContainer.innerHTML += `
-                                            <div class="flex items-center border border-gray-200 rounded-lg p-3 bg-white hover:shadow-md transition-all">
-                                                <div class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
-                                                    <img src="${fotoUrl}" class="w-full h-full object-cover" alt="${namaProduk}">
-                                                </div>
-                                                <div class="flex-1">
-                                                    <p class="font-semibold text-gray-800">${namaProduk}</p>
-                                                    <p class="text-sm text-gray-500 mt-1">Warna: ${warna} • Ukuran: ${ukuran}</p>
-                                                    <p class="text-sm text-gray-500">Jumlah: ${jumlah}</p>
-                                                </div>
-                                                <div class="text-right font-semibold text-gray-800">
-                                                    Rp${Number(subtotalItem).toLocaleString('id-ID')}
-                                                </div>
-                                            </div>
-                                        `;
+            <div class="flex items-center border border-gray-200 rounded-lg p-3 bg-white hover:shadow-md transition-all">
+                <div class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
+                    <img src="${fotoUrl}" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <p class="font-semibold text-gray-800">${produk.nama_produk || 'Produk tidak diketahui'}</p>
+                    <p class="text-sm text-gray-500 mt-1">Warna: ${item.warna || '-'} • Ukuran: ${item.ukuran || '-'}</p>
+                    <p class="text-sm text-gray-500">Jumlah: ${item.jumlah || 0}</p>
+                </div>
+                <div class="text-right font-semibold text-gray-800">
+                    Rp${Number(item.subtotal || 0).toLocaleString('id-ID')}
+                </div>
+            </div>`;
             });
 
-            // Tampilkan modal
             const modal = document.getElementById('orderModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -505,5 +460,4 @@
             if (e.target === this) closeOrderModal();
         });
     </script>
-
 @endpush

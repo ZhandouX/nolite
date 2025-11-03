@@ -5,7 +5,7 @@
         <div class="max-w-10xl md:max-w-6xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
 
             <!-- Header -->
-            <div class="bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-5">
+            <div class="bg-gradient-to-r from-gray-600 to-gray-500 text-white px-6 py-5">
                 <h1 class="text-2xl font-bold">Detail Pesanan #{{ $order->id }}</h1>
                 <p class="text-red-100 mt-1">Status:
                     <span class="font-semibold capitalize">{{ $order->status }}</span>
@@ -19,8 +19,8 @@
                     <!-- ==================== KIRI ==================== -->
                     <div class="space-y-8">
                         <!-- Informasi Penerima -->
-                        <div class="bg-blue-50 border border-blue-200 rounded-xl shadow-sm p-5">
-                            <h2 class="font-bold text-center text-gray-700 text-lg mb-4 bg-blue-100/70 rounded-md py-2">
+                        <div class="border border-gray-200 rounded-xl shadow-sm p-5">
+                            <h2 class="font-bold text-center text-gray-700 text-lg mb-4 bg-gray-100/70 rounded-md py-2">
                                 Informasi Penerima
                             </h2>
 
@@ -37,9 +37,9 @@
                         </div>
 
                         <!-- Alamat Pengiriman -->
-                        <div class="bg-green-50 border border-green-200 rounded-xl shadow-sm p-5">
+                        <div class="border border-gray-200 rounded-xl shadow-sm p-5">
                             <h2
-                                class="font-semibold text-center text-gray-700 text-lg mb-4 bg-green-100/70 rounded-md py-2">
+                                class="font-semibold text-center text-gray-700 text-lg mb-4 bg-gray-100/70 rounded-md py-2">
                                 Alamat Pengiriman
                             </h2>
 
@@ -52,12 +52,6 @@
 
                                 <p><strong>Alamat Detail</strong></p>
                                 <p>: {{ $order->alamat_detail }}</p>
-
-                                <p><strong>Latitude</strong></p>
-                                <p>: {{ $order->latitude ?? '-' }}</p>
-
-                                <p><strong>Longitude</strong></p>
-                                <p>: {{ $order->longitude ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -65,9 +59,9 @@
                     <!-- ==================== KANAN ==================== -->
                     <div class="space-y-8">
                         <!-- Pembayaran -->
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-xl shadow-sm p-5">
+                        <div class="border border-red-200 rounded-xl shadow-sm p-5">
                             <h2
-                                class="font-semibold text-center text-gray-700 text-lg mb-4 bg-yellow-100/70 rounded-md py-2">
+                                class="font-semibold text-center text-gray-700 text-lg mb-4 bg-red-100/70 rounded-md py-2">
                                 Pembayaran
                             </h2>
 
@@ -78,15 +72,15 @@
                                 <p><strong>Total Pembayaran</strong></p>
                                 <p>:
                                     <span class="text-red-800 font-semibold">
-                                        Rp {{ number_format($order->subtotal, 0, ',', '.') }}
+                                        IDR {{ number_format($order->subtotal, 0, ',', '.') }}
                                     </span>
                                 </p>
                             </div>
                         </div>
 
                         <!-- Produk yang Dipesan -->
-                        <div class="bg-gray-50 border border-gray-200 rounded-xl shadow-sm p-5">
-                            <h2 class="font-semibold text-center text-gray-700 text-lg mb-4 bg-gray-100 rounded-md py-2">
+                        <div class="border border-red-200 rounded-xl shadow-sm p-5">
+                            <h2 class="font-semibold text-center text-gray-700 text-lg mb-4 bg-red-100 rounded-md py-2">
                                 Produk Dipesan
                             </h2>
 
@@ -118,15 +112,15 @@
                                                     @endphp
                                                     <div class="flex flex-col">
                                                         <span class="text-gray-400 text-sm line-through">
-                                                            Rp {{ number_format($produk->harga, 0, ',', '.') }}
+                                                            IDR {{ number_format($produk->harga, 0, ',', '.') }}
                                                         </span>
                                                         <span class="text-red-800 font-bold">
-                                                            Rp {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                                            IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
                                                         </span>
                                                     </div>
                                                 @else
                                                     <span class="text-red-800 font-bold">
-                                                        Rp {{ number_format($produk->harga, 0, ',', '.') }}
+                                                        IDR {{ number_format($produk->harga, 0, ',', '.') }}
                                                     </span>
                                                 @endif
 
@@ -153,7 +147,7 @@
             <!-- Footer -->
             <div class="border-t border-gray-200 bg-gray-50 px-6 py-4 flex justify-end">
                 <a href="{{ url()->previous() }}"
-                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gray-700 text-white hover:bg-gray-800 transition">
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-600 text-white hover:bg-gray-800 transition">
                     <i class="fa-solid fa-arrow-left"></i>
                     Kembali
                 </a>

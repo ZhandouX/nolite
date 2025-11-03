@@ -27,7 +27,7 @@
 
                 {{-- EMAIL --}}
                 <div>
-                    <label class="block text-xs font-medium text-gray-700">Alamat Email (Opsional)</label>
+                    <label class="block text-xs font-medium text-gray-700">Alamat Email</label>
                     <input type="email" name="email" value="{{ old('email', Auth::user()->email ?? '') }}"
                         class="w-full mt-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
                         placeholder="kamu@email.com">

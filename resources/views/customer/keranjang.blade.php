@@ -82,8 +82,8 @@
                                 <p class="text-gray-500 text-sm mt-1 line-clamp-2">{{ $produk->deskripsi }}</p>
 
                                 <div class="text-gray-500 text-sm mt-2">
-                                    Warna: <span class="font-medium">{{ $warna }}</span>,
-                                    Ukuran: <span class="font-medium">{{ $ukuran }}</span>
+                                    Warna: <span class="font-medium font-bold text-gray-900">{{ $warna }}</span>,
+                                    Ukuran: <span class="font-medium font-bold text-gray-900">{{ $ukuran }}</span>
                                 </div>
 
                                 {{-- HARGA --}}
@@ -134,11 +134,19 @@
                 <form id="checkout-form" action="{{ route('customer.checkout.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="selected_items" id="selected-items">
-                    <button type="submit"
-                        class="checkout-btn w-full mt-5 bg-gray-600 text-white py-2.5 rounded-2xl hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                        id="checkout-btn" disabled>
-                        Checkout
-                    </button>
+                    @auth
+                        <button type="submit"
+                            class="checkout-btn w-full mt-5 bg-gray-600 text-white py-2.5 rounded-2xl hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            id="checkout-btn" disabled>
+                            Checkout
+                        </button>
+                    @else
+                        <button type="button" onclick="openLoginModal()"
+                            class="checkout-btn w-full mt-5 bg-gray-600 text-white py-2.5 rounded-2xl hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                            id="checkout-btn" disabled>
+                            Checkout
+                        </button>
+                    @endauth
                 </form>
             </div>
         </div>

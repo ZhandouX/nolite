@@ -21,8 +21,14 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function produk() 
+    public function produk()
     {
         return $this->belongsTo(Produk::class);
+    }
+
+    public function ulasan()
+    {
+        return $this->hasOne(Ulasan::class, 'order_item_id', 'id')
+            ->where('user_id', auth()->id());
     }
 }

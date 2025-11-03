@@ -156,3 +156,59 @@ h2 {
     flex: 1 1 100%;
   }
 }
+
+#modalImage {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.thumb {
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.thumb:hover {
+  transform: scale(1.05);
+}
+
+.main-image img:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+.color-option {
+  position: relative;
+  /* penting supaya .check absolut terhadap span */
+  user-select: none;
+  display: inline-block;
+}
+
+/* Hover background sesuai warna */
+.color-option:hover {
+  background-color: var(--bg-color);
+  color: #fff;
+}
+
+/* Khusus warna terang (putih/kuning), hover text jadi hitam */
+.color-option:hover[style*="ffffff"],
+.color-option:hover[style*="eab308"] {
+  color: #000;
+}
+
+/* Centang di pojok kanan atas */
+.color-option .check {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  color: #fff;
+  font-size: 10px;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+.color-option.selected .check {
+  display: flex !important;
+}

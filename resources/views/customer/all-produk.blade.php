@@ -119,7 +119,7 @@
                                     @endphp
                                     <button type="button"
                                         class="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center rounded-full 
-                                        bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
+                                                    bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
                                         onclick="event.preventDefault(); toggleWishlist({{ $item->id }})">
                                         <i id="heart-icon-{{ $item->id }}"
                                             class="fa-solid fa-heart {{ $isFavorited ? 'text-red-500 scale-110' : 'text-gray-400' }} transition-all duration-300 text-lg"></i>
@@ -253,6 +253,27 @@
                     window.location.href = categoryUrl;
                 }
             };
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const radios = document.querySelectorAll('#filterTipeForm input[name="tipe"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    switch (radio.value) {
+                        case 'all':
+                            window.location.href = "{{ route('customer.allProduk') }}";
+                            break;
+                        case 'unggulan':
+                            window.location.href = "{{ route('customer.unggulan') }}";
+                            break;
+                        case 'diskon':
+                            window.location.href = "{{ route('customer.diskon') }}";
+                            break;
+                    }
+                });
+            });
         });
     </script>
 @endpush

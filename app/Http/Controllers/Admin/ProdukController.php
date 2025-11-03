@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk;
+use App\Models\ProdukFoto;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
@@ -148,4 +150,20 @@ class ProdukController extends Controller
         $produk->delete();
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil dihapus.');
     }
+
+    public function hapusFoto($id)
+    {
+        $foto = ProdukFoto::findOrFail($id);
+
+        // Hapus file fisik dari storage
+        if (Storage::disk('public')->exists($foto->foto)) {
+            Storage::disk('public')->delete($foto->foto);
+        }
+
+        // Hapus dari database
+        $foto->delete();
+
+        return response()->json(['success' => true]);
+    }
+
 }

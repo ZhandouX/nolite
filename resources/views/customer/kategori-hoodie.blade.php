@@ -9,7 +9,7 @@
                 @include('layouts.partials_user._filter-form')
             </aside>
 
-            {{-- MAIN CONTENT: BANNER + GRID PRODUK --}}
+            {{-- CONTENT --}}
             <main class="w-full md:w-3/4 flex flex-col gap-6">
 
                 {{-- BANNER --}}
@@ -56,7 +56,7 @@
                         </button>
                         <div id="sortDropdownMenu"
                             class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
-                            <form method="GET" action="{{ route('customer.kategori-tshirt') }}" class="flex flex-col">
+                            <form method="GET" action="{{ route('customer.kategori-hoodie') }}" class="flex flex-col">
                                 <button type="submit" name="sort" value="harga_terendah"
                                     class="text-left px-4 py-2 hover:bg-gray-100 transition">Harga Terendah</button>
                                 <button type="submit" name="sort" value="harga_tertinggi"
@@ -87,7 +87,7 @@
                         <button id="closeSortModal"
                             class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl">&times;</button>
                         <h2 class="text-xl font-bold mb-4">Urutkan Produk</h2>
-                        <form method="GET" action="{{ route('customer.kategori-tshirt') }}" class="flex flex-col gap-3">
+                        <form method="GET" action="{{ route('customer.kategori-hoodie') }}" class="flex flex-col gap-3">
                             <button type="submit" name="sort" value="harga_terendah"
                                 class="text-left px-4 py-2 rounded hover:bg-gray-100 transition">Harga Terendah</button>
                             <button type="submit" name="sort" value="harga_tertinggi"
@@ -112,10 +112,10 @@
                                 class="block overflow-hidden rounded-t-2xl bg-gray-50 relative">
                                 @if($item->fotos->isNotEmpty())
                                     <img src="{{ asset('storage/' . $item->fotos->first()->foto) }}" alt="{{ $item->nama_produk }}"
-                                        class="w-full h-40 md:h-60 object-cover group-hover:scale-105 transition-transform duration-500">
+                                        class="w-full h-50 md:h-60 object-cover group-hover:scale-105 transition-transform duration-500">
                                 @else
                                     <img src="{{ asset('assets/images/no-image.png') }}" alt="{{ $item->nama_produk }}"
-                                        class="w-full h-40 md:h-50 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
+                                        class="w-full h-50 md:h-60 object-cover group-hover:scale-105 transition-transform duration-500 p-4">
                                 @endif
 
                                 {{-- WISHLIST --}}
@@ -127,7 +127,7 @@
                                     @endphp
                                     <button type="button"
                                         class="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center rounded-full 
-                                                                                           bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
+                                                                                                       bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
                                         onclick="event.preventDefault(); toggleWishlist({{ $item->id }})">
                                         <i id="heart-icon-{{ $item->id }}"
                                             class="fa-solid fa-heart {{ $isFavorited ? 'text-red-500 scale-110' : 'text-gray-400' }} transition-all duration-300 text-lg"></i>
@@ -157,7 +157,7 @@
                                         IDR {{ number_format($item->harga, 0, ',', '.') }}
                                     </p>
                                 @endif
-                                <div class="flex gap-2 w-full mt-2 pb-4">
+                                <div class="flex gap-2 w-full">
                                     <button
                                         class="bg-gray-600 text-white p-2 md:p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
                                         onclick="openModal('productModal-{{ $item->id }}')" title="Tambah ke Keranjang">
@@ -250,4 +250,27 @@
             }
         }
     </style>
+@endpush
+
+@push('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const radios = document.querySelectorAll('#filterTipeForm input[name="tipe"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    switch (radio.value) {
+                        case 'all':
+                            window.location.href = "{{ route('customer.allProduk') }}";
+                            break;
+                        case 'unggulan':
+                            window.location.href = "{{ route('customer.unggulan') }}";
+                            break;
+                        case 'diskon':
+                            window.location.href = "{{ route('customer.diskon') }}";
+                            break;
+                    }
+                });
+            });
+        });
+    </script>
 @endpush

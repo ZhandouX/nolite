@@ -76,7 +76,15 @@
         };
     </script>
     <script src="{{ asset('assets/js/user/keranjang-popup.js') }}"></script>
-    <!-- <script src="{{ asset('assets/js/user/kategori.js') }}"></script> -->
+    {{-- SESSION LOGIN --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(!empty($showLoginModal) && $showLoginModal)
+                openLoginModal();
+            @endif
+    });
+    </script>
+
     @if (session('showLoginModal'))
         <script>
             document.addEventListener('DOMContentLoaded', function () {
