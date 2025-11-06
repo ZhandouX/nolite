@@ -3,7 +3,7 @@
 @section('title', 'Keranjang')
 
 @section('content')
-    <div class="container mx-auto px-10 py-10 mt-12">
+    <div class="container mx-auto px-10 mb-4 pt-14 md:pt-6">
 
         {{-- BACK BUTTON --}}
         <div class="flex justify-end mb-6">

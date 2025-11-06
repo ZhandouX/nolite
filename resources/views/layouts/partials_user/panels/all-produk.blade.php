@@ -3,7 +3,7 @@
         <div
             class="product-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-4 gap-y-4 md:px-10 md-gap-y-6 md:gap-y-6 justify-items-center">
             @forelse($produk as $item)
-                <div class="group product-cards w-[300px] bg-white rounded-lg overflow-hidden border border-gray-300 shadow-sm"
+                <div class="group product-cards w-[300px] bg-white rounded-xl overflow-hidden border border-gray-300 shadow-sm"
                     data-id="{{ $item->id }}" data-nama="{{ $item->nama_produk }}" data-harga="{{ $item->harga }}"
                     data-foto="{{ $item->fotos->isNotEmpty() ? asset('storage/' . $item->fotos->first()->foto) : asset('assets/images/no-image.png') }}"
                     data-category="{{ $item->kategori ?? 'umum' }}">

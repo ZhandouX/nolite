@@ -1,7 +1,7 @@
 @extends('layouts.user_app')
 
 @section('content')
-    <div class="container mx-auto px-4 md:px-10 py-8 pt-24">
+    <div class="container mx-auto px-4 md:px-10 py-8 pt-14 md:pt-9">
 
         <div class="flex flex-col md:flex-row gap-8">
 

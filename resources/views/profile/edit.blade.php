@@ -3,7 +3,7 @@
 @section('title', 'My Account')
 
 @section('content')
-    <div class="bg-gray-100 text-gray-800 min-h-screen py-10 px-4 flex justify-center items-start pt-24">
+    <div class="bg-gray-100 text-gray-800 min-h-screen py-10 px-4 flex justify-center items-start pt-14 md:pt-9">
         <div class="w-full max-w-3xl">
 
             <!-- Header -->

@@ -8,43 +8,115 @@ use App\Models\Produk;
 
 class ProdukCustomerController extends Controller
 {
+    /**
+     * Search produk untuk customer
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function search(Request $request)
     {
-        $keyword = strtolower(trim($request->get('q')));
-        $keywordNoSpace = str_replace([' ', '-', '_'], '', $keyword);
+        $query = $request->input('q');
 
-        // Deteksi apakah ekstensi pg_trgm aktif
-        $pgTrgmEnabled = false;
-        try {
-            $check = \DB::select("SELECT extname FROM pg_extension WHERE extname = 'pg_trgm'");
-            $pgTrgmEnabled = !empty($check);
-        } catch (\Exception $e) {
-            $pgTrgmEnabled = false;
+        // Validasi minimal 2 karakter
+        if (strlen($query) < 2) {
+            return response()->json([]);
         }
 
-        if ($pgTrgmEnabled) {
-            // Jika pg_trgm aktif → gunakan fuzzy search PostgreSQL
-            $produks = Produk::with('fotos')
-                ->whereRaw('similarity(LOWER(nama_produk), ?) > 0.25', [$keyword])
-                ->orWhereRaw('similarity(LOWER(REPLACE(nama_produk, \'-\', \'\')), ?) > 0.25', [$keywordNoSpace])
-                ->orderByRaw('similarity(LOWER(nama_produk), ?) DESC', [$keyword])
-                ->limit(30)
-                ->get();
-        } else {
-            // Fallback: pakai LIKE dan Levenshtein di PHP
-            $produks = Produk::with('fotos')
-                ->whereRaw('LOWER(nama_produk) LIKE ?', ['%' . $keyword . '%'])
-                ->orWhereRaw('LOWER(REPLACE(nama_produk, \'-\', \'\')) LIKE ?', ['%' . $keywordNoSpace . '%'])
-                ->orWhereRaw('LOWER(REPLACE(nama_produk, \' \', \'\')) LIKE ?', ['%' . $keywordNoSpace . '%'])
-                ->limit(50)
-                ->get()
-                ->filter(function ($produk) use ($keywordNoSpace) {
-                    $nama = strtolower(str_replace([' ', '-', '_'], '', $produk->nama_produk));
-                    return levenshtein($nama, $keywordNoSpace) <= 3 || str_contains($nama, $keywordNoSpace);
-                })
-                ->values();
+        // Gunakan ILIKE agar tidak case-sensitive (PostgreSQL)
+        $produk = Produk::with([
+            'fotos' => function ($q) {
+                $q->orderBy('id', 'asc')->limit(1);
+            }
+        ])
+            ->where(function ($q) use ($query) {
+                $q->where('nama_produk', 'ILIKE', "%{$query}%")
+                    ->orWhere('deskripsi', 'ILIKE', "%{$query}%")
+                    ->orWhere('jenis', 'ILIKE', "%{$query}%")
+                    ->orWhere('jenis_lain', 'ILIKE', "%{$query}%")
+                    ->orWhere('warna_lain', 'ILIKE', "%{$query}%");
+            })
+            ->orderBy('nama_produk', 'asc')
+            ->limit(20)
+            ->get();
+
+        // Format data response JSON
+        $results = $produk->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'nama_produk' => $item->nama_produk,
+                'harga' => $item->harga,
+                'diskon' => $item->diskon ?? 0,
+                'jumlah' => $item->jumlah,
+                'jenis' => $item->jenis ?? '-',
+                'foto' => $item->fotos->isNotEmpty()
+                    ? asset('storage/' . $item->fotos->first()->foto)
+                    : asset('assets/images/no-image.png'),
+                'warna' => is_array($item->warna) ? implode(', ', $item->warna) : ($item->warna ?? '-'),
+                'ukuran' => is_array($item->ukuran) ? implode(', ', $item->ukuran) : ($item->ukuran ?? '-'),
+            ];
+        });
+
+        return response()->json($results);
+    }
+
+    /**
+     * Search produk dengan pagination (opsional)
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchWithPagination(Request $request)
+    {
+        $query = $request->input('q');
+        $perPage = $request->input('per_page', 12);
+
+        if (strlen($query) < 2) {
+            return response()->json([
+                'data' => [],
+                'total' => 0,
+                'current_page' => 1,
+                'last_page' => 1
+            ]);
         }
 
-        return response()->json($produks);
+        $produk = Produk::with([
+            'fotos' => function ($q) {
+                $q->orderBy('id', 'asc')->limit(1);
+            }
+        ])
+            ->where(function ($q) use ($query) {
+                $q->where('nama_produk', 'ILIKE', "%{$query}%")
+                    ->orWhere('deskripsi', 'ILIKE', "%{$query}%")
+                    ->orWhere('jenis', 'ILIKE', "%{$query}%")
+                    ->orWhere('jenis_lain', 'ILIKE', "%{$query}%")
+                    ->orWhere('warna_lain', 'ILIKE', "%{$query}%");
+            })
+            ->orderBy('nama_produk', 'asc')
+            ->paginate($perPage);
+
+        $results = [
+            'data' => $produk->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'nama_produk' => $item->nama_produk,
+                    'harga' => $item->harga,
+                    'diskon' => $item->diskon ?? 0,
+                    'jumlah' => $item->jumlah,
+                    'jenis' => $item->jenis ?? '-',
+                    'foto' => $item->fotos->isNotEmpty()
+                        ? asset('storage/' . $item->fotos->first()->foto)
+                        : asset('assets/images/no-image.png'),
+                    'warna' => is_array($item->warna) ? implode(', ', $item->warna) : ($item->warna ?? '-'),
+                    'ukuran' => is_array($item->ukuran) ? implode(', ', $item->ukuran) : ($item->ukuran ?? '-'),
+                ];
+            }),
+            'total' => $produk->total(),
+            'current_page' => $produk->currentPage(),
+            'last_page' => $produk->lastPage(),
+            'per_page' => $produk->perPage(),
+        ];
+
+        return response()->json($results);
     }
 }

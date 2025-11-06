@@ -1,7 +1,7 @@
 @extends('layouts.user_app')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8 md:px-10 pt-24">
+    <div class="container mx-auto px-4 py-8 md:px-10 pt-14 md:pt-9">
         <div class="flex flex-col md:flex-row gap-8">
             {{-- SIDEBAR FILTER (DESKTOP) --}}
             <aside class="hidden md:block w-full md:w-1/4 bg-white border border-gray-200 rounded-lg p-4">

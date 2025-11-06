@@ -3,7 +3,7 @@
 @section('title', 'Checkout Produk')
 
 @section('content')
-    <div class="pt-24 max-w-5xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-8">
+    <div class="max-w-5xl mx-auto px-4 py-8 pt-14 md:pt-9 grid md:grid-cols-3 gap-8">
 
         {{-- FORM DETAIL ALAMAT --}}
         <form id="checkout-form" action="{{ route('customer.checkout.dashboard.proses') }}" method="POST"

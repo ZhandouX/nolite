@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class KeranjangController extends Controller
 {
+    // INPUT KERANJANG (STORE)
     public function store(Request $request)
     {
         // Ambil data JSON
@@ -82,6 +83,7 @@ class KeranjangController extends Controller
         return response()->json(['message' => 'Produk berhasil ditambahkan ke keranjang!']);
     }
 
+    // HALAMAN KERANJANG (INDEX)
     public function index()
     {
         if (Auth::check()) {
@@ -105,6 +107,7 @@ class KeranjangController extends Controller
         return view('customer.keranjang', compact('keranjang', 'items'));
     }
 
+    // HAPUS KERANJANG (DESTROY)
     public function destroy($id)
     {
         // Jika user login
@@ -146,7 +149,7 @@ class KeranjangController extends Controller
         ], 404);
     }
 
-    // KIRIM DATA CHECKOUT
+    // KIRIM PRODUK DI KERANJANG KE HALAMAN CHECKOUT
     public function kirimKeCheckout(Request $request)
     {
         $selectedItems = $request->input('selected_items', []); // ID item yang dipilih
@@ -185,6 +188,7 @@ class KeranjangController extends Controller
         return redirect()->route('customer.checkout.view');
     }
 
+    // HITUNG JUMLAH PRODUK DI KERANJANG
     public function count()
     {
         if (Auth::check()) {

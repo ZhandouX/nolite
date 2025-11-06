@@ -188,7 +188,7 @@ class DashboardController extends Controller
         return view('customer.kategori-hoodie', compact('produks'));
     }
 
-    public function hoodieJersey(Request $request)
+    public function jerseyCategory(Request $request)
     {
         $query = Produk::with('fotos')
             ->where('jenis', 'Jersey');

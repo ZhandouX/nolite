@@ -2,33 +2,59 @@
     <span id="menuBtn" class="cursor-pointer text-2xl">&#9776;</span>
 </div>
 
-<div class="logo flex items-center gap-2">
+<div id="headerLogo" class="logo flex items-center gap-2">
     <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="Logo Nolite"
         class="logo-img w-8 h-8 object-contain" />
     <span class="text-white font-semibold">Nolite Aspiciens</span>
 </div>
 
 <nav class="nav-icons flex items-center gap-5 relative">
-    <!-- SEARCH BUTTON -->
-    <button id="searchButton" type="button" class="text-white hover:text-gray-400 transition relative z-[160]">
-        <i data-lucide="search" class="w-6 h-6"></i>
-    </button>
+    <!-- SEARCH SECTION -->
+    <div class="relative flex items-center">
+        <!-- INPUT SEARCH (Initially Hidden) -->
+        <input id="searchInput" type="text" placeholder="Cari produk..."
+            class="absolute right-0 w-0 opacity-0 transition-all duration-300 ease-in-out px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-800 z-[150]">
 
-    <!-- SEARCH CONTAINER -->
-    <div id="searchContainer" class="hidden bg-white shadow-xl absolute top-full right-0 mt-3 z-[150] border border-gray-200 rounded-xl 
-           w-full sm:w-[600px] max-w-[95vw] overflow-hidden transform origin-top 
-           transition-all duration-300 ease-out opacity-0 scale-y-0">
+        <!-- SEARCH BUTTON -->
+        <button id="searchButton" type="button"
+            class="text-white hover:text-gray-400 transition relative z-[160] ml-auto">
+            <i data-lucide="search" class="w-6 h-6"></i>
+        </button>
+    </div>
 
-        <div class="p-3 sm:p-4 border-b border-gray-100">
-            <input type="text" id="searchInput" placeholder="Cari produk..." class="w-full text-black border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base
-                   focus:ring-2 focus:ring-blue-400 outline-none" />
+    <!-- SEARCH RESULTS CONTAINER -->
+    <div id="searchResults"
+        class="fixed top-20 left-0 right-0 mx-auto max-w-6xl bg-white shadow-2xl rounded-2xl p-6 z-[140] hidden overflow-y-auto max-h-[80vh]">
+        <!-- CLOSE BUTTON -->
+        <button id="closeSearch" type="button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+            <i class="fa-solid fa-circle-xmark text-2xl"></i>
+        </button>
+
+        <!-- RESULTS HEADER -->
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Hasil Pencarian</h3>
+
+        <!-- LOADING STATE -->
+        <div id="loadingState" class="hidden text-center py-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+            <p class="mt-4 text-gray-600">Mencari produk...</p>
         </div>
 
-        <!-- HASIL PENCARIAN -->
-        <div id="searchResults"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 max-h-[60vh] overflow-y-auto w-full">
+        <!-- NO RESULTS STATE -->
+        <div id="noResults" class="hidden text-center py-8">
+            <i class="fa-solid fa-search text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-600 text-lg">Produk tidak ditemukan</p>
+        </div>
+
+        <!-- RESULTS GRID -->
+        <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Results will be inserted here dynamically -->
         </div>
     </div>
+
+    <!-- OVERLAY -->
+    <div id="searchOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[130] hidden"></div>
+
+
 
     @php
         if (Auth::check()) {
@@ -41,7 +67,7 @@
     <!-- KERANJANG -->
     <a href="{{ route('keranjang.index') }}" class="text-white hover:text-gray-400 transition relative">
         <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-        <span id="cartBadge" class="absolute -top-1 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5
+        <span id="cartBadge" class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5
         @if ($jumlahKeranjang == 0) hidden @endif">
             {{ $jumlahKeranjang }}
         </span>
@@ -68,291 +94,185 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchButton = document.getElementById('searchButton');
-        const searchContainer = document.getElementById('searchContainer');
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
-        const menuBtn = document.getElementById('menuBtn');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const closeSearch = document.getElementById('closeSearch');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const loadingState = document.getElementById('loadingState');
+        const noResults = document.getElementById('noResults');
 
-        // === Toggle sidebar ===
-        menuBtn?.addEventListener('click', () => {
-            const sidebar = document.getElementById('sidebar');
-            sidebar?.classList.toggle('active');
-        });
+        let searchTimeout;
+        let isSearchOpen = false;
 
-        // === Toggle search box ===
+        // ==========================
+        // Toggle Search Input
+        // ==========================
         searchButton.addEventListener('click', () => {
-            const isHidden = searchContainer.classList.contains('hidden');
-            if (isHidden) {
-                searchContainer.classList.remove('hidden');
-                requestAnimationFrame(() => {
-                    searchContainer.classList.remove('opacity-0', 'scale-y-0');
-                    searchContainer.classList.add('opacity-100', 'scale-y-100');
-                });
+            if (!isSearchOpen) {
+                searchInput.classList.remove('w-0', 'opacity-0');
+                searchInput.classList.add('w-64', 'opacity-100');
                 searchInput.focus();
+                isSearchOpen = true;
+            } else if (searchInput.value.trim().length >= 2) {
+                // Jika sedang terbuka dan ada teks, tampilkan hasil
+                searchResults.classList.remove('hidden');
+                searchOverlay.classList.remove('hidden');
             } else {
-                searchContainer.classList.add('opacity-0', 'scale-y-0');
-                searchContainer.classList.remove('opacity-100', 'scale-y-100');
-                setTimeout(() => searchContainer.classList.add('hidden'), 200);
+                closeSearchResults();
             }
         });
 
-        // === Fungsi Membuat Modal Beli ===
-        function createBeliModal(prod) {
-            const hargaFinal = prod.diskon > 0 ? prod.harga - (prod.harga * prod.diskon / 100) : prod.harga;
-            const foto = prod.fotos?.length ? `/storage/${prod.fotos[0].foto}` : '/assets/images/no-image.png';
-
-            const modal = `
-        <div id="productBeliModal-${prod.id}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-            <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
-                <button onclick="closeModal('productBeliModal-${prod.id}')" class="absolute top-3 right-3 text-2xl">&times;</button>
-                <div class="flex items-center gap-4 mb-5 mt-5 bg-gray-100 rounded-lg p-2">
-                    <img src="${foto}" alt="${prod.nama_produk}" class="w-20 h-20 object-contain rounded-lg">
-                    <div>
-                        <p class="font-bold text-black">${prod.nama_produk}</p>
-                        <p class="text-red-800 font-bold">IDR ${hargaFinal.toLocaleString('id-ID')}</p>
-                        <p class="text-sm text-gray-500">Stok: ${prod.jumlah}</p>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <label>Jumlah:</label>
-                    <input type="number" id="buyQty-${prod.id}" value="1" min="1" max="${prod.jumlah}" class="w-full text-center border rounded-lg">
-                    <button onclick="alert('Checkout ${prod.nama_produk}')" class="w-full bg-gray-600 text-white py-2 rounded-lg">Beli Sekarang</button>
-                </div>
-            </div>
-        </div>`;
-            document.body.insertAdjacentHTML('beforeend', modal);
-        }
-
-        // === Fungsi Membuat Modal Cart ===
-        function createCartModal(prod) {
-            const hargaFinal = prod.diskon > 0 ? prod.harga - (prod.harga * prod.diskon / 100) : prod.harga;
-            const foto = prod.fotos?.length ? `/storage/${prod.fotos[0].foto}` : '/assets/images/no-image.png';
-
-            const modal = `
-        <div id="productModal-${prod.id}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-            <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
-                <button onclick="closeModal('productModal-${prod.id}')" class="absolute top-3 right-3 text-2xl">&times;</button>
-                <div class="flex items-center gap-4 mb-5 mt-5 bg-gray-100 rounded-lg p-2">
-                    <img src="${foto}" alt="${prod.nama_produk}" class="w-20 h-20 object-contain rounded-lg">
-                    <div>
-                        <p class="font-bold text-black">${prod.nama_produk}</p>
-                        <p class="text-red-800 font-bold">IDR ${hargaFinal.toLocaleString('id-ID')}</p>
-                        <p class="text-sm text-gray-500">Stok: ${prod.jumlah}</p>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <label>Jumlah:</label>
-                    <input type="number" id="cartQty-${prod.id}" value="1" min="1" max="${prod.jumlah}" class="w-full text-center border rounded-lg">
-                    <button onclick="alert('Tambah ${prod.nama_produk} ke keranjang')" class="w-full bg-gray-600 text-white py-2 rounded-lg">Tambahkan ke Keranjang</button>
-                </div>
-            </div>
-        </div>`;
-            document.body.insertAdjacentHTML('beforeend', modal);
-        }
-
-        // === Fungsi open/close modal ===
-        window.openModal = function (id) {
-            document.getElementById(id).classList.remove('hidden');
-        }
-        window.closeModal = function (id) {
-            document.getElementById(id).classList.add('hidden');
-        }
-
-        // === Event input pencarian ===
-        searchInput.addEventListener('input', async function () {
+        // ==========================
+        // Ketika mengetik
+        // ==========================
+        searchInput.addEventListener('input', function () {
+            clearTimeout(searchTimeout);
             const query = this.value.trim();
-            searchResults.innerHTML = '';
-            if (query.length < 2) return;
 
+            if (query.length >= 2) {
+                // tampilkan UI pencarian
+                loadingState.classList.remove('hidden');
+                resultsGrid.classList.add('hidden');
+                noResults.classList.add('hidden');
+                searchResults.classList.remove('hidden');
+                searchOverlay.classList.remove('hidden');
+
+                searchTimeout = setTimeout(() => fetchSearchResults(query), 500);
+            } else {
+                // Jangan tutup input, cukup sembunyikan hasil
+                searchResults.classList.add('hidden');
+                searchOverlay.classList.add('hidden');
+                loadingState.classList.add('hidden');
+                noResults.classList.add('hidden');
+                resultsGrid.innerHTML = '';
+            }
+        });
+
+        // ==========================
+        // Fetch dari server
+        // ==========================
+        async function fetchSearchResults(query) {
             try {
                 const response = await fetch(`/search-produk?q=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error('Gagal mengambil data');
                 const data = await response.json();
 
-                if (!data.length) {
-                    searchResults.innerHTML = `<p class="text-gray-500 col-span-full text-center">Tidak ada produk ditemukan.</p>`;
-                    return;
+                loadingState.classList.add('hidden');
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    noResults.classList.remove('hidden');
+                    resultsGrid.classList.add('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                    resultsGrid.classList.remove('hidden');
+                    displayResults(data);
                 }
+            } catch (error) {
+                console.error('Error:', error);
+                loadingState.classList.add('hidden');
+                noResults.classList.remove('hidden');
+            }
+        }
 
-                data.forEach(prod => {
-                    const foto = prod.fotos?.length ? `/storage/${prod.fotos[0].foto}` : '/assets/images/no-image.png';
-                    const stok = prod.jumlah > 0 ? 'Tersedia' : 'Habis';
-                    const hargaHTML = prod.diskon > 0
-                        ? `
-            <p class="text-red-500 font-bold text-sm">
-                IDR ${(prod.harga - prod.harga * prod.diskon / 100).toLocaleString('id-ID')}
-            </p>
-            <p class="text-gray-400 line-through text-xs">
-                IDR ${prod.harga.toLocaleString('id-ID')}
-            </p>
-        `
-                        : `<p class="text-black font-bold text-sm">
-                IDR ${prod.harga.toLocaleString('id-ID')}
-           </p>`;
+        // ==========================
+        // Tampilkan hasil pencarian
+        // ==========================
+        function displayResults(products) {
+            resultsGrid.innerHTML = '';
 
-                    const card = `
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition 
-                flex flex-col justify-between w-full">
-        <a href="/produk/${prod.id}" class="block">
-            <img src="${foto}" alt="${prod.nama_produk}" 
-                 class="w-full h-40 sm:h-44 md:h-48 object-cover hover:opacity-90 transition" />
-        </a>
-        <div class="p-3 flex flex-col justify-between flex-grow">
-            <h3 class="text-sm md:text-base font-semibold text-gray-800 truncate mb-1">
-                ${prod.nama_produk}
-            </h3>
-            <div class="mb-1">${hargaHTML}</div>
-            <span class="text-xs md:text-sm ${stok === 'Tersedia' ? 'text-green-600' : 'text-red-500'}">${stok}</span>
-            <div class="mt-3 flex items-center gap-2">
-                <button onclick="openModal('productModal-${prod.id}')"
-                    class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-600 hover:bg-gray-400 text-white transition">
-                    <i data-lucide='shopping-cart'></i>
-                </button>
-                <button onclick="openModal('productBeliModal-${prod.id}')"
-                    class="flex-1 py-2 rounded-lg bg-gray-600 hover:bg-gray-400 text-white font-medium text-sm transition">
-                    Beli
-                </button>
+            products.forEach(prod => {
+                // Antisipasi null/undefined
+                const foto = prod.foto ? prod.foto : '/assets/images/no-image.png';
+                const nama = prod.nama_produk || 'Produk Tanpa Nama';
+                const harga = parseFloat(prod.harga) || 0;
+                const diskon = parseFloat(prod.diskon) || 0;
+                const jumlah = parseInt(prod.jumlah) || 0;
+
+                const hargaDiskon = diskon > 0
+                    ? harga - (harga * diskon / 100)
+                    : harga;
+
+                const stokStatus = jumlah > 0
+                    ? '<span class="text-green-600 text-sm font-semibold">Tersedia</span>'
+                    : '<span class="text-red-600 text-sm font-semibold">Stok Habis</span>';
+
+                const hargaHTML = diskon > 0
+                    ? `<div class="space-y-1">
+                <p class="text-gray-400 text-sm line-through">IDR ${formatRupiah(harga)}</p>
+                <div class="flex items-center gap-2">
+                    <p class="text-red-600 font-bold text-lg">IDR ${formatRupiah(hargaDiskon)}</p>
+                    <span class="bg-red-100 text-red-600 text-xs font-semibold px-2 py-0.5 rounded">${diskon}%</span>
+                </div>
+            </div>`
+                    : `<p class="text-gray-800 font-bold text-lg">IDR ${formatRupiah(harga)}</p>`;
+
+                const card = `
+        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="relative">
+                <img src="${foto}" 
+                     alt="${nama}"
+                     class="w-full h-48 object-contain bg-gray-50 p-4">
+                ${diskon > 0 ? `<div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">DISKON ${diskon}%</div>` : ''}
             </div>
-        </div>
-    </div>`;
+            <div class="p-4 space-y-3">
+                <h4 class="font-bold text-gray-800 text-base line-clamp-2 h-12">${nama}</h4>
+                ${hargaHTML}
+                <div class="flex items-center justify-between pt-2 border-t">
+                    ${stokStatus}
+                </div>
+                ${jumlah > 0 ? `
+                <div class="flex gap-2 mt-4">
+                    <button 
+                        onclick="openModal('productModal-${prod.id}')"
+                        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
+                        title="Tambah ke Keranjang">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                    <button 
+                        onclick="openModal('productBeliModal-${prod.id}')"
+                        class="flex-[2] bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 rounded-lg transition">
+                        Beli Sekarang
+                    </button>
+                </div>` : `
+                <button disabled class="w-full bg-gray-300 text-gray-500 font-semibold py-2 rounded-lg cursor-not-allowed">
+                    Stok Habis
+                </button>`}
+            </div>
+        </div>`;
 
+                resultsGrid.insertAdjacentHTML('beforeend', card);
+            });
 
-                    searchResults.insertAdjacentHTML('beforeend', card);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
 
-                    // Tambahkan modal dinamis
-                    createBeliModal(prod);
-                    createCartModal(prod);
-                });
+        // ==========================
+        // Format Rupiah
+        // ==========================
+        function formatRupiah(num) {
+            return new Intl.NumberFormat('id-ID').format(num);
+        }
 
-                // Refresh ikon lucide
-                lucide.createIcons();
+        // ==========================
+        // Tutup Search
+        // ==========================
+        function closeSearchResults() {
+            searchResults.classList.add('hidden');
+            searchOverlay.classList.add('hidden');
+            searchInput.classList.remove('w-64', 'opacity-100');
+            searchInput.classList.add('w-0', 'opacity-0');
+            searchInput.value = '';
+            isSearchOpen = false;
+            resultsGrid.innerHTML = '';
+            loadingState.classList.add('hidden');
+            noResults.classList.add('hidden');
+        }
 
-            } catch (err) {
-                console.error('Error:', err);
-                searchResults.innerHTML = `<p class="text-red-500 col-span-full text-center">Terjadi kesalahan memuat data.</p>`;
-            }
-        });
-
-        // === Klik di luar area menutup search box ===
-        document.addEventListener('click', (e) => {
-            if (!searchContainer.contains(e.target) && !searchButton.contains(e.target)) {
-                searchContainer.classList.add('opacity-0', 'scale-y-0');
-                searchContainer.classList.remove('opacity-100', 'scale-y-100');
-                setTimeout(() => searchContainer.classList.add('hidden'), 200);
-            }
+        closeSearch.addEventListener('click', closeSearchResults);
+        searchOverlay.addEventListener('click', closeSearchResults);
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && isSearchOpen) closeSearchResults();
         });
     });
 </script>
-
-<script>
-    function openModal(id) {
-        const modal = document.getElementById(id);
-        modal?.classList.remove('hidden');
-    }
-
-    function closeModal(id) {
-        const modal = document.getElementById(id);
-        modal?.classList.add('hidden');
-    }
-</script>
-
-<!-- ======================== RESPONSIVE STYLE ======================== -->
-
-<style>
-    #searchContainer {
-        backdrop-filter: blur(6px);
-    }
-
-    @media (max-width: 768px) {
-        .left-header span {
-            font-size: 1.2rem;
-        }
-
-        .logo {
-            font-size: 1rem;
-            margin-left: 5.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        /* === SEARCH CONTAINER === */
-        #searchContainer {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 250px;
-            height: 400px;
-            background: white;
-            border-radius: 0.75rem;
-            /* 12px */
-            margin-top: 0.5rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            z-index: 999;
-        }
-
-        /* === SEARCH INPUT === */
-        #searchContainer input {
-            font-size: 0.9rem;
-            width: 100%;
-            height: 45px;
-            padding: 0 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 0.5rem;
-            outline: none;
-        }
-
-        /* === HASIL PENCARIAN === */
-        #searchResults {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            padding: 0.75rem;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-
-        .logo-img {
-            width: 1.2rem;
-            height: 1.2rem;
-        }
-
-        .nav-icons {
-            gap: 0.5rem;
-        }
-
-        .nav-icons i {
-            width: 1rem;
-            height: 1rem;
-        }
-
-        .nav-icons a,
-        .nav-icons button {
-            width: 1.2rem;
-            height: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-
-        .nav-icons i[data-lucide="user"] {
-            width: 0.9rem;
-            height: 0.9rem;
-            margin-right: 0;
-        }
-
-        .absolute {
-            width: 0.9rem;
-            height: 0.9rem;
-            font-size: 0.55rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-    }
-</style>

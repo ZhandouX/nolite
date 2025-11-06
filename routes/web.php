@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\LandingController;
@@ -97,7 +98,38 @@ Route::get('/produk/diskon', [DashboardController::class, 'diskonProduk'])->name
 // DETAIL PRODUK
 Route::get('/produk/{id}', [DashboardController::class, 'show'])->name('produk.detail');
 
-Route::get('/search-produk', [ProdukCustomerController::class, 'search'])->name('produk.search');
+// ============================================
+// SEARCH ROUTES
+// ============================================
+
+// Route untuk search produk (Simple)
+Route::get('/search-produk', [ProdukCustomerController::class, 'search'])
+    ->name('produk.search');
+
+// Route untuk search dengan pagination (Alternative)
+Route::get('/search-produk-pagination', [ProdukCustomerController::class, 'searchWithPagination'])
+    ->name('produk.search.pagination');
+
+// ============================================
+// OPTIONAL: AUTOCOMPLETE ROUTES (fix)
+// ============================================
+use Illuminate\Http\Request;
+use App\Models\Produk;
+
+Route::get('/autocomplete-produk', function (Request $request) {
+    $query = $request->input('q');
+
+    if (strlen($query) < 2) {
+        return response()->json([]);
+    }
+
+    $suggestions = Produk::where('nama_produk', 'ILIKE', "%{$query}%")
+        ->orderBy('nama_produk', 'asc')
+        ->limit(5)
+        ->pluck('nama_produk');
+
+    return response()->json($suggestions);
+})->name('produk.autocomplete');
 
 
 // KATEGORI
@@ -112,7 +144,7 @@ Route::delete('/keranjang/{id}', [KeranjangController::class, 'destroy'])
     ->name('keranjang.destroy');
 Route::get('/keranjang/cek', function () {
     if (!Auth::check()) {
-        $cart = session('cart', []);
+        $cart = session('keranjang', []);
         return response()->json(['items' => array_values($cart)]);
     } else {
         $cart = Keranjang::where('user_id', Auth::id())
@@ -149,6 +181,15 @@ Route::post('/keranjang/session/update', [KeranjangController::class, 'updateSes
 // API WILAYAH
 Route::get('/lokasi-form', [LokasiController::class, 'form'])->name('lokasi.form');
 Route::get('/get-kota', [LokasiController::class, 'getKota'])->name('lokasi.getKota');
+
+// CHATBOT
+Route::get('/chatbot', function () {
+    return view('chatbot'); // pastikan file-nya: resources/views/chatbot.blade.php
+})->name('chatbot.view');
+
+Route::post('/chatbot/query', [ChatbotController::class, 'query'])->name('chatbot.query');
+
+
 
 // AUTH SETTINGS
 Route::middleware('auth')->group(function () {

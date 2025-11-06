@@ -43,7 +43,7 @@
 
         <label class="text-sm block">
             <input type="radio" name="tipe" value="unggulan" {{ request()->routeIs('customer.unggulan') ? 'checked' : '' }}>
-            Unggulan
+            Terlaris
         </label>
 
         <label class="text-sm block">

@@ -1,7 +1,7 @@
 @extends('layouts.user_app')
 
 @section('content')
-    <div class="container mx-auto px-4 md:px-10 py-8 pt-24">
+    <div class="container mx-auto px-4 md:px-10 py-8 pt-14 md:pt-9">
         <div class="flex flex-col md:flex-row gap-8">
 
             {{-- SIDEBAR FILTER (DESKTOP) --}}
@@ -15,7 +15,7 @@
                 <div class="banner-container">
                     <img src="{{ asset('assets/images/banner/tshirt.jpeg') }}" alt="">
                     <div class="banner-overlay">
-                        <h1>Produk Unggulan</h1>
+                        <h1>Produk Terlaris</h1>
                     </div>
                 </div>
 
