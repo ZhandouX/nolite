@@ -19,7 +19,6 @@
     </div>
 
     {{-- PANEL: CATEGORY --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/user/kategori.css') }}">
     @include('layouts.partials_user.panels.kategori')
 
     {{-- PANEL: DISKON --}}

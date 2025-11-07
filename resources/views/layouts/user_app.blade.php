@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nolite Aspiciens</title>
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/logonolite.png') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/user/style.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/user/keranjang.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/auth/login.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/auth/register.css') }}">
+    <link rel="stylesheet" href="/assets/css/user/style.css" />
+    <link rel="stylesheet" href="/assets/css/user/keranjang.css" />
+    <link rel="stylesheet" href="/assets/css/auth/login.css">
+    <link rel="stylesheet" href="/assets/css/auth/register.css">
+    <link rel="stylesheet" href="/assets/css/user/kategori.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -42,15 +43,15 @@
             bottom-2 right-8 scale-75 transition-all duration-300">
     </div>
 
-    <!-- Wrapper tombol fixed -->
+    <!-- ==================== WRAPPER TOMBOL FIXED ==================== -->
     <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 flex flex-col items-end gap-4 z-50">
+
         <!-- Tombol tambahan (Chatbot) -->
         @include('layouts.partials_user.modals.chatbot')
 
         <!-- Tombol Back To Top -->
         <button id="backToTop" title="Kembali ke atas" class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center shadow-lg 
-               hover:bg-gray-700 hover:scale-110 transition-all duration-500 
-               opacity-0 translate-y-6 rotate-45 pointer-events-none">
+               hover:bg-gray-700 hover:scale-110 transition-all duration-500">
             <i class="fa-solid fa-arrow-up text-lg"></i>
         </button>
 
@@ -75,29 +76,48 @@
     @include('layouts.partials_user.modals.register')
     {{-- Tambahkan di bagian bawah layout utama --}}
 
+
+    {{-- ====================================== --}}
+    {{-- ============= JAVASCRIPT ============= --}}
+    {{-- ====================================== --}}
+
     {{-- MODALS CONTAINER untuk produk dari search --}}
     <div id="dynamicModalsContainer"></div>
-
     <script>
-        // Function untuk load modal secara dinamis
-        async function loadProductModals(productId) {
-            try {
-                // Check jika modal sudah ada
-                if (document.getElementById(`productModal-${productId}`)) {
-                    return; // Modal sudah ada
-                }
+        // Fungsi modal dasar (fallback)
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
 
-                // Fetch modal HTML dari server
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        }
+    </script>
+    <script>
+        // ==========================
+        // Load modal produk secara dinamis
+        // ==========================
+        async function loadProductModals(productId) {
+            // Cek jika modal sudah ada
+            if (document.getElementById(`productModal-${productId}`)) return;
+
+            try {
                 const response = await fetch(`/get-product-modals/${productId}`);
                 const html = await response.text();
-
-                // Inject ke container
                 document.getElementById('dynamicModalsContainer').innerHTML += html;
 
-                // Re-initialize Lucide icons jika ada
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
+                // Refresh ikon Lucide jika ada
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             } catch (error) {
                 console.error('Error loading modals:', error);
             }
@@ -128,13 +148,9 @@
             }, 100);
         };
     </script>
-
-    {{-- ====================================== --}}
-    {{-- ============= JAVASCRIPT ============= --}}
-    {{-- ====================================== --}}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="{{ asset('assets/js/user/landing-page.js') }}"></script>
-    <script src="{{ asset('assets/js/user/auth-modal.js') }}"></script>
+    <script src="/assets/js/user/landing-page.js"></script>
+    <script src="/assets/js/user/auth-modal.js"></script>
     <script>
         window.Laravel = {
             csrfToken: "{{ csrf_token() }}",
@@ -148,8 +164,7 @@
             }
         };
     </script>
-    <script src="{{ asset('assets/js/user/keranjang-popup.js') }}"></script>
-
+    <script src="/assets/js/user/keranjang-popup.js"></script>
     {{-- HIDDEN BUTTON --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -203,7 +218,6 @@
             });
         });
     </script>
-
     {{-- SIDEBAR HIDDEN --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -235,8 +249,6 @@
             }
         });
     </script>
-
-
     {{-- SESSION LOGIN --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {

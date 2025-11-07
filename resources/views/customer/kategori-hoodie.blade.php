@@ -103,10 +103,10 @@
                 {{-- PRODUK GRID --}}
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                     @forelse($produks as $item)
-                        <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                        <div class="group product-cards bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                             data-id="{{ $item->id }}" data-nama="{{ $item->nama_produk }}" data-harga="{{ $item->harga }}"
                             data-foto="{{ $item->fotos->isNotEmpty() ? asset('storage/' . $item->fotos->first()->foto) : asset('assets/images/no-image.png') }}"
-                            data-category="{{ $item->kategori ?? 'umum' }}">
+                            data-category="{{ $item->jenis ?? 'Hoodie' }}">
 
                             <a href="{{ route('produk.detail', $item->id) }}"
                                 class="block overflow-hidden rounded-t-2xl bg-gray-50 relative">

@@ -101,6 +101,15 @@
                     @forelse($produks as $item)
                         <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                             data-id="{{ $item->id }}">
+
+                            {{-- BADGE DISKON --}}
+                            @if($item->diskon && $item->diskon > 0)
+                                <div
+                                    class="absolute top-1 right-1 bg-red-500 text-white text-[10px] md:text-sm font-bold px-3 py-1 rounded-full z-10">
+                                    DISKON -{{ $item->diskon }}%
+                                </div>
+                            @endif
+
                             <a href="{{ route('produk.detail', $item->id) }}"
                                 class="block overflow-hidden rounded-t-2xl bg-gray-50 relative">
                                 @if($item->fotos->isNotEmpty())
@@ -119,7 +128,7 @@
                                     @endphp
                                     <button type="button"
                                         class="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center rounded-full 
-                                                    bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
+                                                                                                    bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 text-gray-400 hover:text-red-500"
                                         onclick="event.preventDefault(); toggleWishlist({{ $item->id }})">
                                         <i id="heart-icon-{{ $item->id }}"
                                             class="fa-solid fa-heart {{ $isFavorited ? 'text-red-500 scale-110' : 'text-gray-400' }} transition-all duration-300 text-lg"></i>
@@ -127,32 +136,38 @@
                                 @endauth
                             </a>
 
-                            <div class="pb-4 pl-4 pr-4 pt-0 flex flex-col gap-3">
+                            <div class="pb-2 md:pb-4 pl-4 pr-4 pt-0 flex flex-col gap-1 md:gap-3">
                                 <h3 class="text-sm md:text-xl text-center font-bold text-gray-900 line-clamp-1 pt-2">
                                     {{ $item->nama_produk }}
                                 </h3>
 
-                                @if($item->diskon && $item->diskon > 0)
-                                    @php
-                                        $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
-                                    @endphp
-                                    <div class="flex justify-center items-center gap-2">
-                                        <p class="text-gray-400 text-[12px] md:text-[16px] font-bold line-through">
+                                @php
+                                    $adaDiskon = $item->diskon && $item->diskon > 0;
+                                    $hargaDiskon = $adaDiskon ? $item->harga - ($item->harga * $item->diskon / 100) : null;
+                                @endphp
+
+                                <div class="flex flex-col justify-center items-center h-[30px] md:h-[60px]">
+                                    @if($adaDiskon)
+                                        <p class="text-gray-400 text-[12px] md:text-[14px] font-bold line-through leading-tight">
                                             IDR {{ number_format($item->harga, 0, ',', '.') }}
                                         </p>
-                                        <p class="text-red-600 text-[12px] md:text-[16px] font-bold">
+                                        <p class="text-red-600 text-[12px] md:text-[16px] font-bold leading-tight">
                                             IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
                                         </p>
-                                    </div>
-                                @else
-                                    <p class="text-sm md:text-lg text-center text-black font-bold">
-                                        IDR {{ number_format($item->harga, 0, ',', '.') }}
-                                    </p>
-                                @endif
+                                    @else
+                                        <!-- Baris kosong sebagai placeholder agar tinggi tetap -->
+                                        <p class="text-transparent text-[14px] md:text-[14px] font-bold leading-tight select-none">
+                                            IDR {{ number_format($item->harga, 0, ',', '.') }}
+                                        </p>
+                                        <p class="text-black text-[14px] md:text-[16px] font-bold leading-tight">
+                                            IDR {{ number_format($item->harga, 0, ',', '.') }}
+                                        </p>
+                                    @endif
+                                </div>
 
-                                <div class="flex gap-1 md:gap-2 w-full pb-2">
+                                <div class="flex gap-1 md:gap-2 w-full pt-2 md:pt-2 pb-2">
                                     <button
-                                        class="bg-gray-600 text-white p-2 md:p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
+                                        class="bg-gray-600 text-white p-2 md:p-3 rounded-lg mdrounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
                                         onclick="openModal('productModal-{{ $item->id }}')" title="Tambah ke Keranjang">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -162,7 +177,7 @@
                                     </button>
 
                                     <button
-                                        class="bg-gray-600 text-white px-3 md:px-6 py-2 md:py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-1"
+                                        class="bg-gray-600 text-white px-3 md:px-6 py-3 md:py-3 rounded-lg md:rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-1"
                                         onclick="openModal('productBeliModal-{{ $item->id }}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

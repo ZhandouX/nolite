@@ -5,7 +5,7 @@
         {{-- CLOSE --}}
         <button type="button" onclick="closeModal('productModal-{{ $item->id }}')"
             class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-            <i class="fa-solid fa-circle-xmark text-sm md:text-xl"></i>
+            <i class="fa-solid fa-circle-xmark text-[20px] md:text-xl"></i>
         </button>
 
         {{-- CARD PRODUK --}}
@@ -26,10 +26,10 @@
                         $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
                     @endphp
                     <div class="flex justify-start items-center gap-3">
-                        <p class="text-gray-400 font-bold line-through">
+                        <p class="text-[12px] md:text-sm text-gray-400 font-bold line-through">
                             IDR {{ number_format($item->harga, 0, ',', '.') }}
                         </p>
-                        <p class="text-red-600 font-bold">
+                        <p class="text-[13px] md:text-sm text-red-600 font-bold">
                             IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
                             <span class="text-sm text-red-500">({{ $item->diskon }}%)</span>
                         </p>

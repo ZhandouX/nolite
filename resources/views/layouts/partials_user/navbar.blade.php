@@ -1,60 +1,60 @@
 <div class="left-header">
-    <span id="menuBtn" class="cursor-pointer text-2xl">&#9776;</span>
+    <span id="menuBtn" class="cursor-pointer text-2xl">
+        <i class="fa-solid fa-bars text-[14px] md:text-xl"></i>
+    </span>
 </div>
 
 <div id="headerLogo" class="logo flex items-center gap-2">
     <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="Logo Nolite"
         class="logo-img w-8 h-8 object-contain" />
-    <span class="text-white font-semibold">Nolite Aspiciens</span>
+    <span class="text-white text-[14px] md:text-[20px] font-semibold">Nolite Aspiciens</span>
 </div>
 
-<nav class="nav-icons flex items-center gap-5 relative">
-    <!-- SEARCH SECTION -->
-    <div class="relative flex items-center">
-        <!-- INPUT SEARCH (Initially Hidden) -->
-        <input id="searchInput" type="text" placeholder="Cari produk..."
-            class="absolute right-0 w-0 opacity-0 transition-all duration-300 ease-in-out px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-800 z-[150]">
-
-        <!-- SEARCH BUTTON -->
-        <button id="searchButton" type="button"
-            class="text-white hover:text-gray-400 transition relative z-[160] ml-auto">
-            <i data-lucide="search" class="w-6 h-6"></i>
+<nav class="nav-icons flex items-center gap-2 md:gap-5 relative">
+    <div class="relative flex items-center h-10">
+        <!-- ICON SEARCH -->
+        <button type="button" id="searchButton">
+            <i data-lucide="search"
+                class="lucide-nav absolute left-0 top-1/2 transform -translate-y-1/2 text-white pointer-events-none"></i>
         </button>
+
+        <!-- INPUT SEARCH -->
+        <input id="searchInput" type="text" placeholder="Cari produk..."
+            class="bg-transparent border-none cursor-pointer w-0 h-6 pl-5 text-[12px] md:text-sm transition-all duration-400 ease-in-out
+               focus:w-36 focus:border-b focus:border-gray-800 focus:pl-8 focus:outline-none focus:cursor-text rounded-none text-white">
     </div>
 
-    <!-- SEARCH RESULTS CONTAINER -->
     <div id="searchResults"
-        class="fixed top-20 left-0 right-0 mx-auto max-w-6xl bg-white shadow-2xl rounded-2xl p-6 z-[140] hidden overflow-y-auto max-h-[80vh]">
+        class="fixed top-20 right-6 w-[450px] max-w-[450px] md:w-[800px] md:max-w-[800px] bg-white shadow-2xl rounded-2xl p-4 z-[140] hidden overflow-y-auto max-h-[70vh]">
+
         <!-- CLOSE BUTTON -->
-        <button id="closeSearch" type="button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+        <button id="closeSearch" type="button" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
             <i class="fa-solid fa-circle-xmark text-2xl"></i>
         </button>
 
         <!-- RESULTS HEADER -->
-        <h3 class="text-2xl font-bold text-gray-800 mb-6">Hasil Pencarian</h3>
+        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Hasil Pencarian</h3>
 
         <!-- LOADING STATE -->
-        <div id="loadingState" class="hidden text-center py-8">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-            <p class="mt-4 text-gray-600">Mencari produk...</p>
+        <div id="loadingState" class="hidden text-center py-6">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900 mx-auto"></div>
+            <p class="mt-2 text-gray-600 text-sm">Mencari produk...</p>
         </div>
 
         <!-- NO RESULTS STATE -->
-        <div id="noResults" class="hidden text-center py-8">
-            <i class="fa-solid fa-search text-6xl text-gray-300 mb-4"></i>
-            <p class="text-gray-600 text-lg">Produk tidak ditemukan</p>
+        <div id="noResults" class="hidden text-center py-6">
+            <i class="fa-solid fa-search text-5xl text-gray-300 mb-2"></i>
+            <p class="text-gray-600 text-sm">Produk tidak ditemukan</p>
         </div>
 
         <!-- RESULTS GRID -->
-        <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Results will be inserted here dynamically -->
+        <div id="resultsGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-4 justify-items-center">
+            <!-- Results akan muncul di sini -->
         </div>
     </div>
 
     <!-- OVERLAY -->
-    <div id="searchOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[130] hidden"></div>
-
-
+    <div id="searchOverlay" class="fixed inset-0 bg-transparent z-[130] hidden"></div>
 
     @php
         if (Auth::check()) {
@@ -66,7 +66,7 @@
 
     <!-- KERANJANG -->
     <a href="{{ route('keranjang.index') }}" class="text-white hover:text-gray-400 transition relative">
-        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+        <i data-lucide="shopping-cart" class="lucide-nav"></i>
         <span id="cartBadge" class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5
         @if ($jumlahKeranjang == 0) hidden @endif">
             {{ $jumlahKeranjang }}
@@ -78,17 +78,16 @@
         @auth
             <a href="{{ route('profile.edit') }}"
                 class="text-white hover:text-gray-400 transition flex items-center justify-center w-8 h-8 rounded-full">
-                <i data-lucide="user" class="w-5 h-5"></i>
+                <i data-lucide="user" class="lucide-nav"></i>
             </a>
         @else
             <button type="button" onclick="openLoginModal()"
                 class="text-white hover:text-gray-400 transition flex items-center justify-center w-8 h-8 rounded-full">
-                <i data-lucide="user" class="w-5 h-5"></i>
+                <i data-lucide="user" class="lucide-nav"></i>
             </button>
         @endauth
     </div>
 </nav>
-
 
 <!-- ======================== JAVASCRIPT ======================== -->
 <script>
@@ -110,17 +109,37 @@
         // ==========================
         searchButton.addEventListener('click', () => {
             if (!isSearchOpen) {
-                searchInput.classList.remove('w-0', 'opacity-0');
+                searchInput.classList.remove('w-0', 'opacity-0', 'pointer-events-none');
                 searchInput.classList.add('w-64', 'opacity-100');
                 searchInput.focus();
                 isSearchOpen = true;
             } else if (searchInput.value.trim().length >= 2) {
-                // Jika sedang terbuka dan ada teks, tampilkan hasil
                 searchResults.classList.remove('hidden');
                 searchOverlay.classList.remove('hidden');
             } else {
                 closeSearchResults();
             }
+        });
+
+        // ==========================
+        // Tutup Search
+        // ==========================
+        function closeSearchResults() {
+            searchResults.classList.add('hidden');
+            searchOverlay.classList.add('hidden');
+            searchInput.classList.remove('w-64', 'opacity-100');
+            searchInput.classList.add('w-0', 'opacity-0', 'pointer-events-none');
+            searchInput.value = '';
+            isSearchOpen = false;
+            resultsGrid.innerHTML = '';
+            loadingState.classList.add('hidden');
+            noResults.classList.add('hidden');
+        }
+
+        closeSearch.addEventListener('click', closeSearchResults);
+        searchOverlay.addEventListener('click', closeSearchResults);
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && isSearchOpen) closeSearchResults();
         });
 
         // ==========================
@@ -131,7 +150,6 @@
             const query = this.value.trim();
 
             if (query.length >= 2) {
-                // tampilkan UI pencarian
                 loadingState.classList.remove('hidden');
                 resultsGrid.classList.add('hidden');
                 noResults.classList.add('hidden');
@@ -140,7 +158,6 @@
 
                 searchTimeout = setTimeout(() => fetchSearchResults(query), 500);
             } else {
-                // Jangan tutup input, cukup sembunyikan hasil
                 searchResults.classList.add('hidden');
                 searchOverlay.classList.add('hidden');
                 loadingState.classList.add('hidden');
@@ -175,71 +192,106 @@
             }
         }
 
+        // Override openModal untuk dynamic modal
+        const originalOpenModal = window.openModal;
+        window.openModal = async function (modalId) {
+            // Load modal jika belum ada
+            if (!document.getElementById(modalId)) {
+                // Ambil productId dari akhir string ID (asumsi format: productModal-{id})
+                const parts = modalId.split('-');
+                const productId = parts[parts.length - 1];
+                await loadProductModals(productId);
+            }
+
+            // Tunggu sebentar supaya modal sudah di-inject
+            setTimeout(() => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    if (originalOpenModal) {
+                        originalOpenModal(modalId);
+                    } else {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        document.body.style.overflow = 'hidden';
+                    }
+                } else {
+                    console.warn('Modal tidak ditemukan:', modalId);
+                }
+            }, 50);
+        };
+
         // ==========================
-        // Tampilkan hasil pencarian
+        // Fungsi untuk menampilkan badge diskon
         // ==========================
+        function renderDiskonBadge(diskon) {
+            if (!diskon || diskon <= 0) return '';
+            const persen = Number(diskon);
+            return `<div class="absolute top-0 right-0 bg-red-500 text-white text-[8px] md:text-[12px] font-semibold md:font-bold px-2 py-1 rounded">
+                DISKON ${persen}%
+            </div>`;
+        }
+
         function displayResults(products) {
+            const resultsGrid = document.getElementById('resultsGrid');
             resultsGrid.innerHTML = '';
 
             products.forEach(prod => {
-                // Antisipasi null/undefined
-                const foto = prod.foto ? prod.foto : '/assets/images/no-image.png';
-                const nama = prod.nama_produk || 'Produk Tanpa Nama';
-                const harga = parseFloat(prod.harga) || 0;
-                const diskon = parseFloat(prod.diskon) || 0;
-                const jumlah = parseInt(prod.jumlah) || 0;
-
-                const hargaDiskon = diskon > 0
-                    ? harga - (harga * diskon / 100)
-                    : harga;
+                const foto = prod.foto || '/assets/images/no-image.png';
+                const nama = (prod.nama_produk || 'Produk Tanpa Nama').replace(/"/g, '&quot;');
+                const harga = Number(prod.harga) || 0;
+                const hargaDiskon = Number(prod.harga_diskon) || harga;
+                const diskon = Number(prod.diskon) || 0;
+                const jumlah = Number(prod.jumlah) || 0;
 
                 const stokStatus = jumlah > 0
-                    ? '<span class="text-green-600 text-sm font-semibold">Tersedia</span>'
-                    : '<span class="text-red-600 text-sm font-semibold">Stok Habis</span>';
+                    ? '<span class="text-green-600 text-xs font-semibold">Tersedia</span>'
+                    : '<span class="text-red-600 text-xs font-semibold">Stok Habis</span>';
 
-                const hargaHTML = diskon > 0
-                    ? `<div class="space-y-1">
-                <p class="text-gray-400 text-sm line-through">IDR ${formatRupiah(harga)}</p>
-                <div class="flex items-center gap-2">
-                    <p class="text-red-600 font-bold text-lg">IDR ${formatRupiah(hargaDiskon)}</p>
-                    <span class="bg-red-100 text-red-600 text-xs font-semibold px-2 py-0.5 rounded">${diskon}%</span>
-                </div>
-            </div>`
-                    : `<p class="text-gray-800 font-bold text-lg">IDR ${formatRupiah(harga)}</p>`;
+                // Harga dan diskon berdampingan
+                let hargaHTML = '';
+                if (diskon > 0 && hargaDiskon < harga) {
+                    hargaHTML = `
+                        <div class="flex justify-center items-center gap-1 md:gap-2 truncate">
+                            <p class="text-gray-400 line-through text-[10px] md:text-xs">${formatRupiah(harga)}</p>
+                            <p class="text-red-600 font-bold text-[10px] md:text-sm">${formatRupiah(hargaDiskon)} 
+                                <span class="text-[10px] md:text-xs text-red-500">(${diskon}%)</span>
+                            </p>
+                        </div>
+                        `;
+                } else {
+                    hargaHTML = `<p class="text-black font-bold text-[10px] md:text-sm">${formatRupiah(harga)}</p>`;
+                }
+
+                const modalCartId = `productModal-${prod.id}`;
+                const modalBeliId = `productBeliModal-${prod.id}`;
 
                 const card = `
-        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="relative">
-                <img src="${foto}" 
-                     alt="${nama}"
-                     class="w-full h-48 object-contain bg-gray-50 p-4">
-                ${diskon > 0 ? `<div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">DISKON ${diskon}%</div>` : ''}
-            </div>
-            <div class="p-4 space-y-3">
-                <h4 class="font-bold text-gray-800 text-base line-clamp-2 h-12">${nama}</h4>
-                ${hargaHTML}
-                <div class="flex items-center justify-between pt-2 border-t">
-                    ${stokStatus}
-                </div>
-                ${jumlah > 0 ? `
-                <div class="flex gap-2 mt-4">
-                    <button 
-                        onclick="openModal('productModal-${prod.id}')"
-                        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
-                        title="Tambah ke Keranjang">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </button>
-                    <button 
-                        onclick="openModal('productBeliModal-${prod.id}')"
-                        class="flex-[2] bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 rounded-lg transition">
-                        Beli Sekarang
-                    </button>
-                </div>` : `
-                <button disabled class="w-full bg-gray-300 text-gray-500 font-semibold py-2 rounded-lg cursor-not-allowed">
-                    Stok Habis
-                </button>`}
-            </div>
-        </div>`;
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 w-full text-center">
+                        <div class="relative">
+                            <img src="${foto}" alt="${nama}" class="w-full h-40 max-h-40 object-cover bg-gray-50">
+                            ${renderDiskonBadge(diskon)}
+                        </div>
+                        <div class="p-2 space-y-1">
+                            <h4 class="font-bold text-gray-800 text-[12px] md:text-sm truncate">${nama}</h4>
+                            ${hargaHTML}
+                            <div class="pt-0 md:pt-1 border-t flex justify-center text-[10px] md:text-xs">
+                                ${stokStatus}
+                            </div>
+                            ${jumlah > 0
+                        ? `<div class="flex gap-1 mt-2 justify-center">
+                                       <button onclick="openModal('${modalCartId}')" class="bg-gray-600 hover:bg-gray-200 text-white font-semibold py-2 px-2 rounded-lg text-xs flex items-center gap-1">
+                                           <i class="fa-solid fa-cart-shopping text-xs"></i>
+                                       </button>
+                                       <button onclick="openModal('${modalBeliId}')" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 w-full rounded-lg text-xs">
+                                           Beli
+                                       </button>
+                                   </div>`
+                        : `<button disabled class="w-full bg-gray-300 text-gray-500 font-semibold py-1 rounded text-xs mt-2">
+                                       Stok Habis
+                                   </button>`}
+                        </div>
+                    </div>
+                    `;
 
                 resultsGrid.insertAdjacentHTML('beforeend', card);
             });
@@ -254,25 +306,7 @@
             return new Intl.NumberFormat('id-ID').format(num);
         }
 
-        // ==========================
-        // Tutup Search
-        // ==========================
-        function closeSearchResults() {
-            searchResults.classList.add('hidden');
-            searchOverlay.classList.add('hidden');
-            searchInput.classList.remove('w-64', 'opacity-100');
-            searchInput.classList.add('w-0', 'opacity-0');
-            searchInput.value = '';
-            isSearchOpen = false;
-            resultsGrid.innerHTML = '';
-            loadingState.classList.add('hidden');
-            noResults.classList.add('hidden');
-        }
-
-        closeSearch.addEventListener('click', closeSearchResults);
-        searchOverlay.addEventListener('click', closeSearchResults);
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && isSearchOpen) closeSearchResults();
-        });
+        // Export displayResults supaya bisa dipanggil di fetchSearchResults
+        window.displayResults = displayResults;
     });
 </script>

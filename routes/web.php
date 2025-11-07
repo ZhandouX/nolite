@@ -14,6 +14,8 @@ use App\Http\Controllers\Customer\UlasanController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\LokasiController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Http\Request;
+use App\Models\Produk;
 use App\Models\Keranjang;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -113,9 +115,6 @@ Route::get('/search-produk-pagination', [ProdukCustomerController::class, 'searc
 // ============================================
 // OPTIONAL: AUTOCOMPLETE ROUTES (fix)
 // ============================================
-use Illuminate\Http\Request;
-use App\Models\Produk;
-
 Route::get('/autocomplete-produk', function (Request $request) {
     $query = $request->input('q');
 
@@ -130,6 +129,7 @@ Route::get('/autocomplete-produk', function (Request $request) {
 
     return response()->json($suggestions);
 })->name('produk.autocomplete');
+Route::get('/get-product-modals/{id}', [ProdukCustomerController::class, 'getProductModals']);
 
 
 // KATEGORI

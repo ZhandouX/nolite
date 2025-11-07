@@ -9,51 +9,43 @@ use App\Models\Produk;
 class ProdukCustomerController extends Controller
 {
     /**
-     * Search produk untuk customer
-     * 
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Search produk untuk customer (tanpa pagination)
      */
     public function search(Request $request)
     {
-        $query = $request->input('q');
+        $query = trim($request->input('q', ''));
 
-        // Validasi minimal 2 karakter
         if (strlen($query) < 2) {
             return response()->json([]);
         }
 
-        // Gunakan ILIKE agar tidak case-sensitive (PostgreSQL)
-        $produk = Produk::with([
-            'fotos' => function ($q) {
-                $q->orderBy('id', 'asc')->limit(1);
-            }
-        ])
-            ->where(function ($q) use ($query) {
-                $q->where('nama_produk', 'ILIKE', "%{$query}%")
-                    ->orWhere('deskripsi', 'ILIKE', "%{$query}%")
-                    ->orWhere('jenis', 'ILIKE', "%{$query}%")
-                    ->orWhere('jenis_lain', 'ILIKE', "%{$query}%")
-                    ->orWhere('warna_lain', 'ILIKE', "%{$query}%");
-            })
+        $produk = Produk::with(['fotos' => fn($q) => $q->orderBy('id', 'asc')->limit(1)])
+            ->where('nama_produk', 'ILIKE', "%{$query}%")
             ->orderBy('nama_produk', 'asc')
             ->limit(20)
             ->get();
 
-        // Format data response JSON
         $results = $produk->map(function ($item) {
+            // Hitung diskon jika ada
+            $hargaAsli = (float) $item->harga;
+            $diskon = (float) ($item->diskon ?? 0);
+            $hargaSetelahDiskon = $diskon > 0
+                ? $hargaAsli - ($hargaAsli * $diskon / 100)
+                : $hargaAsli;
+
             return [
                 'id' => $item->id,
                 'nama_produk' => $item->nama_produk,
-                'harga' => $item->harga,
-                'diskon' => $item->diskon ?? 0,
+                'harga' => $hargaAsli,
+                'harga_diskon' => $hargaSetelahDiskon,
+                'diskon' => $diskon,
                 'jumlah' => $item->jumlah,
                 'jenis' => $item->jenis ?? '-',
                 'foto' => $item->fotos->isNotEmpty()
                     ? asset('storage/' . $item->fotos->first()->foto)
                     : asset('assets/images/no-image.png'),
-                'warna' => is_array($item->warna) ? implode(', ', $item->warna) : ($item->warna ?? '-'),
-                'ukuran' => is_array($item->ukuran) ? implode(', ', $item->ukuran) : ($item->ukuran ?? '-'),
+                'warna' => $item->warna ?? '-',
+                'ukuran' => $item->ukuran ?? '-',
             ];
         });
 
@@ -62,9 +54,6 @@ class ProdukCustomerController extends Controller
 
     /**
      * Search produk dengan pagination (opsional)
-     * 
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function searchWithPagination(Request $request)
     {
@@ -86,11 +75,11 @@ class ProdukCustomerController extends Controller
             }
         ])
             ->where(function ($q) use ($query) {
-                $q->where('nama_produk', 'ILIKE', "%{$query}%")
-                    ->orWhere('deskripsi', 'ILIKE', "%{$query}%")
-                    ->orWhere('jenis', 'ILIKE', "%{$query}%")
-                    ->orWhere('jenis_lain', 'ILIKE', "%{$query}%")
-                    ->orWhere('warna_lain', 'ILIKE', "%{$query}%");
+                $q->whereRaw('nama_produk ILIKE ?', ["%{$query}%"])
+                    ->orWhereRaw('deskripsi ILIKE ?', ["%{$query}%"])
+                    ->orWhereRaw('jenis ILIKE ?', ["%{$query}%"])
+                    ->orWhereRaw('jenis_lain ILIKE ?', ["%{$query}%"])
+                    ->orWhereRaw('warna_lain ILIKE ?', ["%{$query}%"]);
             })
             ->orderBy('nama_produk', 'asc')
             ->paginate($perPage);
@@ -118,5 +107,12 @@ class ProdukCustomerController extends Controller
         ];
 
         return response()->json($results);
+    }
+
+    public function getProductModals($id)
+    {
+        $item = Produk::with('fotos')->findOrFail($id);
+        return view('layouts.partials_user.modal-beli', compact('item'))->render()
+            . view('layouts.partials_user.modal-cart', compact('item'))->render();
     }
 }

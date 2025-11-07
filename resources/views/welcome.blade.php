@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nolite Aspiciens</title>
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/logonolite.png') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/user/style.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/user/keranjang.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/auth/login.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/auth/register.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/user/kategori.css') }}">
+    <link rel="stylesheet" href="/assets/css/user/style.css" />
+    <link rel="stylesheet" href="/assets/css/user/keranjang.css">
+    <link rel="stylesheet" href="/assets/css/auth/login.css">
+    <link rel="stylesheet" href="/assets/css/auth/register.css">
+    <link rel="stylesheet" href="/assets/css/user/kategori.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -50,13 +50,6 @@
 
     {{-- PANEL: CATEGORY --}}
     @include('layouts.partials_user.panels.kategori')
-
-    {{-- PANEL: PRODUCT: FILTERED --}}
-    <div id="filtered-category" class="hidden">
-        <div id="category-banner" class="relative h-96 bg-cover bg-center rounded-3xl shadow-lg mb-12"></div>
-        <h2 class="text-3xl font-bold text-center mb-8 text-gray-800" id="category-title"></h2>
-        <div id="filtered-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    </div>
 
     {{-- PANEL: DISKON --}}
     @include('layouts.partials_user.panels.diskon')
@@ -128,7 +121,115 @@
     {{-- ============= JAVASCRIPT ============= --}}
     {{-- ====================================== --}}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="{{ asset('assets/js/user/landing-page.js') }}"></script>
+    <script>
+        // === Sidebar Toggle (Tailwind Version) ===
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const menuBtn = document.getElementById("menuBtn");
+        const closeSidebar = document.getElementById("closeSidebar");
+        const backToTopButton = document.getElementById("backToTop");
+
+        if (menuBtn && sidebar && overlay) {
+            menuBtn.addEventListener("click", () => {
+                // Sidebar muncul
+                sidebar.classList.remove("-translate-x-full");
+                sidebar.classList.add("translate-x-0");
+
+                // Overlay aktif
+                overlay.classList.remove("opacity-0", "pointer-events-none");
+                overlay.classList.add("opacity-100", "pointer-events-auto");
+            });
+
+            closeSidebar.addEventListener("click", () => {
+                // Sidebar sembunyi
+                sidebar.classList.remove("translate-x-0");
+                sidebar.classList.add("-translate-x-full");
+
+                // Overlay nonaktif
+                overlay.classList.remove("opacity-100", "pointer-events-auto");
+                overlay.classList.add("opacity-0", "pointer-events-none");
+            });
+
+            overlay.addEventListener("click", () => {
+                sidebar.classList.remove("translate-x-0");
+                sidebar.classList.add("-translate-x-full");
+                overlay.classList.remove("opacity-100", "pointer-events-auto");
+                overlay.classList.add("opacity-0", "pointer-events-none");
+            });
+        }
+
+        // === Dropdown Sidebar ===
+        document.querySelectorAll(".dropdown-toggle").forEach((toggle) => {
+            toggle.addEventListener("click", function (e) {
+                e.preventDefault();
+                this.parentElement.classList.toggle("open");
+            });
+        });
+
+        // === Simple Search Filter ===
+        const searchInput = document.querySelector(".search-bar input");
+
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+                const value = this.value.toLowerCase();
+                allProducts.forEach((prod) => {
+                    const text = prod.innerText.toLowerCase();
+                    prod.style.display = text.includes(value) ? "block" : "none";
+                });
+            });
+        }
+
+        // === Inisialisasi Lucide Icon ===
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+
+        // === Hero Slider ===
+        let slides = document.querySelectorAll(".slide");
+        let currentSlide = 0;
+
+        function changeSlide() {
+            slides[currentSlide].classList.remove("active");
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add("active");
+        }
+
+        // IMAGES SLIDER
+        setInterval(changeSlide, 4000);
+
+        function openDetail(productName) {
+            alert("Buka detail produk: " + productName);
+        }
+
+        // === Footer Payment Toggle ===
+        function toggleFooterPayment() {
+            const logosMobile = document.getElementById("footerLogosMobile");
+            const icon = document.getElementById("footerIcon");
+
+            logosMobile.classList.toggle("hidden");
+            icon.classList.toggle("rotate-180");
+        }
+
+        // === Back To Top Button ===
+        window.addEventListener("scroll", () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove("hidden");
+                backToTopButton.classList.add("flex");
+            } else {
+                backToTopButton.classList.add("hidden");
+                backToTopButton.classList.remove("flex");
+            }
+        });
+
+        backToTopButton.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        // === Re-initialize Lucide (safe call) ===
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+    </script>
     <script>
         window.Laravel = {
             csrfToken: "{{ csrf_token() }}",
@@ -142,7 +243,7 @@
             }
         };
     </script>
-    <script src="{{ asset('assets/js/user/keranjang-popup.js') }}"></script>
+    <script src="/assets/js/user/keranjang-popup.js"></script>
 
     {{-- HIDDEN BUTTON --}}
     <script>
@@ -195,6 +296,106 @@
             backBtn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.tab-panel').forEach(panel => {
+                    panel.classList.add('hidden');
+                    panel.classList.remove('block');
+                });
+
+                const filteredCategory = document.getElementById('filtered-category');
+                if (filteredCategory) filteredCategory.classList.add('hidden');
+                const target = tab.dataset.category;
+                const targetPanel = document.getElementById(`panel-${target}`);
+                if (targetPanel) {
+                    targetPanel.classList.remove('hidden');
+                    targetPanel.classList.add('block');
+                }
+            });
+        });
+    </script>
+    {{-- JS: KATEGORI --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const allProducts = @json($produk);
+            window.showCategory = function (jenis) {
+                const kategoriPanel = document.getElementById('panel-kategori');
+                const filteredPanel = document.getElementById('filtered-category');
+                const grid = document.getElementById('filtered-products');
+                const bannerTitle = document.getElementById('category-banner-title');
+                const bannerImg = document.getElementById('category-banner-img');
+                kategoriPanel.classList.add('hidden');
+                filteredPanel.classList.remove('hidden');
+                bannerTitle.textContent = jenis;
+                const bannerMap = {
+                    'T-Shirt': '/assets/images/banner/tshirt.jpeg',
+                    'Hoodie': '/assets/images/banner/hoodie-1.jpg',
+                    'Jersey': '/assets/images/banner/jersey.jpg',
+                };
+                bannerImg.src = bannerMap[jenis] || '/assets/images/default-banner.jpg';
+                const filtered = allProducts.filter(p => p.jenis === jenis);
+                grid.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = `<p class='col-span-3 text-center text-gray-500 text-lg py-12'>Belum ada produk untuk kategori ${jenis}</p>`;
+                    return;
+                }
+
+                filtered.forEach(item => {
+                    const foto = item.fotos?.length ? `/storage/${item.fotos[0].foto}` : `/assets/images/no-image.png`;
+
+                    const card = `
+                                                                            <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                                                                                data-id="${item.id}" data-nama="${item.nama_produk}" data-harga="${item.harga}"
+                                                                                data-foto="${foto}" data-category="${item.kategori ?? 'umum'}">
+
+                                                                                <a href="/produk/detail/${item.id}" class="block overflow-hidden rounded-t-2xl bg-gray-50">
+                                                                                    <img src="${foto}" alt="${item.nama_produk}" class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
+                                                                                </a>
+
+                                                                                <div class="p-6 flex flex-col gap-3">
+                                                                                    <h3 class="text-center text-xl font-bold text-gray-900 line-clamp-1">${item.nama_produk}</h3>
+                                                                                    <p class="text-center text-lg text-black font-bold">
+                                                                                        IDR ${new Intl.NumberFormat('id-ID').format(item.harga)}
+                                                                                    </p>
+
+                                                                                    <div class="flex gap-2 w-full mt-2">
+                                                                                        <!-- CART -->
+                                                                                        <button
+                                                                                            class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
+                                                                                            onclick="openModal('productModal-${item.id}')" title="Tambah ke Keranjang">
+                                                                                            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+                                                                                                <path stroke-linecap='round' stroke-linejoin='round'
+                                                                                                    d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'/>
+                                                                                            </svg>
+                                                                                        </button>
+
+                                                                                        <!-- BUY -->
+                                                                                        <button
+                                                                                            class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
+                                                                                            onclick="openModal('productBeliModal-${item.id}')">
+                                                                                            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+                                                                                                <path stroke-linecap='round' stroke-linejoin='round' d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'/>
+                                                                                            </svg>
+                                                                                            <span>Beli Sekarang</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>`;
+                    grid.insertAdjacentHTML('beforeend', card);
+                });
+            };
+
+            window.backToCategories = function () {
+                document.getElementById('filtered-category').classList.add('hidden');
+                document.getElementById('panel-kategori').classList.remove('hidden');
+            };
         });
     </script>
 

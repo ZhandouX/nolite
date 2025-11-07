@@ -1,7 +1,7 @@
 <!-- Chat toggle button -->
 <button id="chat-toggle" title="Chat Produk Nolite"
-    class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-600 hover:scale-110 transition-all duration-500 opacity-0 translate-y-6 pointer-events-none">
-    <i class="fa-solid fa-robot text-lg"></i>
+    class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-600 hover:scale-110 transition-all duration-500">
+    <i class="fa-solid fa-comment-dots text-lg"></i>
 </button>
 
 <!-- Mobile chat container full screen -->
