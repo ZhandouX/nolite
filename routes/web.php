@@ -18,43 +18,83 @@ use App\Models\Keranjang;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\AdminChatController;
+
 
 // DEFAULT LANDING PAGE
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::post('/add-to-cart', [LandingController::class, 'addToCart'])->name('landing.addToCart');
 
-// MIDDLEWARE: ADMIN
+// ==========================
+// 🔐 MIDDLEWARE: ADMIN
+// ==========================
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
+        // DASHBOARD
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // HAPUS FOTO DARI STORAGE
+        // HAPUS FOTO PRODUK DARI STORAGE
         Route::delete('/produk/foto/{id}', [ProdukController::class, 'hapusFoto'])
-            ->name('admin.produk.foto.hapus');
+            ->name('produk.foto.hapus');
 
         // PRODUK
         Route::resource('produk', ProdukController::class);
-        Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('admin.produk.diskon');
+        Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])
+            ->name('produk.diskon');
 
         // ORDER
         Route::resource('order', AdminOrderController::class);
-        Route::post('/order/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('order.updateStatus');
+        Route::post('/order/{order}/update-status', [AdminOrderController::class, 'updateStatus'])
+            ->name('order.updateStatus');
 
-        // KELOLA PENGGUNA
+        // ==========================
+        // 📊 LAPORAN
+        // ==========================
+        Route::prefix('laporan')->name('laporan.')->group(function () {
+            Route::get('/', [LaporanController::class, 'index'])->name('index');
+            Route::post('/get-data', [LaporanController::class, 'getData'])->name('getData');
+
+            // Export PDF & Excel
+            Route::get('/export-pdf/{jenis}', [LaporanController::class, 'exportPDF'])->name('exportPDF');
+            Route::get('/export-excel/{jenis}', [LaporanController::class, 'exportExcel'])->name('exportExcel');
+        });
+
+        // ==========================
+        // 🧩 CHAT MANAGEMENT (ADMIN)
+        // ==========================
+        Route::prefix('chats')->name('chats.')->group(function () {
+            Route::get('/', [AdminChatController::class, 'index'])->name('index');              // daftar chat
+            Route::get('/{chat}', [AdminChatController::class, 'show'])->name('show');          // lihat chat
+            Route::post('/{chat}/send', [AdminChatController::class, 'send'])->name('send');    // kirim pesan
+
+            // Hapus pesan tertentu
+            Route::delete('/message/{id}', [AdminChatController::class, 'deleteMessage'])
+                ->name('message.delete');
+
+            // Hapus seluruh chat (beserta semua pesan)
+            Route::delete('/{id}', [AdminChatController::class, 'deleteChat'])
+                ->name('delete');
+        });
+
+
+        // ==========================
+        // 👥 KELOLA PENGGUNA
+        // ==========================
         Route::controller(UserController::class)
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-            Route::get('/', 'index')->name('index');                // daftar
-            Route::get('/{user}', 'show')->name('show');            // detail
-            Route::patch('/{user}/block', 'block')->name('block');  // blokir
-            Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
-            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
-            Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
-        });
+                Route::get('/', 'index')->name('index');                // daftar
+                Route::get('/{user}', 'show')->name('show');            // detail
+                Route::patch('/{user}/block', 'block')->name('block');  // blokir
+                Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
+                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
+                Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
+            });
     });
 
 

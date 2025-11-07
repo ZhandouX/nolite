@@ -11,92 +11,109 @@ class GeminiService
     public function query($message)
     {
         try {
-            // Ambil keyword dari pertanyaan user
-            $keywords = preg_split('/\s+/', strtolower($message));
+            $messageTrim = trim($message);
+
+            // 1️⃣ Ambil keyword dari pertanyaan user
+            $keywords = preg_split('/\s+/', strtolower($messageTrim));
             $keywords = array_filter($keywords, fn($w) => strlen($w) > 2);
 
-            // Ambil filter harga jika ada
-            preg_match('/di bawah (\d+)/', strtolower($message), $hargaMatch);
+            // 2️⃣ Ambil filter harga jika ada (contoh: "di bawah 100000")
+            preg_match('/di bawah (\d+)/', strtolower($messageTrim), $hargaMatch);
             $maxHarga = $hargaMatch[1] ?? null;
 
-            // Ambil warna dan ukuran jika disebut
-            preg_match_all('/(biru|merah|hitam|putih|kuning|hijau)/i', $message, $warnaMatch);
+            // 3️⃣ Ambil filter warna & ukuran jika disebut
+            preg_match_all('/(biru|merah|hitam|putih|kuning|hijau)/i', $messageTrim, $warnaMatch);
             $warnaFilter = $warnaMatch[0] ?? [];
 
-            preg_match_all('/(S|M|L|XL|XXL|XXXL)/i', $message, $ukuranMatch);
+            preg_match_all('/\b(S|M|L|XL|XXL|XXXL)\b/i', $messageTrim, $ukuranMatch);
             $ukuranFilter = $ukuranMatch[0] ?? [];
 
-            // Query produk
+            // 4️⃣ Query produk dari database
             $produkList = Produk::with('fotos')
-                ->where(function ($q) use ($keywords) {
-                    foreach ($keywords as $word) {
-                        $q->orWhere('nama_produk', 'ILIKE', "%{$word}%")
-                            ->orWhere('deskripsi', 'ILIKE', "%{$word}%");
-                    }
+                ->when(count($keywords) > 0, function ($q) use ($keywords) {
+                    $q->where(function ($q2) use ($keywords) {
+                        foreach ($keywords as $word) {
+                            $q2->orWhere('nama_produk', 'ILIKE', "%{$word}%")
+                               ->orWhere('deskripsi', 'ILIKE', "%{$word}%");
+                        }
+                    });
                 })
                 ->when($maxHarga, fn($q) => $q->where('harga', '<=', $maxHarga))
                 ->get();
 
-            // Filter warna dan ukuran secara manual
+            // 5️⃣ Filter warna & ukuran
             $produkList = $produkList->filter(function ($p) use ($warnaFilter, $ukuranFilter) {
-                $warna = is_array($p->warna) ? $p->warna : [$p->warna];
-                $ukuran = is_array($p->ukuran) ? $p->ukuran : [$p->ukuran];
+                $warna = is_array($p->warna) ? $p->warna : [];
+                $ukuran = is_array($p->ukuran) ? $p->ukuran : [];
 
-                $warnaOk = empty($warnaFilter) || count(array_intersect(array_map('strtolower', $warna), array_map('strtolower', $warnaFilter))) > 0;
-                $ukuranOk = empty($ukuranFilter) || count(array_intersect(array_map('strtoupper', $ukuran), array_map('strtoupper', $ukuranFilter))) > 0;
+                $warnaOk = empty($warnaFilter) || count(array_intersect(
+                    array_map('strtolower', $warna),
+                    array_map('strtolower', $warnaFilter)
+                )) > 0;
+
+                $ukuranOk = empty($ukuranFilter) || count(array_intersect(
+                    array_map('strtoupper', $ukuran),
+                    array_map('strtoupper', $ukuranFilter)
+                )) > 0;
 
                 return $warnaOk && $ukuranOk;
             });
 
-            // Build context untuk AI
-            $context = "Kamu adalah chatbot produk e-commerce Nolite Aspicience.\n";
-            $context .= "Jawablah pertanyaan pengguna hanya dengan format natural: Sebutkan produk yang sesuai dalam bullet point, sebutkan nama, warna, ukuran, dan harga.\n\n";
-
+            // 6️⃣ Siapkan data produk untuk kartu UI
             $produkForCards = [];
+            $context = "Kamu adalah chatbot produk e-commerce Nolite Aspicience.\n";
+            $context .= "Jawablah pertanyaan pengguna dengan bahasa Indonesia natural. ";
+            $context .= "Sebutkan produk dalam bullet point jika tersedia, nama, warna, ukuran, dan harga.\n\n";
 
-            foreach ($produkList as $produk) {
-                $nama = $produk->nama_produk;
-                $warna = is_array($produk->warna) ? implode(', ', $produk->warna) : $produk->warna;
-                $ukuran = is_array($produk->ukuran) ? implode(', ', $produk->ukuran) : $produk->ukuran;
-                $deskripsi = $produk->deskripsi;
-                $harga = is_numeric($produk->harga) ? 'IDR ' . number_format($produk->harga, 0, ',', '.') : $produk->harga;
+            if ($produkList->isNotEmpty()) {
+                foreach ($produkList as $produk) {
+                    $warna = is_array($produk->warna) ? $produk->warna : [];
+                    $ukuran = is_array($produk->ukuran) ? $produk->ukuran : [];
 
-                $context .= "- {$nama}, Warna: ({$warna}), Ukuran: ({$ukuran}), Harga: {$harga}\n";
+                    $nama = $produk->nama_produk;
+                    $deskripsi = $produk->deskripsi;
+                    $harga = is_numeric($produk->harga)
+                        ? 'IDR ' . number_format($produk->harga, 0, ',', '.')
+                        : $produk->harga;
 
-                $foto = $produk->fotos->first()->foto ?? null;
-                $foto = $foto ? asset('storage/' . $foto) : asset('assets/images/no-image.png');
+                    $context .= "- {$nama}, Warna: (" . implode(', ', $warna) . "), Ukuran: (" . implode(', ', $ukuran) . "), Harga: {$harga}\n";
 
-                $produkForCards[] = [
-                    'id' => $produk->id,
-                    'nama_produk' => $nama,
-                    'warna' => $warna,
-                    'ukuran' => $ukuran,
-                    'harga' => $harga,
-                    'deskripsi' => $deskripsi,
-                    'foto' => $foto
-                ];
+                    $foto = $produk->fotos->first()->foto ?? null;
+                    $foto = $foto ? asset('storage/' . $foto) : asset('assets/images/no-image.png');
+
+                    $produkForCards[] = [
+                        'id' => $produk->id,
+                        'nama_produk' => $nama,
+                        'warna' => implode(', ', $warna),
+                        'ukuran' => implode(', ', $ukuran),
+                        'harga' => $harga,
+                        'deskripsi' => $deskripsi,
+                        'foto' => $foto
+                    ];
+                }
             }
 
-            $prompt = $context . "\nPertanyaan pengguna: " . $message;
+            // 7️⃣ Siapkan prompt ke Gemini API
+            $prompt = $context . "\nPertanyaan pengguna: " . $messageTrim;
+
+            // 8️⃣ Kirim request ke Gemini
+            $url = 'https://generativelanguage.googleapis.com/v1/models/' . env('GEMINI_MODEL') . ':generateContent?key=' . env('GEMINI_API_KEY');
+
+            Log::info('Gemini Request', ['url' => $url, 'prompt' => $prompt]);
 
             $response = Http::withHeaders(['Content-Type' => 'application/json'])
-                ->post(
-                    'https://generativelanguage.googleapis.com/v1/models/' . env('GEMINI_MODEL') . ':generateContent?key=' . env('GEMINI_API_KEY'),
-                    [
-                        'contents' => [
-                            ['parts' => [['text' => $prompt]]]
-                        ]
+                ->post($url, [
+                    'contents' => [
+                        ['parts' => [['text' => $prompt]]]
                     ]
-                );
+                ]);
+
+            Log::info('Gemini Raw Response', ['status' => $response->status(), 'body' => $response->body()]);
 
             if ($response->failed()) {
-                Log::error('Gagal koneksi ke Gemini API', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                ]);
                 return [
-                    'reply' => "Gagal koneksi ke Gemini API. Kode: " . $response->status(),
-                    'produk_list' => []
+                    'reply' => "Terjadi kesalahan koneksi ke server. Kode: " . $response->status(),
+                    'produk_list' => $produkForCards
                 ];
             }
 

@@ -7,54 +7,50 @@
     var footer = $('.footer');
     var sidebar = $('.sidebar');
 
-    function addActiveClass(element) {
-      if (current === "") {
-        //for root url
-        if (element.attr('href').indexOf("index.html") !== -1) {
-          element.parents('.nav-item').last().addClass('active');
-          if (element.parents('.sub-menu').length) {
-            element.closest('.collapse').addClass('show');
-            element.addClass('active');
-          }
-        }
-      } else {
-        //for other url
-        if (element.attr('href').indexOf(current) !== -1) {
-          element.parents('.nav-item').last().addClass('active');
-          if (element.parents('.sub-menu').length) {
-            element.closest('.collapse').addClass('show');
-            element.addClass('active');
-          }
-          if (element.parents('.submenu-item').length) {
-            element.addClass('active');
-          }
-        }
-      }
-    }
+    // 🔇 Nonaktifkan fungsi auto active bawaan template
+    // function addActiveClass(element) {
+    //   if (current === "") {
+    //     if (element.attr('href').indexOf("index.html") !== -1) {
+    //       element.parents('.nav-item').last().addClass('active');
+    //       if (element.parents('.sub-menu').length) {
+    //         element.closest('.collapse').addClass('show');
+    //         element.addClass('active');
+    //       }
+    //     }
+    //   } else {
+    //     if (element.attr('href').indexOf(current) !== -1) {
+    //       element.parents('.nav-item').last().addClass('active');
+    //       if (element.parents('.sub-menu').length) {
+    //         element.closest('.collapse').addClass('show');
+    //         element.addClass('active');
+    //       }
+    //       if (element.parents('.submenu-item').length) {
+    //         element.addClass('active');
+    //       }
+    //     }
+    //   }
+    // }
 
-    var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
-    $('.nav li a', sidebar).each(function () {
-      var $this = $(this);
-      addActiveClass($this);
-    })
+    // var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
+    // $('.nav li a', sidebar).each(function () {
+    //   var $this = $(this);
+    //   addActiveClass($this);
+    // })
 
-    $('.horizontal-menu .nav li a').each(function () {
-      var $this = $(this);
-      addActiveClass($this);
-    })
+    // $('.horizontal-menu .nav li a').each(function () {
+    //   var $this = $(this);
+    //   addActiveClass($this);
+    // })
 
     //Close other submenu in sidebar on opening any
-
     sidebar.on('show.bs.collapse', '.collapse', function () {
       sidebar.find('.collapse.show').collapse('hide');
     });
-
 
     //Change sidebar and content-wrapper height
     applyStyles();
 
     function applyStyles() {
-      //Applying perfect scrollbar
       if (!body.hasClass("rtl")) {
         if ($('.settings-panel .tab-content .tab-pane.scroll-wrapper').length) {
           const settingsPanelScroll = new PerfectScrollbar('.settings-panel .tab-content .tab-pane.scroll-wrapper');
@@ -78,14 +74,12 @@
       }
     });
 
-    //checkbox and radios
     $(".form-check label,.form-radio label").append('<i class="input-helper"></i>');
 
-    //Horizontal menu in mobile
     $('[data-toggle="horizontal-menu-toggle"]').on("click", function () {
       $(".horizontal-menu .bottom-navbar").toggleClass("header-toggled");
     });
-    // Horizontal menu navigation in mobile menu on click
+
     var navItemClicked = $('.horizontal-menu .page-navigation >.nav-item');
     navItemClicked.on("click", function (event) {
       if (window.matchMedia('(max-width: 991px)').matches) {
@@ -106,6 +100,7 @@
         }
       }
     });
+
     if ($("#datepicker-popup").length) {
       $('#datepicker-popup').datepicker({
         enableOnReadonly: true,
@@ -113,15 +108,12 @@
       });
       $("#datepicker-popup").datepicker("setDate", "0");
     }
-
   });
 
-  //check all boxes in order status 
   $("#check-all").click(function () {
     $(".form-check-input").prop('checked', $(this).prop('checked'));
   });
 
-  // focus input when clicking on search icon
   $('#navbar-search-icon').click(function () {
     $("#navbar-search-input").focus();
   });
@@ -129,9 +121,7 @@
   $(window).scroll(function () {
     var scroll = $(window).scrollTop();
 
-    //>=, not <=
     if (scroll >= 97) {
-      //clearHeader, not clearheader - caps H
       $(".fixed-top").addClass("headerLight");
     }
     else {
