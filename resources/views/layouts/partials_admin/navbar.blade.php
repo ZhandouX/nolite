@@ -5,7 +5,7 @@
                 <span class="icon-menu"></span>
             </button>
         </div>
-        <!-- <div>
+         <div>
             <a class="navbar-brand brand-logo d-flex align-items-center" href="#">
                 <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="logo"
                     style="height:40px; width:auto; margin-right:10px;">
@@ -13,7 +13,7 @@
             <a class="navbar-brand brand-logo-mini" href="#">
                 <img src="{{ asset('assets/images/logo/logonolite.png') }}" alt="logo" />
             </a>
-        </div> -->
+        </div>
     </div>
 
     <div class="navbar-menu-wrapper d-flex align-items-top">

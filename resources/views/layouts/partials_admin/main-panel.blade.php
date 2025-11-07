@@ -12,12 +12,7 @@
                         </li>
                     </ul>
                     <div>
-                        <div class="btn-wrapper">
-                            <a href="{{ route('admin.produk.create') }}" class="btn btn-primary text-white me-0">
-                                <i class="icon-plus"></i>
-                                Tambah Produk
-                            </a>
-                        </div>
+
                     </div>
                 </div>
 
