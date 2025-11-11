@@ -301,3 +301,16 @@
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }
+
+@media (min-width: 700px) {
+    .form-container {
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 700px) {
+    .form-container {
+        max-width: 340px;
+        width: 340px;
+    }
+}

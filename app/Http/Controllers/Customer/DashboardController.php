@@ -15,15 +15,18 @@ class DashboardController extends Controller
     // INDEX
     public function index()
     {
+        // PRODUK TERBARU + STATISTIK
         $produk = Produk::with('fotos')
-            ->latest()
+            ->withStatistik()
+            ->orderByDesc('produks.created_at')
             ->take(6)
             ->get();
 
-        // DISKON
+        // PRODUK DISKON + STATISTIK
         $produkDiskon = Produk::with('fotos')
-            ->where('diskon', '>', 0)
-            ->latest()
+            ->withStatistik()
+            ->where('produks.diskon', '>', 0)
+            ->orderByDesc('produks.created_at')
             ->get();
 
         return view('customer.dashboard', compact('produk', 'produkDiskon'));
@@ -43,9 +46,12 @@ class DashboardController extends Controller
         return view('customer.detail-produk', compact('produk', 'totalUlasan', 'averageRating', 'terjual'));
     }
 
+    // HALAMAN ALL PRODUK
     public function allProduk(Request $request)
     {
-        $query = Produk::query()->with('fotos');
+        $query = Produk::query()
+            ->with('fotos')
+            ->withStatistik();
 
         // SEARCH
         if ($request->filled('search')) {
@@ -74,7 +80,7 @@ class DashboardController extends Controller
             $query->where('harga', '<=', $request->harga_max);
         }
 
-        // SIZED
+        // SIZE
         if ($request->filled('ukuran')) {
             $query->whereJsonContains('ukuran', $request->ukuran);
         }
@@ -94,11 +100,11 @@ class DashboardController extends Controller
                 $query->orderBy('nama_produk', 'desc');
                 break;
             default:
-                $query->latest();
+                $query->latest(); // ini sekarang valid, masih QueryBuilder
                 break;
         }
 
-        // PAGINATION
+        // PAGINATION (eksekusi query di sini)
         $produks = $query->paginate(12)->appends($request->query());
 
         return view('customer.all-produk', compact('produks'));
@@ -107,13 +113,7 @@ class DashboardController extends Controller
     public function unggulanProduk()
     {
         $produks = Produk::with('fotos')
-            ->select('produks.*', DB::raw('COALESCE(SUM(order_items.jumlah), 0) as total_terjual'))
-            ->leftJoin('order_items', 'order_items.produk_id', '=', 'produks.id')
-            ->leftJoin('orders', function ($join) {
-                $join->on('orders.id', '=', 'order_items.order_id')
-                    ->where('orders.status', '=', 'selesai');
-            })
-            ->groupBy('produks.id')
+            ->withStatistik()
             ->orderByDesc('total_terjual')
             ->paginate(12);
 
@@ -126,6 +126,7 @@ class DashboardController extends Controller
         $produks = Produk::with('fotos')
             ->where('diskon', '>', 0)
             ->orderByDesc('diskon')
+            ->withStatistik()
             ->paginate(12);
 
         return view('customer.diskon', compact('produks'));
@@ -134,7 +135,8 @@ class DashboardController extends Controller
     public function tshirtCategory(Request $request)
     {
         $query = Produk::with('fotos')
-            ->where('jenis', 'T-Shirt');
+            ->where('jenis', 'T-Shirt')
+            ->withStatistik();
 
         switch ($request->input('sort')) {
             case 'harga_terendah':
@@ -161,7 +163,8 @@ class DashboardController extends Controller
     public function hoodieCategory(Request $request)
     {
         $query = Produk::with('fotos')
-            ->where('jenis', 'Hoodie');
+            ->where('jenis', 'Hoodie')
+            ->withStatistik();
 
         // ==== Tambahkan logika sorting berdasarkan query string ====
         switch ($request->input('sort')) {
@@ -191,7 +194,8 @@ class DashboardController extends Controller
     public function jerseyCategory(Request $request)
     {
         $query = Produk::with('fotos')
-            ->where('jenis', 'Jersey');
+            ->where('jenis', 'Jersey')
+            ->withStatistik();
 
         // ==== Tambahkan logika sorting berdasarkan query string ====
         switch ($request->input('sort')) {

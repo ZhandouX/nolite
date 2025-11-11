@@ -13,7 +13,7 @@ class ProdukController extends Controller
     /* INDEX */
     public function index()
     {
-        $produks = Produk::with('fotos')->get();
+        $produks = Produk::with('fotos')->paginate(10);
         return view('admin.produk.index', compact('produks'));
 
     }

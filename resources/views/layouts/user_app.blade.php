@@ -16,6 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
 
     @stack('style')
 </head>
@@ -34,37 +35,84 @@
 
     @yield('content')
 
-    {{-- FOOTER --}}
-    @include('layouts.partials_user.footer')
+    {{-- FOOTER KONDISIONAL --}}
+    @php
+        $routeName = Route::currentRouteName();
+        $footerFullRoutes = [
+            'customer.dashboard',
+            'customer.all-produk',
+            'customer.kategori-hoodie',
+            'customer.kategori-tshirt',
+            'customer.kategori-jersey',
+            'customer.unggulan',
+            'customer.diskon'
+        ];
+    @endphp
 
-    {{-- KERANJANG POPUP --}}
-    <div id="cartPopupContainer" class="fixed z-50 flex flex-col gap-1
-            sm:bottom-[1.30rem] sm:right-24 sm:scale-100
-            bottom-2 right-8 scale-75 transition-all duration-300">
-    </div>
+    @if (in_array($routeName, $footerFullRoutes))
+        {{-- FOOTER LENGKAP --}}
+        @include('layouts.partials_user.footer')
+    @else
+        {{-- FOOTER SIMPEL --}}
+        @include('layouts.partials_user.simple-footer')
+    @endif
 
-    <!-- ==================== WRAPPER TOMBOL FIXED ==================== -->
-    <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 flex flex-col items-end gap-4 z-50">
+    <!-- BUTTON GROUP -->
+    <div class="fixed bottom-20 right-4 lg:bottom-2 md:right-6 flex flex-col items-end gap-4 z-50">
 
-        <!-- Tombol tambahan (Chatbot) -->
-        @include('layouts.partials_user.modals.chatbot')
-
-        <!-- Tombol Back To Top -->
-        <button id="backToTop" title="Kembali ke atas" class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center shadow-lg 
-               hover:bg-gray-700 hover:scale-110 transition-all duration-500">
-            <i class="fa-solid fa-arrow-up text-lg"></i>
+        <!-- BACK TO TOP BUTTON -->
+        <button id="backToTop" title="Kembali ke atas" class="group w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl 
+        hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
+        border border-gray-600/30 backdrop-blur-sm">
+            <i class="fa-solid fa-chevron-up text-lg group-hover:animate-bounce"></i>
         </button>
 
-        <!-- Garis divider -->
-        <div id="toggleDivider"
-            class="w-full h-[2px] bg-gray-300 rounded opacity-0 scale-x-0 transform transition-all duration-300 origin-right">
+        <!-- WRAPPER CHATBOT -->
+        <div class="relative flex items-center gap-3">
+
+            <!-- WRAPPER TOOLTIP -->
+            <div class="absolute inline-block right-16 pointer-events-none">
+                <!-- TEKS ANIMASI -->
+                <div id="chat-tooltip"
+                    class="relative bg-gray-800 text-white text-[12px] px-3 py-2 rounded-xl shadow-lg opacity-0 translate-x-4
+            transition-all duration-500 ease-out max-w-[250px] w-max max-h-[50px] h-max whitespace-normal break-words leading-snug overflow-hidden">
+                    <span class="typing-text"></span>
+                </div>
+
+                <!-- Segitiga kecil -->
+                <div id="chat-arrow" class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0 
+            border-t-8 border-t-transparent border-l-8 border-l-gray-800 border-b-8 border-b-transparent
+            opacity-0 translate-x-4 transition-all duration-500 ease-out">
+                </div>
+            </div>
+
+            <!-- CHATBOT BUTTON -->
+            <button id="chat-toggle" title="Chat AI Nolite" class="group w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center shadow-xl
+        hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
+        border border-gray-400/40 backdrop-blur-sm relative">
+
+                <!-- Ikon AI -->
+                <i data-lucide="sparkles"
+                    class="w-6 h-6 text-white group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300"></i>
+
+                <!-- Titik notifikasi -->
+                <span
+                    class="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full border-2 border-white animate-pulse"></span>
+            </button>
         </div>
 
-        <!-- Tombol toggle utama -->
-        <button id="toggleButtons" title="Menu" class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center shadow-lg 
-               hover:bg-gray-700 hover:scale-110 transition-all duration-300">
-            <i id="toggleIcon" class="fa-solid fa-chevron-up text-lg transition-transform duration-300"></i>
-        </button>
+        {{-- CHATBOT MODAL (MOBILE) --}}
+        @include('layouts.partials_user.modals.chatbot')
+
+        {{-- KERANJANG POPUP (MOBILE) --}}
+        <div id="cartPopupMobile" class="group flex items-center justify-center shadow-xl 
+        hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1 relative">
+        </div>
+
+        {{-- KERANJANG POPUP (DESKTOP) --}}
+        <div id="cartPopupDesktop" class="group hidden lg:flex z-50 flex-col gap-1
+            sm:scale-100 scale-75 transition-all duration-300">
+        </div>
     </div>
 
     {{-- MODALS --}}
@@ -83,6 +131,43 @@
 
     {{-- MODALS CONTAINER untuk produk dari search --}}
     <div id="dynamicModalsContainer"></div>
+
+
+
+    <script>
+        if (window.lucide) lucide.createIcons();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const tooltip = document.getElementById("chat-tooltip");
+            const arrow = document.getElementById("chat-arrow");
+            const fullText = "Halo! Saya asisten AI Nolite Aspiciens. Ada yang ingin kamu tanyakan?";
+            let index = 0;
+
+            // Delay awal sebelum tooltip muncul
+            setTimeout(() => {
+                // Tampilkan tooltip dan arrow
+                tooltip.classList.remove("opacity-0", "translate-x-4");
+                arrow.classList.remove("opacity-0", "translate-x-4");
+
+                // Mulai animasi typing
+                const typing = setInterval(() => {
+                    if (index < fullText.length) {
+                        tooltip.querySelector(".typing-text").textContent += fullText.charAt(index);
+                        index++;
+                    } else {
+                        clearInterval(typing);
+
+                        // Setelah selesai mengetik, tunggu 6 detik lalu sembunyikan
+                        setTimeout(() => {
+                            tooltip.classList.add("opacity-0", "translate-x-4");
+                            arrow.classList.add("opacity-0", "translate-x-4");
+                        }, 6000);
+                    }
+                }, 50); // Kecepatan mengetik (50ms per huruf)
+            }, 800); // Delay 800ms sebelum mulai
+        });
+    </script>
+
     <script>
         // Fungsi modal dasar (fallback)
         function openModal(modalId) {
@@ -165,60 +250,6 @@
         };
     </script>
     <script src="/assets/js/user/keranjang-popup.js"></script>
-    {{-- HIDDEN BUTTON --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleBtn = document.getElementById('toggleButtons');
-            const toggleIcon = document.getElementById('toggleIcon');
-            const chatBtn = document.getElementById('chat-toggle');
-            const backBtn = document.getElementById('backToTop');
-            const divider = document.getElementById('toggleDivider');
-
-            let isOpen = false;
-
-            toggleBtn.addEventListener('click', () => {
-                isOpen = !isOpen;
-
-                if (isOpen) {
-                    // Munculkan tombol tambahan dengan animasi
-                    [chatBtn, backBtn].forEach((btn, i) => {
-                        setTimeout(() => {
-                            btn.classList.remove('opacity-0', 'translate-y-6', 'rotate-45', 'pointer-events-none');
-                            btn.classList.add('opacity-100', 'translate-y-0', 'rotate-0', 'pointer-events-auto');
-                        }, i * 100);
-                    });
-
-                    // Munculkan garis divider
-                    divider.classList.remove('opacity-0', 'scale-x-0');
-                    divider.classList.add('opacity-100', 'scale-x-100');
-
-                    // Flip icon toggle
-                    toggleIcon.style.transform = 'rotate(180deg)';
-                } else {
-                    // Sembunyikan tombol tambahan dengan stagger
-                    [backBtn, chatBtn].forEach((btn, i) => {
-                        setTimeout(() => {
-                            btn.classList.add('opacity-0', 'translate-y-6', 'rotate-45', 'pointer-events-none');
-                            btn.classList.remove('opacity-100', 'translate-y-0', 'rotate-0', 'pointer-events-auto');
-                        }, i * 100);
-                    });
-
-                    // Sembunyikan garis divider
-                    divider.classList.add('opacity-0', 'scale-x-0');
-                    divider.classList.remove('opacity-100', 'scale-x-100');
-
-                    // Flip kembali icon toggle
-                    toggleIcon.style.transform = 'rotate(0deg)';
-                }
-            });
-
-            // Tombol back to top
-            backBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-    </script>
-    {{-- SIDEBAR HIDDEN --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menuBtn = document.getElementById("menuBtn");

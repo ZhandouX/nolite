@@ -179,6 +179,14 @@ class CheckoutController extends Controller
      */
     public function indexDashboard(Request $request)
     {
+        $user = auth()->user();
+
+        // Cek apakah akun nonaktif
+        if ($user->status === 'nonaktif') {
+            return redirect()->route('services.customer-service') // atau halaman lain
+                ->with('error', 'Akun Anda dinonaktifkan, tidak bisa melakukan checkout.');
+        }
+
         // Validasi data input
         $validated = $request->validate([
             'produk_id' => 'required|exists:produks,id',
@@ -188,7 +196,7 @@ class CheckoutController extends Controller
         ]);
 
         // Ambil produk
-        $produk = \App\Models\Produk::findOrFail($validated['produk_id']);
+        $produk = Produk::findOrFail($validated['produk_id']);
 
         // Ambil daftar provinsi
         $lokasi = new LokasiController();
@@ -222,6 +230,7 @@ class CheckoutController extends Controller
             'provinsiList' => $provinsiList,
         ]);
     }
+
 
     /**
      * Proses checkout langsung

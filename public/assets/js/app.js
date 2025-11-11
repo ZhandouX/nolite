@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeApp();
 });
 
@@ -9,7 +9,7 @@ function initializeApp() {
     const mobileCloseBtn = document.querySelector('.mobile-close-btn');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
-    
+
     // Initialize features
     initializeSidebar(toggleBtn, sidebar);
     initializeMobileMenu(mobileMenuBtn, mobileCloseBtn, sidebar);
@@ -23,7 +23,7 @@ function initializeApp() {
     initializeKeyboardShortcuts();
     initializePerformanceMonitoring();
     initializeAccessibility();
-    
+
     // Show initial animations
     setTimeout(() => {
         document.body.classList.add('loaded');
@@ -36,14 +36,14 @@ function initializeApp() {
 function initializeSidebar(toggleBtn, sidebar) {
     if (!toggleBtn || !sidebar) return;
 
-    toggleBtn.addEventListener('click', function() {
+    toggleBtn.addEventListener('click', function () {
         const isCollapsed = sidebar.classList.contains('collapsed');
-        
+
         if (!isCollapsed) {
             // Collapse animation
             sidebar.style.transition = 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
             sidebar.classList.add('collapsed');
-            
+
             // Hide text elements with stagger
             const textElements = sidebar.querySelectorAll('.nav-text, .logo-text');
             textElements.forEach((el, index) => {
@@ -52,11 +52,11 @@ function initializeSidebar(toggleBtn, sidebar) {
                     el.style.transform = 'translateX(-10px)';
                 }, index * 50);
             });
-            
+
             setTimeout(() => {
                 toggleBtn.querySelector('i').style.transform = 'rotate(180deg)';
             }, 200);
-            
+
         } else {
             sidebar.classList.remove('collapsed');
             setTimeout(() => {
@@ -68,11 +68,11 @@ function initializeSidebar(toggleBtn, sidebar) {
                     }, index * 50);
                 });
             }, 300);
-            
+
             // Rotate toggle button back
             toggleBtn.querySelector('i').style.transform = 'rotate(0deg)';
         }
-        
+
         // Store state
         try {
             localStorage.setItem('sidebarCollapsed', isCollapsed ? 'false' : 'true');
@@ -107,12 +107,12 @@ function initializeMobileMenu(mobileMenuBtn, mobileCloseBtn, sidebar) {
         sidebar.classList.add('show');
         overlay.classList.add('show');
         document.body.style.overflow = 'hidden';
-        
+
         // Add subtle haptic feedback
         if (navigator.vibrate) {
             navigator.vibrate(50);
         }
-        
+
         // Animate nav items
         const navItems = sidebar.querySelectorAll('.nav-item');
         navItems.forEach((item, index) => {
@@ -130,7 +130,7 @@ function initializeMobileMenu(mobileMenuBtn, mobileCloseBtn, sidebar) {
         sidebar.classList.remove('show');
         overlay.classList.remove('show');
         document.body.style.overflow = '';
-        
+
         // Reset nav items
         const navItems = sidebar.querySelectorAll('.nav-item');
         navItems.forEach(item => {
@@ -154,16 +154,16 @@ function initializeMobileMenu(mobileMenuBtn, mobileCloseBtn, sidebar) {
     overlay.addEventListener('click', hideMobileMenu);
 
     // Close on escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && sidebar.classList.contains('show')) {
             hideMobileMenu();
         }
     });
 
     // Close on outside click (enhanced)
-    document.addEventListener('click', function(e) {
-        if (window.innerWidth < 1025 && 
-            !sidebar.contains(e.target) && 
+    document.addEventListener('click', function (e) {
+        if (window.innerWidth < 1025 &&
+            !sidebar.contains(e.target) &&
             !mobileMenuBtn?.contains(e.target) &&
             sidebar.classList.contains('show')) {
             hideMobileMenu();
@@ -184,7 +184,7 @@ function initializeNavigation() {
         }
 
         // Add hover effects
-        link.addEventListener('mouseenter', function() {
+        link.addEventListener('mouseenter', function () {
             this.style.transform = 'translateX(8px)';
             const icon = this.querySelector('.nav-icon');
             if (icon) {
@@ -192,7 +192,7 @@ function initializeNavigation() {
             }
         });
 
-        link.addEventListener('mouseleave', function() {
+        link.addEventListener('mouseleave', function () {
             if (!this.classList.contains('active')) {
                 this.style.transform = 'translateX(0)';
             }
@@ -204,12 +204,12 @@ function initializeNavigation() {
 
         // Handle submenu items
         if (link.nextElementSibling && link.nextElementSibling.classList.contains('submenu')) {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const submenu = this.nextElementSibling;
                 const dropdownIcon = this.querySelector('.dropdown-icon');
                 const isOpen = !submenu.classList.contains('hidden');
-                
+
                 if (isOpen) {
                     // Close submenu
                     submenu.style.maxHeight = submenu.scrollHeight + 'px';
@@ -217,11 +217,11 @@ function initializeNavigation() {
                         submenu.style.maxHeight = '0';
                         submenu.style.opacity = '0';
                     }, 10);
-                    
+
                     setTimeout(() => {
                         submenu.classList.add('hidden');
                     }, 300);
-                    
+
                     if (dropdownIcon) {
                         dropdownIcon.style.transform = 'rotate(0deg)';
                     }
@@ -230,12 +230,12 @@ function initializeNavigation() {
                     submenu.classList.remove('hidden');
                     submenu.style.maxHeight = '0';
                     submenu.style.opacity = '0';
-                    
+
                     setTimeout(() => {
                         submenu.style.maxHeight = submenu.scrollHeight + 'px';
                         submenu.style.opacity = '1';
                     }, 10);
-                    
+
                     if (dropdownIcon) {
                         dropdownIcon.style.transform = 'rotate(180deg)';
                     }
@@ -244,7 +244,7 @@ function initializeNavigation() {
         }
 
         // Close mobile menu on navigation
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
             if (window.innerWidth < 1025 && !this.getAttribute('href').startsWith('#')) {
                 const sidebar = document.getElementById('sidebar');
                 const overlay = document.querySelector('.mobile-overlay');
@@ -267,10 +267,10 @@ function initializeUserProfile() {
     const profileDropdown = document.querySelector('.profile-dropdown');
 
     if (profileBtn && profileDropdown) {
-        profileBtn.addEventListener('click', function(e) {
+        profileBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             const isVisible = !profileDropdown.classList.contains('hidden');
-            
+
             if (isVisible) {
                 profileDropdown.style.transform = 'translateY(-10px) scale(0.95)';
                 profileDropdown.style.opacity = '0';
@@ -281,7 +281,7 @@ function initializeUserProfile() {
                 profileDropdown.classList.remove('hidden');
                 profileDropdown.style.transform = 'translateY(-10px) scale(0.95)';
                 profileDropdown.style.opacity = '0';
-                
+
                 setTimeout(() => {
                     profileDropdown.style.transform = 'translateY(0) scale(1)';
                     profileDropdown.style.opacity = '1';
@@ -290,7 +290,7 @@ function initializeUserProfile() {
         });
 
         // Enhanced close dropdown
-        document.addEventListener('click', function() {
+        document.addEventListener('click', function () {
             if (!profileDropdown.classList.contains('hidden')) {
                 profileDropdown.style.transform = 'translateY(-10px) scale(0.95)';
                 profileDropdown.style.opacity = '0';
@@ -331,7 +331,7 @@ function initializeAnimations() {
     });
 
     // Add loading animation to buttons
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target.matches('.btn, .nav-link, .user-profile')) {
             const element = e.target;
             element.style.transform = 'scale(0.95)';
@@ -348,11 +348,11 @@ function initializeAnimations() {
 // Responsive Handling
 function initializeResponsiveHandling() {
     let resizeTimer;
-    
+
     function handleResize() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.querySelector('.mobile-overlay');
-        
+
         if (window.innerWidth >= 1025) {
             // Desktop mode
             if (sidebar) {
@@ -364,12 +364,12 @@ function initializeResponsiveHandling() {
             }
             document.body.style.overflow = '';
         }
-        
+
         // Update viewport height for mobile
         updateViewportHeight();
     }
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(handleResize, 250);
     });
@@ -381,13 +381,13 @@ function initializeResponsiveHandling() {
     let touchEndY = 0;
     let touchStartTime = 0;
 
-    document.addEventListener('touchstart', function(e) {
+    document.addEventListener('touchstart', function (e) {
         touchStartX = e.changedTouches[0].screenX;
         touchStartY = e.changedTouches[0].screenY;
         touchStartTime = Date.now();
     });
 
-    document.addEventListener('touchend', function(e) {
+    document.addEventListener('touchend', function (e) {
         touchEndX = e.changedTouches[0].screenX;
         touchEndY = e.changedTouches[0].screenY;
         handleSwipe();
@@ -397,28 +397,28 @@ function initializeResponsiveHandling() {
         const swipeThreshold = 50;
         const timeThreshold = 500; // Max time for swipe gesture
         const sidebar = document.getElementById('sidebar');
-        
+
         if (!sidebar || window.innerWidth >= 1025) return;
 
         const swipeDistance = touchEndX - touchStartX;
         const swipeTime = Date.now() - touchStartTime;
         const verticalSwipe = Math.abs(touchEndY - touchStartY);
-        
+
         // Only trigger if it's a horizontal swipe and within time limit
         if (swipeTime > timeThreshold || verticalSwipe > 100) return;
-        
+
         // Swipe right to open
         if (swipeDistance > swipeThreshold && touchStartX < 50 && !sidebar.classList.contains('show')) {
             sidebar.classList.add('show');
             document.querySelector('.mobile-overlay')?.classList.add('show');
             document.body.style.overflow = 'hidden';
-            
+
             // Haptic feedback
             if (navigator.vibrate) {
                 navigator.vibrate(50);
             }
         }
-        
+
         // Swipe left to close
         if (swipeDistance < -swipeThreshold && sidebar.classList.contains('show')) {
             sidebar.classList.remove('show');
@@ -449,22 +449,22 @@ function initializeNotifications() {
 function initializeSearchFeature() {
     const searchInput = document.querySelector('.search-input');
     const searchResults = document.querySelector('.search-results');
-    
+
     if (searchInput) {
         let searchTimeout;
-        
-        searchInput.addEventListener('input', debounce(function(e) {
+
+        searchInput.addEventListener('input', debounce(function (e) {
             const query = e.target.value.trim();
-            
+
             if (query.length > 2) {
                 performSearch(query);
             } else {
                 hideSearchResults();
             }
         }, 300));
-        
+
         // Close search results when clicking outside
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!searchInput.contains(e.target) && !searchResults?.contains(e.target)) {
                 hideSearchResults();
             }
@@ -475,12 +475,12 @@ function initializeSearchFeature() {
 // Initialize Theme Toggle
 function initializeThemeToggle() {
     const themeToggle = document.querySelector('.theme-toggle');
-    
+
     if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
+        themeToggle.addEventListener('click', function () {
             toggleTheme();
         });
-        
+
         // Load saved theme
         loadSavedTheme();
     }
@@ -488,7 +488,7 @@ function initializeThemeToggle() {
 
 // Initialize Keyboard Shortcuts
 function initializeKeyboardShortcuts() {
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         // Ctrl/Cmd + K for search
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
@@ -497,7 +497,7 @@ function initializeKeyboardShortcuts() {
                 searchInput.focus();
             }
         }
-        
+
         // Ctrl/Cmd + B for sidebar toggle
         if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
             e.preventDefault();
@@ -506,7 +506,7 @@ function initializeKeyboardShortcuts() {
                 toggleBtn.click();
             }
         }
-        
+
         // Esc to close modals/dropdowns
         if (e.key === 'Escape') {
             closeAllDropdowns();
@@ -531,7 +531,7 @@ function initializePerformanceMonitoring() {
             // Browser doesn't support longtask entries
         }
     }
-    
+
     // Track Core Web Vitals
     trackWebVitals();
 }
@@ -541,7 +541,7 @@ function initializeAccessibility() {
     // Skip link functionality
     const skipLink = document.querySelector('.skip-link');
     if (skipLink) {
-        skipLink.addEventListener('click', function(e) {
+        skipLink.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
@@ -550,15 +550,15 @@ function initializeAccessibility() {
             }
         });
     }
-    
+
     // Keyboard navigation for dropdowns
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Tab') {
             document.body.classList.add('using-keyboard');
         }
     });
-    
-    document.addEventListener('mousedown', function() {
+
+    document.addEventListener('mousedown', function () {
         document.body.classList.remove('using-keyboard');
     });
 }
@@ -587,12 +587,12 @@ function showWelcomeAnimation() {
 // Initialize parallax effect
 function initializeParallax() {
     const parallaxElements = document.querySelectorAll('.parallax');
-    
+
     if (parallaxElements.length > 0) {
-        window.addEventListener('scroll', throttle(function() {
+        window.addEventListener('scroll', throttle(function () {
             const scrolled = window.pageYOffset;
             const rate = scrolled * -0.5;
-            
+
             parallaxElements.forEach(element => {
                 element.style.transform = `translateY(${rate}px)`;
             });
@@ -612,23 +612,23 @@ function updateBreadcrumb() {
     if (breadcrumb) {
         const currentPath = window.location.pathname;
         const pathSegments = currentPath.split('/').filter(segment => segment);
-        
+
         // Build breadcrumb HTML
         let breadcrumbHTML = '<a href="/" class="breadcrumb-item">Home</a>';
         let currentUrl = '';
-        
+
         pathSegments.forEach((segment, index) => {
             currentUrl += '/' + segment;
             const isLast = index === pathSegments.length - 1;
             const displayName = segment.charAt(0).toUpperCase() + segment.slice(1);
-            
+
             if (isLast) {
                 breadcrumbHTML += ` <span class="breadcrumb-separator">></span> <span class="breadcrumb-current">${displayName}</span>`;
             } else {
                 breadcrumbHTML += ` <span class="breadcrumb-separator">></span> <a href="${currentUrl}" class="breadcrumb-item">${displayName}</a>`;
             }
         });
-        
+
         breadcrumb.innerHTML = breadcrumbHTML;
     }
 }
@@ -637,12 +637,12 @@ function updateBreadcrumb() {
 function performSearch(query) {
     // Mock search functionality - replace with actual search logic
     const searchResults = document.querySelector('.search-results');
-    
+
     if (searchResults) {
         // Show loading state
         searchResults.innerHTML = '<div class="search-loading">Mencari...</div>';
         searchResults.classList.remove('hidden');
-        
+
         // Simulate API call
         setTimeout(() => {
             const mockResults = [
@@ -650,15 +650,15 @@ function performSearch(query) {
                 { title: 'User Management', url: '/users', type: 'page' },
                 { title: 'Settings', url: '/settings', type: 'page' }
             ].filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
-            
+
             if (mockResults.length > 0) {
-                const resultsHTML = mockResults.map(result => 
+                const resultsHTML = mockResults.map(result =>
                     `<a href="${result.url}" class="search-result-item">
                         <i class="fas fa-${result.type === 'page' ? 'file' : 'search'}"></i>
                         <span>${result.title}</span>
                     </a>`
                 ).join('');
-                
+
                 searchResults.innerHTML = resultsHTML;
             } else {
                 searchResults.innerHTML = '<div class="search-no-results">Tidak ada hasil ditemukan</div>';
@@ -679,15 +679,15 @@ function hideSearchResults() {
 function toggleTheme() {
     const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
+
     document.body.classList.toggle('dark-theme');
-    
+
     try {
         localStorage.setItem('theme', newTheme);
     } catch (e) {
         console.log('LocalStorage not available');
     }
-    
+
     // Animate theme change
     document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
     setTimeout(() => {
@@ -743,14 +743,14 @@ function showToast(message, type = 'success', duration = 4000) {
 
     const toast = document.createElement('div');
     toast.className = `toast-notification toast-${type}`;
-    
+
     const iconMap = {
         success: 'fas fa-check-circle',
-        error: 'fas fa-exclamation-circle', 
+        error: 'fas fa-exclamation-circle',
         warning: 'fas fa-exclamation-triangle',
         info: 'fas fa-info-circle'
     };
-    
+
     toast.innerHTML = `
         <i class="${iconMap[type]} toast-icon"></i>
         <span>${message}</span>
@@ -795,13 +795,13 @@ function showLoading(message = 'Loading...') {
             <span class="text-gray-700">${message}</span>
         </div>
     `;
-    
+
     document.body.appendChild(loadingOverlay);
-    
+
     setTimeout(() => {
         loadingOverlay.classList.add('opacity-100');
     }, 10);
-    
+
     return loadingOverlay;
 }
 
@@ -831,7 +831,7 @@ function debounce(func, wait) {
 
 function throttle(func, limit) {
     let inThrottle;
-    return function() {
+    return function () {
         const args = arguments;
         const context = this;
         if (!inThrottle) {
@@ -848,10 +848,10 @@ function slideDown(element, duration = 300) {
     element.style.overflow = 'hidden';
     element.style.transition = `height ${duration}ms ease-out`;
     element.style.display = 'block';
-    
+
     const height = element.scrollHeight;
     element.style.height = height + 'px';
-    
+
     setTimeout(() => {
         element.style.height = '';
         element.style.overflow = '';
@@ -863,11 +863,11 @@ function slideUp(element, duration = 300) {
     element.style.height = element.offsetHeight + 'px';
     element.style.overflow = 'hidden';
     element.style.transition = `height ${duration}ms ease-out`;
-    
+
     setTimeout(() => {
         element.style.height = '0';
     }, 10);
-    
+
     setTimeout(() => {
         element.style.display = 'none';
         element.style.height = '';
@@ -890,6 +890,13 @@ updateViewportHeight();
 
 // Console welcome message for developers
 if (typeof console !== 'undefined') {
-    console.log('%c🚀 Dashboard Enhanced JavaScript Loaded!', 
+    console.log('%c🚀 Dashboard Enhanced JavaScript Loaded!',
         'background: linear-gradient(90deg, #1a56a7, #e8a317); color: white; padding: 10px; border-radius: 5px; font-size: 14px; font-weight: bold;');
 }
+
+document.addEventListener('alpine:init', () => {
+    Alpine.data('sidebar', () => ({
+        sidebarToggle: false,
+        selected: 'Dashboard'
+    }))
+})

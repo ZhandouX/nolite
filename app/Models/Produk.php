@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Models\ProdukFoto;
 
 class Produk extends Model
@@ -51,5 +52,23 @@ class Produk extends Model
     public function ulasan()
     {
         return $this->hasMany(Ulasan::class, 'produk_id')->with('user', 'fotos');
+    }
+
+    // Local scope
+    public function scopeWithStatistik($query)
+    {
+        return $query->select(
+            'produks.*',
+            DB::raw('COALESCE(SUM(order_items.jumlah), 0) as total_terjual'),
+            DB::raw('COALESCE(AVG(ulasans.rating), 0) as average_rating'),
+            DB::raw('COUNT(ulasans.id) as total_ulasan')
+        )
+            ->leftJoin('order_items', 'order_items.produk_id', '=', 'produks.id')
+            ->leftJoin('orders', function ($join) {
+                $join->on('orders.id', '=', 'order_items.order_id')
+                    ->where('orders.status', '=', 'selesai');
+            })
+            ->leftJoin('ulasans', 'ulasans.produk_id', '=', 'produks.id')
+            ->groupBy('produks.id');
     }
 }

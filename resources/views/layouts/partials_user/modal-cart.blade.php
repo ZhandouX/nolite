@@ -1,11 +1,11 @@
 <div id="productModal-{{ $item->id }}"
-    class="z-[9999] fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
+    class="z-[9999] fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-[340px] md:max-w-md p-6 relative">
 
         {{-- CLOSE --}}
         <button type="button" onclick="closeModal('productModal-{{ $item->id }}')"
-            class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-            <i class="fa-solid fa-circle-xmark text-[20px] md:text-xl"></i>
+            class="absolute w-8 h-8 md:w-10 md:h-10 rounded-full -top-2 -right-2 md:-top-4 md:-right-4 bg-red-900 text-gray-50 hover:bg-red-700 hover:text-gray-50">
+                <i class="fa-solid fa-xmark text-[16px] md:text-xl"></i>
         </button>
 
         {{-- CARD PRODUK --}}
@@ -19,26 +19,30 @@
             @endif
 
             <div>
-                <p class="text-left text-lg font-bold text-black">{{ $item->nama_produk }}</p>
+                <p class="montserrat text-left text-[14px] md:text-lg font-semibold text-black line-clamp-2">
+                    {{ $item->nama_produk }}
+                </p>
 
-                @if($item->diskon && $item->diskon > 0)
-                    @php
-                        $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
-                    @endphp
-                    <div class="flex justify-start items-center gap-3">
-                        <p class="text-[12px] md:text-sm text-gray-400 font-bold line-through">
-                            IDR {{ number_format($item->harga, 0, ',', '.') }}
+                <div class="py-2">
+                    @if($item->diskon && $item->diskon > 0)
+                        @php
+                            $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
+                        @endphp
+                        <div class="flex flex-col items-start gap-1">
+                            <p class="text-[12px] md:text-sm text-gray-400 font-bold line-through">
+                                Rp{{ number_format($item->harga, 0, ',', '.') }}
+                            </p>
+                            <p class="text-[13px] md:text-base text-red-600 font-bold">
+                                Rp{{ number_format($hargaDiskon, 0, ',', '.') }}
+                                <span class="text-sm text-red-500">({{ $item->diskon }}%)</span>
+                            </p>
+                        </div>
+                    @else
+                        <p class="text-left text-black font-bold">
+                            Rp{{ number_format($item->harga, 0, ',', '.') }}
                         </p>
-                        <p class="text-[13px] md:text-sm text-red-600 font-bold">
-                            IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
-                            <span class="text-sm text-red-500">({{ $item->diskon }}%)</span>
-                        </p>
-                    </div>
-                @else
-                    <p class="text-black font-bold">
-                        IDR {{ number_format($item->harga, 0, ',', '.') }}
-                    </p>
-                @endif
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -85,8 +89,8 @@
             </div>
 
             {{-- SUBTOTAL PRODUCT --}}
-            <div class="flex flex-col items-center space-y-3 py-4 border-t border-gray-200">
-                <label class="text-sm font-semibold text-gray-800 text-left w-full">Jumlah</label>
+            <div class="flex flex-col items-center space-y-3 pt-4 border-t border-gray-200">
+                <label class="text-sm font-semibold text-gray-800 text-center w-full">Jumlah:</label>
 
                 <div class="flex items-center justify-center space-x-4">
                     {{-- BUTTON ( - ) --}}

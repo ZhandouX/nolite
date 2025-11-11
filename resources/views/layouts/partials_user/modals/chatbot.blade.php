@@ -1,12 +1,5 @@
-<!-- Chat toggle button -->
-<button id="chat-toggle" title="Chat Produk Nolite"
-    class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-600 hover:scale-110 transition-all duration-500">
-    <i class="fa-solid fa-comment-dots text-lg"></i>
-</button>
-
-<!-- Mobile chat container full screen -->
 <div id="chat-container"
-    class="hidden z-[9999] fixed inset-0 sm:hidden bg-white rounded-t-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate__animated animate__fadeInUp">
+    class="hidden z-[9999] fixed inset-0 lg:hidden bg-white rounded-t-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate__animated animate__fadeInUp">
 
     <!-- Header -->
     <div
@@ -44,7 +37,7 @@
         const chatContainer = document.getElementById("chat-container");
 
         // Cek viewport
-        const isMobile = window.innerWidth < 640; // Tailwind sm breakpoint = 640px
+        const isMobile = window.innerWidth < 1024; // Tailwind sm breakpoint = 640px
 
         chatToggle.addEventListener("click", () => {
             if (isMobile) {

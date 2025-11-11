@@ -3,8 +3,8 @@
 @section('title', 'My Account')
 
 @section('content')
-    <div class="bg-gray-100 text-gray-800 min-h-screen py-10 px-4 flex justify-center items-start pt-14 md:pt-9">
-        <div class="w-full max-w-3xl">
+    <div class="bg-gray-100 text-gray-800 min-h-screen py-10 px-2 md:px-4 flex justify-center items-start pt-20 md:pt-9">
+        <div class="w-full md:max-w-3xl">
 
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
@@ -19,11 +19,11 @@
             </div>
 
             <!-- Orders & Wishlist -->
-            <div class="bg-white rounded-lg shadow-sm p-6 relative hover:shadow-md transition">
+            <div class="bg-white rounded-lg shadow-sm p-3 md:p-6 relative hover:shadow-md transition">
 
                 <!-- Dropdown -->
-                <div class="absolute top-8 right-20 md:top-6 md:right-6">
-                    <select id="statusFilter" class="border border-gray-300 rounded px-3 py-1 text-sm">
+                <div class="absolute top-16 right-1 md:top-6 md:right-6">
+                    <select id="statusFilter" class="border border-gray-300 rounded px-2 py-1 md:px-3 text-sm">
                         <option value="all">Semua Status</option>
                         <option value="menunggu">Menunggu</option>
                         <option value="diproses">Diproses</option>
@@ -33,7 +33,7 @@
                 </div>
 
                 <!-- Tabs -->
-                <div class="flex justify-center border-b border-gray-200 mb-5">
+                <div class="flex justify-center border-b border-gray-200 mb-[50px] md:mb-5">
                     <div class="tab cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-black hover:border-gray-400 active-tab"
                         data-tab="orders">
                         Orders
@@ -76,7 +76,7 @@
                                         data-status="{{ strtolower($order->status) }}" onclick="openOrderModal({{ $order->id }})">
 
                                         <div
-                                            class="relative w-full h-52 bg-gradient-to-br from-gray-100 to-gray-50 overflow-hidden">
+                                            class="relative w-full h-[150px] md:h-52 bg-gradient-to-br from-gray-100 to-gray-50 overflow-hidden">
                                             @if ($foto)
                                                 <img src="{{ asset('storage/' . $foto) }}" alt="{{ $firstItem->nama_produk }}"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -87,7 +87,7 @@
                                                 </div>
                                             @endif
 
-                                            <div class="absolute top-3 right-8 md:right-3 z-20 py-2 md:py-0">
+                                            <div class="absolute top-0 right-1 sm:top-1 sm:right-1 md:top-3 md:right-3 z-20 py-0 md:py-0">
                                                 <span
                                                     class="px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold rounded-full
                                                                             {{ $order->status === 'selesai' ? 'bg-green-500/90 text-white' : '' }}
@@ -99,7 +99,7 @@
                                                 </span>
                                             </div>
 
-                                            <div class="absolute bottom-3 left-6 md:left-3">
+                                            <div class="absolute bottom-1 left-0 md:left-6 md:left-3">
                                                 <span
                                                     class="px-3 py-1 bg-red-900/90 text-white text-xs font-medium rounded-full shadow-sm min-w-[60px] text-center">
                                                     {{ $order->items->count() }}
@@ -108,24 +108,26 @@
                                             </div>
                                         </div>
 
-                                        <div class="p-5">
-                                            <div class="flex items-center justify-between mb-3">
-                                                <h3 class="font-bold text-gray-800 text-base">Order #{{ $order->id }}</h3>
+                                        <div class="py-1 px-4 mb-2 md:p-5">
+                                            <div class="flex items-center justify-between mb-1 md:mb-3">
+                                                <h3 class="font-bold text-gray-800 text-base truncate">
+                                                    {{ $firstItem->nama_produk }}
+                                                    @if ($order->items->count() > 1)
+                                                        <span class="font-medium">+{{ $order->items->count() - 1 }}
+                                                            more</span>
+                                                    @endif    
+                                                </h3>
                                                 <i class="fa-solid fa-chevron-right text-gray-400 group-hover:text-red-900"></i>
                                             </div>
                                             <div class="space-y-2">
                                                 <div class="flex items-baseline gap-1">
                                                     <span class="text-sm font-medium text-gray-500">IDR</span>
-                                                    <span class="text-2xl font-bold text-red-900">
+                                                    <span class="text-[20px] md:text-2xl font-bold text-red-900">
                                                         {{ number_format($order->subtotal, 0, ',', '.') }}
                                                     </span>
                                                 </div>
                                                 <p class="text-xs text-gray-500">
-                                                    {{ $firstItem->nama_produk }}
-                                                    @if ($order->items->count() > 1)
-                                                        <span class="font-medium">+{{ $order->items->count() - 1 }}
-                                                            more</span>
-                                                    @endif
+                                                    Order #{{ $order->id }}
                                                 </p>
                                             </div>
                                         </div>

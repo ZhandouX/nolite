@@ -24,32 +24,41 @@
                focus:w-36 focus:border-b focus:border-gray-800 focus:pl-8 focus:outline-none focus:cursor-text rounded-none text-white">
     </div>
 
-    <div id="searchResults"
-        class="fixed top-20 right-6 w-[450px] max-w-[450px] md:w-[800px] md:max-w-[800px] bg-white shadow-2xl rounded-2xl p-4 z-[140] hidden overflow-y-auto max-h-[70vh]">
+    <div id="searchResults" class="fixed top-[70px] md:top-20 left-2 right-2 md:left-auto md:right-6 
+           w-[calc(100%-1rem)] md:w-[800px] md:max-w-[800px]
+           bg-white shadow-2xl rounded-2xl p-0 z-[140] hidden overflow-y-auto max-h-[70vh]">
 
-        <!-- CLOSE BUTTON -->
-        <button id="closeSearch" type="button" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-            <i class="fa-solid fa-circle-xmark text-2xl"></i>
-        </button>
+        <!-- WRAPPER -->
+        <div class="relative">
 
-        <!-- RESULTS HEADER -->
-        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Hasil Pencarian</h3>
+            <!-- HEADER STICKY -->
+            <div
+                class="sticky top-0 bg-white z-50 px-4 pt-4 pb-3 border-b border-gray-200 flex items-center justify-center">
+                <h3 class="text-xl font-bold text-gray-800 text-center flex-1">Hasil Pencarian</h3>
 
-        <!-- LOADING STATE -->
-        <div id="loadingState" class="hidden text-center py-6">
-            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900 mx-auto"></div>
-            <p class="mt-2 text-gray-600 text-sm">Mencari produk...</p>
-        </div>
+                <!-- CLOSE BUTTON (Tetap di atas) -->
+                <button id="closeSearch" type="button"
+                    class="absolute right-4 text-gray-500 hover:text-gray-700 transition">
+                    <i class="fa-solid fa-circle-xmark text-2xl"></i>
+                </button>
+            </div>
 
-        <!-- NO RESULTS STATE -->
-        <div id="noResults" class="hidden text-center py-6">
-            <i class="fa-solid fa-search text-5xl text-gray-300 mb-2"></i>
-            <p class="text-gray-600 text-sm">Produk tidak ditemukan</p>
-        </div>
+            <!-- LOADING STATE -->
+            <div id="loadingState" class="hidden text-center py-6">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900 mx-auto"></div>
+                <p class="mt-2 text-gray-600 text-sm">Mencari produk...</p>
+            </div>
 
-        <!-- RESULTS GRID -->
-        <div id="resultsGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-4 justify-items-center">
-            <!-- Results akan muncul di sini -->
+            <!-- NO RESULTS STATE -->
+            <div id="noResults" class="hidden text-center py-6">
+                <i class="fa-solid fa-search text-5xl text-gray-300 mb-2"></i>
+                <p class="text-gray-600 text-sm">Produk tidak ditemukan</p>
+            </div>
+
+            <!-- RESULTS GRID -->
+            <div id="resultsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center p-4">
+                <!-- Results akan muncul di sini -->
+            </div>
         </div>
     </div>
 
@@ -67,7 +76,7 @@
     <!-- KERANJANG -->
     <a href="{{ route('keranjang.index') }}" class="text-white hover:text-gray-400 transition relative">
         <i data-lucide="shopping-cart" class="lucide-nav"></i>
-        <span id="cartBadge" class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5
+        <span id="cartBadge" class="absolute -top-2 -right-3 bg-red-600 text-white text-[9px] md:text-xs font-bold rounded-full px-1.5 py-0.5
         @if ($jumlahKeranjang == 0) hidden @endif">
             {{ $jumlahKeranjang }}
         </span>
@@ -266,7 +275,7 @@
                 const modalBeliId = `productBeliModal-${prod.id}`;
 
                 const card = `
-                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 w-full text-center">
+                    <div class="product-cards bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 w-full text-center">
                         <div class="relative">
                             <img src="${foto}" alt="${nama}" class="w-full h-40 max-h-40 object-cover bg-gray-50">
                             ${renderDiskonBadge(diskon)}

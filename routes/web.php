@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\CustomerServiceAdminController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\LandingController;
 use App\Http\Controllers\Customer\KeranjangController;
@@ -72,7 +74,7 @@ Route::middleware(['auth', 'role:admin'])
             Route::get('/', [AdminChatController::class, 'index'])->name('index');              // daftar chat
             Route::get('/{chat}', [AdminChatController::class, 'show'])->name('show');          // lihat chat
             Route::post('/{chat}/send', [AdminChatController::class, 'send'])->name('send');    // kirim pesan
-
+    
             // Hapus pesan tertentu
             Route::delete('/message/{id}', [AdminChatController::class, 'deleteMessage'])
                 ->name('message.delete');
@@ -90,13 +92,27 @@ Route::middleware(['auth', 'role:admin'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-                Route::get('/', 'index')->name('index');                // daftar
-                Route::get('/{user}', 'show')->name('show');            // detail
-                Route::patch('/{user}/block', 'block')->name('block');  // blokir
-                Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
-                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
-                Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
-            });
+            Route::get('/', 'index')->name('index');                // daftar
+            Route::get('/{user}', 'show')->name('show');            // detail
+            Route::patch('/{user}/block', 'block')->name('block');  // blokir
+            Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
+            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
+            Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
+        });
+
+        // ==========================
+        // 💬 CUSTOMER SERVICE (ADMIN)
+        // ==========================
+        Route::prefix('customer-service')->name('customer-service.')->group(function () {
+            Route::get('/', [CustomerServiceAdminController::class, 'index'])
+                ->name('index'); // Route name: admin.customer-service.index
+
+            Route::get('/{user}', [CustomerServiceAdminController::class, 'show'])
+                ->name('show'); // Route name: admin.customer-service.show
+    
+            Route::post('/reply/{id}', [CustomerServiceAdminController::class, 'reply'])
+                ->name('reply'); // Route name: admin.customer-service.reply
+        });
     });
 
 
@@ -104,6 +120,15 @@ Route::middleware(['auth', 'role:admin'])
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/dashboard/customer', [DashboardController::class, 'index'])
         ->name('customer.dashboard');
+
+    // COSTUMER SERVICE
+    Route::prefix('services')->name('services.')->group(function () {
+        Route::get('/customer-service', [CustomerServiceController::class, 'index'])
+            ->name('customer-service'); // hasil: services.customer-service
+
+        Route::post('/customer-service/send', [CustomerServiceController::class, 'sendMessage'])
+            ->name('customer-service.send'); // hasil: services.customer-service.send
+    });
 
     // CHECKOUT
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');

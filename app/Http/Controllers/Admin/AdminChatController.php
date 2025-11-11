@@ -11,10 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminChatController extends Controller
 {
-    /**
-     * 📨 Menampilkan daftar semua chat user
-     * Dapat difilter dan dicari berdasarkan nama pengguna.
-     */
+    /* CHATS INDEX */
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -27,14 +24,12 @@ class AdminChatController extends Controller
                 });
             })
             ->orderByDesc('last_activity')
-            ->get();
+            ->paginate(10);
 
         return view('admin.chats.index', compact('chats', 'search'));
     }
 
-    /**
-     * 💬 Menampilkan isi percakapan dengan user tertentu.
-     */
+    // CHATS SHOW
     public function show($chatId)
     {
         $chat = Chat::with(['user', 'messages.sender'])->findOrFail($chatId);

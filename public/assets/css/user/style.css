@@ -1,6 +1,8 @@
 /* =================================================== */
 /* ================== GLOBAL STYLES ================== */
 /* =================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -403,6 +405,10 @@ header .nav-links a {
   left: 0;
 }
 
+.sidebar-bordered {
+  border-bottom: 1px solid rgba(174, 174, 174, 0.234);
+}
+
 .sidebar-header {
   display: flex;
   justify-content: space-between;
@@ -759,7 +765,7 @@ header .nav-links a {
     padding-top: 4px;
   }
 
-  /* Header */
+  /* HEADER */
   #menuBtn {
     font-size: 18px;
   }
@@ -770,7 +776,7 @@ header .nav-links a {
   }
 
   header {
-    padding: 2px 9px;
+    padding: 10px 9px;
     z-index: 50;
     align-items: center;
   }
@@ -920,6 +926,7 @@ header .nav-links a {
     gap: 100px;
     overflow-x: auto;
     padding: 5px 0;
+    margin: 10px 0;
   }
 
   .icon-box {
@@ -957,4 +964,80 @@ input[type=number]::-webkit-inner-spin-button {
 /* Hilangkan spinner default (Firefox) */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* FONT FAMILY */
+.montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.typing-text::after {
+  content: "|";
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.quantity-btn {
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  transform: scale(1.05);
+}
+
+.item-card {
+  transition: all 0.2s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-btn {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.checkout-btn:active {
+  transform: translateY(0);
 }

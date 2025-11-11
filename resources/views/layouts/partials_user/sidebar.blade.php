@@ -1,9 +1,9 @@
 <style>
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
         #sidebar-inner .header-logo {
             padding-top: 8px;
             padding-bottom: 8px;
-            height: 44px;
+            height: 60px;
         }
     }
 
@@ -68,27 +68,27 @@
         <nav class="flex-1 p-3 overflow-y-auto bg-white">
             <ul class="space-y-1">
                 <!-- BERANDA -->
-                <li>
+                <li class="sidebar-bordered">
                     <a href="{{ route('customer.dashboard') }}"
-                        class="flex items-center gap-3 px-2 py-1 md:px-4 md:py-3 text-[12px] md:text-sm text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition">
+                        class="flex items-center gap-3 px-4 py-1 md:px-4 md:py-3 text-[15px] md:text-sm text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition">
                         <i class="fa-solid fa-house text-[14px] md:text-base"></i>
                         <span>Beranda</span>
                     </a>
                 </li>
 
                 <!-- PRODUK -->
-                <li>
+                <li class="sidebar-bordered">
                     <a href="{{ route('customer.allProduk') }}"
-                        class="flex items-center gap-3 px-2 py-1 md:px-4 md:py-3 text-[12px] md:text-sm text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition">
+                        class="flex items-center gap-3 px-4 py-1 md:px-4 md:py-3 text-[15px] md:text-sm text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition">
                         <i class="fa-solid fa-shirt text-[14px] md:text-base"></i>
                         <span>Produk</span>
                     </a>
                 </li>
 
                 <!-- KATEGORI DROPDOWN -->
-                <li class="relative group">
+                <li class="relative group sidebar-bordered">
                     <button type="button"
-                        class="flex items-center gap-3 px-2 py-1 md:px-4 md:py-3 text-[12px] md:text-sm text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition w-full">
+                        class="flex items-center gap-3 px-4 py-1 md:px-4 md:py-3 text-[15px] md:text-sm text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition w-full">
                         <i class="fa-solid fa-layer-group text-[14px] md:text-base"></i>
                         <span>Kategori</span>
                         <i

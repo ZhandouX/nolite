@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="shortcut icon" href="{{ asset('assets/images/logo/logonolite.png') }}" />
-  <link rel="stylesheet" href="{{ asset('assets/css/auth/login.css') }}">
+  <link rel="stylesheet" href="/assets/css/auth/login.css">
 </head>
 <body>
   <div class="form-container w-full max-w-md">

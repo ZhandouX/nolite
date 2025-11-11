@@ -1,6 +1,6 @@
 <div id="registerModal"
     class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-[9999] transition-opacity duration-300">
-    <div class="bg-transparent relative w-full max-w-md p-0">
+    <div class="bg-transparent relative md:w-full md:max-w-md p-0">
 
         <!-- Tombol Close -->
         <button type="button" onclick="closeRegisterModal()"
@@ -9,7 +9,7 @@
         </button>
 
         <!-- ===== Konten Register ===== -->
-        <div class="form-container w-full max-w-md">
+        <div class="form-container">
             <div class="form-header">
                 <h1 class="text-2xl font-bold mb-2">Register</h1>
             </div>

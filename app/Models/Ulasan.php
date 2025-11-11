@@ -9,6 +9,8 @@ class Ulasan extends Model
 {
     use HasFactory;
 
+    protected $table = 'ulasans';
+
     protected $fillable = [
         'user_id',
         'produk_id',

@@ -101,43 +101,43 @@
                     const foto = item.fotos?.length ? `/storage/${item.fotos[0].foto}` : `/assets/images/no-image.png`;
 
                     const card = `
-                                                                            <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                                                                                data-id="${item.id}" data-nama="${item.nama_produk}" data-harga="${item.harga}"
-                                                                                data-foto="${foto}" data-category="${item.kategori ?? 'umum'}">
+                                                                                <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                                                                                    data-id="${item.id}" data-nama="${item.nama_produk}" data-harga="${item.harga}"
+                                                                                    data-foto="${foto}" data-category="${item.kategori ?? 'umum'}">
 
-                                                                                <a href="/produk/detail/${item.id}" class="block overflow-hidden rounded-t-2xl bg-gray-50">
-                                                                                    <img src="${foto}" alt="${item.nama_produk}" class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
-                                                                                </a>
+                                                                                    <a href="/produk/detail/${item.id}" class="block overflow-hidden rounded-t-2xl bg-gray-50">
+                                                                                        <img src="${foto}" alt="${item.nama_produk}" class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
+                                                                                    </a>
 
-                                                                                <div class="p-6 flex flex-col gap-3">
-                                                                                    <h3 class="text-center text-xl font-bold text-gray-900 line-clamp-1">${item.nama_produk}</h3>
-                                                                                    <p class="text-center text-lg text-black font-bold">
-                                                                                        IDR ${new Intl.NumberFormat('id-ID').format(item.harga)}
-                                                                                    </p>
+                                                                                    <div class="p-6 flex flex-col gap-3">
+                                                                                        <h3 class="text-center text-xl font-bold text-gray-900 line-clamp-1">${item.nama_produk}</h3>
+                                                                                        <p class="text-center text-lg text-black font-bold">
+                                                                                            IDR ${new Intl.NumberFormat('id-ID').format(item.harga)}
+                                                                                        </p>
 
-                                                                                    <div class="flex gap-2 w-full mt-2">
-                                                                                        <!-- CART -->
-                                                                                        <button
-                                                                                            class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
-                                                                                            onclick="openModal('productModal-${item.id}')" title="Tambah ke Keranjang">
-                                                                                            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
-                                                                                                <path stroke-linecap='round' stroke-linejoin='round'
-                                                                                                    d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'/>
-                                                                                            </svg>
-                                                                                        </button>
+                                                                                        <div class="flex gap-2 w-full mt-2">
+                                                                                            <!-- CART -->
+                                                                                            <button
+                                                                                                class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
+                                                                                                onclick="openModal('productModal-${item.id}')" title="Tambah ke Keranjang">
+                                                                                                <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+                                                                                                    <path stroke-linecap='round' stroke-linejoin='round'
+                                                                                                        d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'/>
+                                                                                                </svg>
+                                                                                            </button>
 
-                                                                                        <!-- BUY -->
-                                                                                        <button
-                                                                                            class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
-                                                                                            onclick="openModal('productBeliModal-${item.id}')">
-                                                                                            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
-                                                                                                <path stroke-linecap='round' stroke-linejoin='round' d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'/>
-                                                                                            </svg>
-                                                                                            <span>Beli Sekarang</span>
-                                                                                        </button>
+                                                                                            <!-- BUY -->
+                                                                                            <button
+                                                                                                class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
+                                                                                                onclick="openModal('productBeliModal-${item.id}')">
+                                                                                                <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+                                                                                                    <path stroke-linecap='round' stroke-linejoin='round' d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'/>
+                                                                                                </svg>
+                                                                                                <span>Beli Sekarang</span>
+                                                                                            </button>
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
-                                                                            </div>`;
+                                                                                </div>`;
                     grid.insertAdjacentHTML('beforeend', card);
                 });
             };
