@@ -20,7 +20,6 @@ class AdminDashboardController extends Controller
         // === TOTAL PESANAN ===
         $totalPesanan = Order::count();
 
-        // Pesanan bulan lalu untuk growth
         $totalPesananBulanLalu = Order::whereMonth('created_at', now()->subMonth()->month)
             ->whereYear('created_at', now()->subMonth()->year)
             ->count();
@@ -30,8 +29,6 @@ class AdminDashboardController extends Controller
 
         // === TOTAL PENJUALAN ===
         $totalPenjualan = Order::where('status', 'selesai')->sum('subtotal');
-
-        // Penjualan bulan lalu untuk growth
         $totalPenjualanBulanLalu = Order::where('status', 'selesai')
             ->whereMonth('created_at', now()->subMonth()->month)
             ->whereYear('created_at', now()->subMonth()->year)
@@ -42,7 +39,7 @@ class AdminDashboardController extends Controller
             : 0;
 
         // === TOTAL PENDAPATAN ===
-        $pendapatan = $totalPenjualan; // sama dengan totalPenjualan
+        $pendapatan = $totalPenjualan;
         $pendapatanBulanLalu = $totalPenjualanBulanLalu;
         $growthPendapatan = $pendapatanBulanLalu > 0
             ? round((($pendapatan - $pendapatanBulanLalu) / $pendapatanBulanLalu) * 100, 1)
@@ -50,7 +47,6 @@ class AdminDashboardController extends Controller
 
         // === TOTAL PENGGUNA ===
         $totalPengguna = User::count();
-
         $penggunaBulanLalu = User::whereMonth('created_at', now()->subMonth()->month)
             ->whereYear('created_at', now()->subMonth()->year)
             ->count();
@@ -58,19 +54,22 @@ class AdminDashboardController extends Controller
             ? round((($totalPengguna - $penggunaBulanLalu) / $penggunaBulanLalu) * 100, 1)
             : 0;
 
-        // Pesanan pending
+        // === PESANAN ===
         $pesananPending = Order::where('status', 'menunggu')->count();
-
-        // Pesanan terbaru
         $pesananTerbaru = Order::latest()->take(5)->get();
 
-        // Produk terlaris
-        $produkTerlaris = Produk::withSum('orderItems as total_terjual', 'jumlah')
+        // === PRODUK TERLARIS ===
+        $produkTerlaris = Produk::with(['fotos'])
+            ->withStatistik()
             ->orderByDesc('total_terjual')
             ->take(5)
             ->get();
 
-        // === Pendapatan bulanan (12 bulan terakhir) ===
+
+        // === USER TERBARU ===
+        $usersTerbaru = User::latest()->take(5)->get();
+
+        // === PENDAPATAN BULANAN ===
         $pendapatanBulanan = Order::select(
             DB::raw('EXTRACT(MONTH FROM created_at)::int as bulan'),
             DB::raw('EXTRACT(YEAR FROM created_at)::int as tahun'),
@@ -87,7 +86,7 @@ class AdminDashboardController extends Controller
         $pendapatanData = [];
         for ($i = 0; $i < 12; $i++) {
             $bulan = now()->subMonths(11 - $i);
-            $label = $bulan->translatedFormat('M Y'); // contoh: Okt 2025
+            $label = $bulan->translatedFormat('M Y');
 
             $data = $pendapatanBulanan->firstWhere(
                 fn($row) => $row->bulan == $bulan->month && $row->tahun == $bulan->year
@@ -97,11 +96,11 @@ class AdminDashboardController extends Controller
             $pendapatanData[] = $data ? (int) $data->total : 0;
         }
 
-        // Pesanan menunggu untuk Floating Button
+        // === PESANAN MENUNGGU FLOATING ===
         $pesananMenunggu = Order::where('status', 'menunggu')->latest()->get();
         $jumlahMenunggu = $pesananMenunggu->count();
 
-        // Statistik pengguna bulanan (12 bulan terakhir)
+        // === STATISTIK PENGGUNA BULANAN ===
         $penggunaBulanan = User::select(
             DB::raw('EXTRACT(MONTH FROM created_at)::int as bulan'),
             DB::raw('EXTRACT(YEAR FROM created_at)::int as tahun'),
@@ -122,7 +121,7 @@ class AdminDashboardController extends Controller
             $penggunaData[] = $data ? (int) $data->total : 0;
         }
 
-        // Kirim ke view
+        // === KIRIM KE VIEW ===
         return view('admin.dashboard', compact(
             'bulanLabels',
             'pendapatanData',
@@ -140,8 +139,7 @@ class AdminDashboardController extends Controller
             'pesananPending',
             'pesananTerbaru',
             'produkTerlaris',
-            'bulanLabels',
-            'pendapatanData',
+            'usersTerbaru',
             'pesananMenunggu',
             'jumlahMenunggu'
         ));

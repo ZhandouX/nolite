@@ -32,9 +32,10 @@ class DashboardController extends Controller
         return view('customer.dashboard', compact('produk', 'produkDiskon'));
     }
 
+    // DETAIL PRODUK
     public function show($id)
     {
-        $produk = Produk::with(['fotos', 'ulasan.user', 'ulasan.fotos'])->findOrFail($id);
+        $produk = Produk::with(['fotos', 'ulasan.user', 'ulasan.fotos', 'kategori'])->findOrFail($id);
 
         // Hitung rata-rata rating dan jumlah ulasan
         $totalUlasan = $produk->ulasan->count();
@@ -60,7 +61,7 @@ class DashboardController extends Controller
 
         // CATEGORY FILTER
         if ($request->filled('kategori')) {
-            $query->whereIn('jenis', $request->kategori);
+            $query->whereIn('kategori_id', $request->kategori);
         }
 
         // PRODUCT TYPE FILTER
@@ -130,95 +131,5 @@ class DashboardController extends Controller
             ->paginate(12);
 
         return view('customer.diskon', compact('produks'));
-    }
-
-    public function tshirtCategory(Request $request)
-    {
-        $query = Produk::with('fotos')
-            ->where('jenis', 'T-Shirt')
-            ->withStatistik();
-
-        switch ($request->input('sort')) {
-            case 'harga_terendah':
-                $query->orderBy('harga', 'asc');
-                break;
-            case 'harga_tertinggi':
-                $query->orderBy('harga', 'desc');
-                break;
-            case 'nama_az':
-                $query->orderBy('nama_produk', 'asc');
-                break;
-            case 'nama_za':
-                $query->orderBy('nama_produk', 'desc');
-                break;
-            default:
-                $query->latest();
-                break;
-        }
-
-        $produks = $query->take(6)->get();
-        return view('customer.kategori-tshirt', compact('produks'));
-    }
-
-    public function hoodieCategory(Request $request)
-    {
-        $query = Produk::with('fotos')
-            ->where('jenis', 'Hoodie')
-            ->withStatistik();
-
-        // ==== Tambahkan logika sorting berdasarkan query string ====
-        switch ($request->input('sort')) {
-            case 'harga_terendah':
-                $query->orderBy('harga', 'asc');
-                break;
-            case 'harga_tertinggi':
-                $query->orderBy('harga', 'desc');
-                break;
-            case 'nama_az':
-                $query->orderBy('nama_produk', 'asc');
-                break;
-            case 'nama_za':
-                $query->orderBy('nama_produk', 'desc');
-                break;
-            default:
-                $query->latest(); // default: terbaru
-                break;
-        }
-
-        // ==== Batasi 6 item (opsional) ====
-        $produks = $query->take(6)->get();
-
-        return view('customer.kategori-hoodie', compact('produks'));
-    }
-
-    public function jerseyCategory(Request $request)
-    {
-        $query = Produk::with('fotos')
-            ->where('jenis', 'Jersey')
-            ->withStatistik();
-
-        // ==== Tambahkan logika sorting berdasarkan query string ====
-        switch ($request->input('sort')) {
-            case 'harga_terendah':
-                $query->orderBy('harga', 'asc');
-                break;
-            case 'harga_tertinggi':
-                $query->orderBy('harga', 'desc');
-                break;
-            case 'nama_az':
-                $query->orderBy('nama_produk', 'asc');
-                break;
-            case 'nama_za':
-                $query->orderBy('nama_produk', 'desc');
-                break;
-            default:
-                $query->latest(); // default: terbaru
-                break;
-        }
-
-        // ==== Batasi 6 item (opsional) ====
-        $produks = $query->take(6)->get();
-
-        return view('customer.kategori-jersey', compact('produks'));
     }
 }

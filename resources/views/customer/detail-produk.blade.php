@@ -600,7 +600,6 @@
 @endsection
 
 @push('script')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // IMAGE GALLERY FUNCTIONS
     function setMainImage(src, element) {

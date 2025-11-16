@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\CustomerServiceAdminController;
+use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\ChatbotController;
@@ -37,6 +39,12 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
+        // KATEGORI
+        Route::resource('kategori', KategoriController::class);
+        Route::post('/kategori/store-ajax', [KategoriController::class, 'storeAjax'])->name('kategori.store-ajax');
+        Route::post('/kategori/{kategori}/update-ajax', [KategoriController::class, 'updateAjax'])->name('kategori.update-ajax');
+        Route::delete('/kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
         // DASHBOARD
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -106,13 +114,18 @@ Route::middleware(['auth', 'role:admin'])
         Route::prefix('customer-service')->name('customer-service.')->group(function () {
             Route::get('/', [CustomerServiceAdminController::class, 'index'])
                 ->name('index'); // Route name: admin.customer-service.index
-
+    
             Route::get('/{user}', [CustomerServiceAdminController::class, 'show'])
                 ->name('show'); // Route name: admin.customer-service.show
     
             Route::post('/reply/{id}', [CustomerServiceAdminController::class, 'reply'])
                 ->name('reply'); // Route name: admin.customer-service.reply
         });
+
+        // =========================
+        // NOTIFICATIONS
+        // =========================
+        Route::get('/notifications', [NotificationController::class, 'notifications'])->name('notifications');
     });
 
 
@@ -162,6 +175,9 @@ Route::get('/all-produk/customer', [DashboardController::class, 'allProduk'])->n
 Route::get('/produk/unggulan', [DashboardController::class, 'unggulanProduk'])->name('customer.unggulan');
 Route::get('/produk/diskon', [DashboardController::class, 'diskonProduk'])->name('customer.diskon');
 
+// KATEGORI
+Route::get('/kategori/{kategori}', [ProdukCustomerController::class, 'kategori'])->name('customer.kategori-produk');
+
 // DETAIL PRODUK
 Route::get('/produk/{id}', [DashboardController::class, 'show'])->name('produk.detail');
 
@@ -195,12 +211,6 @@ Route::get('/autocomplete-produk', function (Request $request) {
     return response()->json($suggestions);
 })->name('produk.autocomplete');
 Route::get('/get-product-modals/{id}', [ProdukCustomerController::class, 'getProductModals']);
-
-
-// KATEGORI
-Route::get('/kategori-tshirt/customer', [DashboardController::class, 'tshirtCategory'])->name('customer.kategori-tshirt');
-Route::get('/kategori-hoodie/customer', [DashboardController::class, 'hoodieCategory'])->name('customer.kategori-hoodie');
-Route::get('/kategori-jersey/customer', [DashboardController::class, 'jerseyCategory'])->name('customer.kategori-jersey');
 
 // KERANJANG
 Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
@@ -259,6 +269,7 @@ Route::post('/chatbot/query', [ChatbotController::class, 'query'])->name('chatbo
 // AUTH SETTINGS
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/profile-admin', [ProfileController::class, 'profileAdmin'])->name('profile.profile-admin');
     Route::get('/profile/settings', [ProfileController::class, 'settings'])->name('profile.settings');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-8">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex items-center">
@@ -189,14 +189,14 @@
                                                     <i class="fa-solid fa-tag mr-1.5"></i>
                                                     @if(!empty($item->diskon) && $item->diskon > 0)
                                                         <span class="line-through text-gray-400 mr-1">
-                                                            IDR {{ number_format($item->harga, 0, ',', '.') }}
+                                                            Rp{{ number_format($item->harga, 0, ',', '.') }}
                                                         </span>
                                                         <span class="text-red-600 dark:text-red-400 font-semibold">
-                                                            IDR {{ number_format($item->harga_diskon, 0, ',', '.') }}
+                                                            Rp{{ number_format($item->harga_diskon, 0, ',', '.') }}
                                                         </span>
                                                     @else
                                                         <span class="text-gray-900 dark:text-white font-semibold">
-                                                            IDR {{ number_format($item->harga_diskon, 0, ',', '.') }}
+                                                            Rp{{ number_format($item->harga_diskon, 0, ',', '.') }}
                                                         </span>
                                                     @endif
                                                 </span>
@@ -216,7 +216,7 @@
                                     <!-- Subtotal -->
                                     <div class="text-right">
                                         <p class="text-lg font-bold text-primary-600 dark:text-primary-400">
-                                            IDR {{ number_format($item->subtotal, 0, ',', '.') }}
+                                            Rp{{ number_format($item->subtotal, 0, ',', '.') }}
                                         </p>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Subtotal</p>
                                     </div>
@@ -236,7 +236,7 @@
                             <div class="flex justify-between items-center py-2">
                                 <span class="text-gray-600 dark:text-gray-400">Subtotal</span>
                                 <span class="text-gray-900 dark:text-white font-medium">
-                                    IDR {{ number_format($order->subtotal, 0, ',', '.') }}
+                                    Rp{{ number_format($order->subtotal, 0, ',', '.') }}
                                 </span>
                             </div>
 
@@ -244,7 +244,7 @@
                                 class="flex justify-between items-center py-2 border-t border-gray-200 dark:border-gray-600 pt-4">
                                 <span class="text-lg font-semibold text-gray-900 dark:text-white">Total Pembayaran</span>
                                 <span class="text-xl font-bold text-primary-600 dark:text-primary-400">
-                                    IDR {{ number_format($order->subtotal, 0, ',', '.') }}
+                                    Rp{{ number_format($order->subtotal, 0, ',', '.') }}
                                 </span>
                             </div>
 

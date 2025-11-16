@@ -1,31 +1,48 @@
 <div id="chat-container"
-    class="hidden z-[9999] fixed inset-0 lg:hidden bg-white rounded-t-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate__animated animate__fadeInUp">
+    class="hidden z-[10000] fixed bottom-0 right-0 lg:bottom-4 lg:right-4 w-full h-full lg:w-96 lg:h-[450px] bg-white rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden animate__animated animate__fadeInUp dark:bg-gray-800">
 
     <!-- Header -->
     <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-gray-700 to-gray-600 rounded-t-3xl">
-        <h4 class="text-white font-semibold text-sm flex items-center gap-2">
-            <i class="fa-solid fa-robot text-gray-200"></i> Chat Nolite
-        </h4>
-        <button id="close-chat" class="text-white hover:text-gray-300 text-lg leading-none transition">&times;</button>
+        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-primary-500 to-primary-600 rounded-t-2xl">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-robot text-white text-sm"></i>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold text-sm">Chat Nolite</h4>
+                <p class="text-primary-100 text-xs">Online • Siap membantu</p>
+            </div>
+        </div>
+        <button id="close-chat" class="text-white hover:text-primary-200 text-lg leading-none transition-colors duration-200 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10">
+            &times;
+        </button>
     </div>
 
     <!-- Chat area -->
-    <div id="chatbox" class="flex-1 overflow-y-auto p-4 text-sm space-y-3 bg-gray-50 scroll-smooth">
-        <div class="text-gray-400 text-center text-xs mt-10">
-            💬 Hai! Tanya tentang produk Nolite Aspicience yuk 😊
+    <div id="chatbox" class="flex-1 overflow-y-auto p-4 text-sm space-y-3 bg-gray-50 dark:bg-gray-900 scroll-smooth">
+        <!-- Welcome Message -->
+        <div class="text-center mt-8">
+            <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="fa-solid fa-robot text-white text-2xl"></i>
+            </div>
+            <h4 class="text-gray-700 dark:text-gray-300 font-semibold text-sm mb-1">Hai, {{ auth()->user()->name ?? 'Pelanggan Nolite' }}! 👋</h4>
+            <p class="text-gray-500 dark:text-gray-400 text-xs px-4">
+                Tanya tentang produk Nolite Aspicience yuk! 😊
+            </p>
         </div>
     </div>
 
-    <!-- Floating input -->
-    <div class="p-4 border-t border-gray-200 bg-white">
-        <form id="chatForm" class="flex items-center bg-white rounded-2xl shadow-md border border-gray-200 p-2">
-            <input type="text" id="message"
-                class="flex-1 px-4 py-3 text-sm focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400 rounded-2xl"
-                placeholder="Ketik pertanyaanmu...">
+    <!-- Input area -->
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <form id="chatForm" class="flex items-center gap-2">
+            <div class="flex-1 relative">
+                <input type="text" id="message"
+                    class="w-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 rounded-xl bg-gray-100 dark:bg-gray-700 border border-transparent focus:border-primary-500 transition-all duration-200"
+                    placeholder="Ketik pertanyaanmu...">
+            </div>
             <button type="submit"
-                class="bg-gray-700 text-white px-5 py-2 ml-2 rounded-2xl hover:bg-gray-600 transition">
-                Kirim
+                class="bg-primary-500 text-white p-3 rounded-xl hover:bg-primary-600 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center min-w-[44px]">
+                <i class="fa-solid fa-paper-plane text-sm"></i>
             </button>
         </form>
     </div>
@@ -36,100 +53,134 @@
         const chatToggle = document.getElementById("chat-toggle");
         const chatContainer = document.getElementById("chat-container");
 
-        // Cek viewport
-        const isMobile = window.innerWidth < 1024; // Tailwind sm breakpoint = 640px
-
         chatToggle.addEventListener("click", () => {
-            if (isMobile) {
-                // Mobile -> popup
-                chatContainer.classList.toggle("hidden");
-            } else {
-                // Desktop -> redirect ke halaman chatbot
-                window.location.href = "{{ route('chatbot.view') }}";
-            }
+            chatContainer.classList.toggle("hidden");
         });
 
-        // Tombol close hanya untuk mobile
         const closeChat = document.getElementById("close-chat");
         closeChat.addEventListener("click", () => {
             chatContainer.classList.add("hidden");
         });
 
-        // Chat form untuk mobile (hanya aktif kalau mobile)
-        if (isMobile) {
-            const chatForm = document.getElementById("chatForm");
-            const chatbox = document.getElementById("chatbox");
-            const messageInput = document.getElementById("message");
+        // Chat form functionality for both mobile and desktop
+        const chatForm = document.getElementById("chatForm");
+        const chatbox = document.getElementById("chatbox");
+        const messageInput = document.getElementById("message");
 
-            chatForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const msg = messageInput.value.trim();
-                if (!msg) return;
+        chatForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const msg = messageInput.value.trim();
+            if (!msg) return;
 
-                chatbox.innerHTML += `
-                <div class="text-right">
-                    <span class="bg-gray-200 px-3 py-1 rounded-lg inline-block text-gray-800">${msg}</span>
+            // Add user message
+            chatbox.innerHTML += `
+                <div class="flex justify-end">
+                    <div class="max-w-[80%]">
+                        <div class="bg-primary-500 text-white px-4 py-2 rounded-2xl rounded-br-sm">
+                            ${msg}
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 block text-right">Sekarang</span>
+                    </div>
                 </div>
             `;
-                messageInput.value = "";
-                chatbox.scrollTop = chatbox.scrollHeight;
+            
+            messageInput.value = "";
+            chatbox.scrollTop = chatbox.scrollHeight;
 
-                const typing = document.createElement("div");
-                typing.className = "text-left text-gray-400 italic animate-pulse";
-                typing.innerText = "Bot sedang mengetik...";
-                chatbox.appendChild(typing);
-                chatbox.scrollTop = chatbox.scrollHeight;
+            // Show typing indicator
+            const typing = document.createElement("div");
+            typing.className = "flex justify-start";
+            typing.innerHTML = `
+                <div class="max-w-[80%]">
+                    <div class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-2xl rounded-bl-sm">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatbox.appendChild(typing);
+            chatbox.scrollTop = chatbox.scrollHeight;
 
-                try {
-                    const response = await fetch("{{ route('chatbot.query') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                        },
-                        body: JSON.stringify({ message: msg })
-                    });
+            try {
+                const response = await fetch("{{ route('chatbot.query') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({ message: msg })
+                });
 
-                    const data = await response.json();
-                    typing.remove();
+                const data = await response.json();
+                typing.remove();
 
-                    const replyText = data.reply || "Maaf, saya tidak menemukan informasi produk.";
-                    const produkList = data.produk_list || [];
+                const replyText = data.reply || "Maaf, saya tidak menemukan informasi produk.";
+                const produkList = data.produk_list || [];
 
-                    chatbox.innerHTML += `
-                    <div class="text-left">
-                        <span class="bg-gray-100 px-3 py-2 rounded-lg inline-block text-gray-700 leading-relaxed">${replyText}</span>
+                // Add bot reply
+                chatbox.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="max-w-[80%]">
+                            <div class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-2xl rounded-bl-sm">
+                                ${replyText}
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 block">Nolite Bot</span>
+                        </div>
                     </div>
                 `;
 
-                    if (produkList.length > 0) {
-                        const cardsHtml = produkList.map(p => `
-                        <a href="/produk/${p.id}" class="flex items-center gap-3 p-2 border border-gray-200 rounded-lg hover:bg-gray-100 transition">
-                            <img src="${p.foto}" class="w-16 h-16 object-cover rounded" alt="${p.nama_produk}">
-                            <div class="flex-1 text-sm">
-                                <div class="font-semibold text-gray-700">${p.nama_produk}</div>
-                                <div class="text-gray-500 text-xs">Ukuran: ${p.ukuran}</div>
-                                <div class="text-gray-500 text-xs">Warna: ${p.warna}</div>
-                                <div class="text-gray-700 font-medium text-sm">${p.harga}</div>
-                                <div class="text-gray-600 text-xs mt-1">${p.deskripsi}</div>
+                // Add product cards if available
+                if (produkList.length > 0) {
+                    const cardsHtml = produkList.map(p => `
+                        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div class="flex gap-3">
+                                <img src="${p.foto}" class="w-12 h-12 object-cover rounded-lg" alt="${p.nama_produk}">
+                                <div class="flex-1 min-w-0">
+                                    <h5 class="font-semibold text-gray-800 dark:text-gray-200 text-sm truncate">${p.nama_produk}</h5>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="text-xs text-gray-600 dark:text-gray-400">${p.ukuran}</span>
+                                        <span class="text-xs text-gray-600 dark:text-gray-400">•</span>
+                                        <span class="text-xs text-gray-600 dark:text-gray-400">${p.warna}</span>
+                                    </div>
+                                    <div class="text-primary-600 dark:text-primary-400 font-semibold text-sm mt-1">${p.harga}</div>
+                                </div>
                             </div>
-                        </a>
+                            <p class="text-gray-600 dark:text-gray-400 text-xs mt-2 line-clamp-2">${p.deskripsi}</p>
+                            <a href="/produk/${p.id}" 
+                               class="block w-full mt-3 text-center bg-primary-500 hover:bg-primary-600 text-white text-xs py-2 rounded-lg transition-colors duration-200">
+                                Lihat Detail
+                            </a>
+                        </div>
                     `).join('');
 
-                        chatbox.innerHTML += `<div class="space-y-2 mt-2">${cardsHtml}</div>`;
-                    }
+                    chatbox.innerHTML += `<div class="space-y-3 mt-3">${cardsHtml}</div>`;
+                }
 
-                    chatbox.scrollTop = chatbox.scrollHeight;
+                chatbox.scrollTop = chatbox.scrollHeight;
 
-                } catch (error) {
-                    typing.remove();
-                    chatbox.innerHTML += `
-                    <div class="text-left text-red-600">
-                        <span class="bg-red-100 px-2 py-1 rounded-lg inline-block">Terjadi kesalahan koneksi ke server.</span>
+            } catch (error) {
+                typing.remove();
+                chatbox.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="max-w-[80%]">
+                            <div class="bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-4 py-2 rounded-2xl rounded-bl-sm">
+                                Terjadi kesalahan koneksi ke server.
+                            </div>
+                        </div>
                     </div>
                 `;
-                }
-            });
-        }
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }
+        });
+
+        // Auto-focus input when chat opens
+        chatToggle.addEventListener("click", () => {
+            setTimeout(() => {
+                messageInput.focus();
+            }, 300);
+        });
     });
 </script>

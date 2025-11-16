@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-        <div class="max-w-7xl mx-auto">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 animate-fade-in-up">
+        <div class="max-w-screen mx-auto">
             <!-- Header Section -->
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Customer Service</h1>
@@ -139,3 +139,33 @@
         </div>
     </div>
 @endsection
+<script>
+    // Add fade-in animation
+        document.addEventListener('DOMContentLoaded', function () {
+            const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
+            elements.forEach((el, index) => {
+                el.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => {
+                    el.classList.add('transition-all', 'duration-500');
+                    el.classList.remove('opacity-0', 'translate-y-4');
+                }, index * 100);
+            });
+        });
+</script>
+<style>
+    @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
+        }
+</style>

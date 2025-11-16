@@ -58,7 +58,7 @@
                         @endif
 
                         <p class="text-gray-800 font-semibold mt-2">
-                            Total: IDR {{ number_format($order->subtotal, 0, ',', '.') }}
+                            Total: Rp{{ number_format($order->subtotal, 0, ',', '.') }}
                         </p>
                         <p class="text-gray-800 font-semibold mt-2">
                             Metode Pembayaran: {{ $order->metode_pembayaran }}

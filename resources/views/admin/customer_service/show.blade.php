@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-screen mx-auto">
             <!-- Header Section -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
                 <div class="mb-4 sm:mb-0">
@@ -49,43 +49,42 @@
                         </div>
                         <div class="p-6 space-y-4 max-h-96 overflow-y-auto">
                             @forelse($messages as $msg)
-                                                <div class="flex space-x-4">
-                                                    <div class="flex-shrink-0">
-                                                        <div
-                                                            class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                                                            {{ substr($msg->user->name, 0, 1) }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-1 min-w-0">
-                                                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl px-4 py-3">
-                                                            <p class="text-gray-800 dark:text-gray-200 text-sm">{{ $msg->message }}</p>
-                                                        </div>
-                                                        @if($msg->reply)
-                                                            <div
-                                                                class="ml-8 mt-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl px-4 py-3">
-                                                                <p class="text-blue-800 dark:text-blue-300 text-sm">
-                                                                    <span class="font-semibold">Admin:</span> {{ $msg->reply }}
-                                                                </p>
-                                                            </div>
-                                                        @endif
-                                                        <div class="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-400 space-x-3">
-                                                            <span class="inline-flex items-center">
-                                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                </svg>
-                                                                {{ $msg->created_at->diffForHumans() }}
-                                                            </span>
-                                                            <span
-                                                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-                                                                        {{ $msg->status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                ($msg->status === 'read' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400') }}">
-                                                                {{ ucfirst($msg->status) }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                <div class="flex space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                                            {{ substr($msg->user->name, 0, 1) }}
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl px-4 py-3">
+                                            <p class="text-gray-800 dark:text-gray-200 text-sm">{{ $msg->message }}</p>
+                                        </div>
+                                        @if($msg->reply)
+                                            <div
+                                                class="ml-8 mt-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl px-4 py-3">
+                                                <p class="text-blue-800 dark:text-blue-300 text-sm">
+                                                    <span class="font-semibold">Admin:</span> {{ $msg->reply }}
+                                                </p>
+                                            </div>
+                                        @endif
+                                        <div class="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-400 space-x-3">
+                                            <span class="inline-flex items-center">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                {{ $msg->created_at->diffForHumans() }}
+                                            </span>
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                                                                                        {{ $msg->status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                ($msg->status === 'read' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
+                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400') }}">
+                                                {{ ucfirst($msg->status) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             @empty
                                 <div class="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <svg class="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor"
@@ -171,7 +170,7 @@
                             <div class="mb-6">
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Status Akun:</p>
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
-                                        {{ $user->status === 'aktif' ?
+                                                {{ $user->status === 'aktif' ?
         'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
         'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }}">
                                     <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">

@@ -14,7 +14,7 @@
             <div class="text-left text-sm border-t border-b py-4 mb-6">
                 <p><strong>Kode Pesanan:</strong> #{{ $order->id }}</p>
                 <p><strong>Nama Penerima:</strong> {{ $order->nama_penerima }}</p>
-                <p><strong>Total Pembayaran:</strong> IDR {{ number_format($order['subtotal'], 0, ',', '.') }}</p>
+                <p><strong>Total Pembayaran:</strong> Rp{{ number_format($order['subtotal'], 0, ',', '.') }}</p>
                 <p><strong>Metode Pembayaran:</strong> {{ $order->metode_pembayaran }}</p>
                 <p><strong>Status:</strong> <span class="text-yellow-600">{{ $order->status }}</span></p>
             </div>
@@ -28,7 +28,7 @@
                                 <p class="font-medium">{{ $item->nama_produk }}</p>
                                 <p class="text-xs text-gray-500">Warna: {{ $item->warna }} | Ukuran: {{ $item->ukuran }}</p>
                             </div>
-                            <span class="font-semibold">IDR {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                            <span class="font-semibold">Rp{{ number_format($item->subtotal, 0, ',', '.') }}</span>
                         </div>
                     </li>
                 @endforeach

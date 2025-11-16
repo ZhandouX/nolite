@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-6">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -235,7 +235,7 @@
 
     <style>
         /* Animasi untuk transisi halus */
-        .fade-in {
+        /* .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
 
@@ -265,7 +265,7 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
+        } */
 
         /* Custom scrollbar untuk area chat */
         .custom-scrollbar::-webkit-scrollbar {

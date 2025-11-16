@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk;
+use App\Models\Kategori;
 
 class ProdukCustomerController extends Controller
 {
@@ -40,7 +41,7 @@ class ProdukCustomerController extends Controller
                 'harga_diskon' => $hargaSetelahDiskon,
                 'diskon' => $diskon,
                 'jumlah' => $item->jumlah,
-                'jenis' => $item->jenis ?? '-',
+                'kategori_id' => $item->kategori_id ?? '-',
                 'foto' => $item->fotos->isNotEmpty()
                     ? asset('storage/' . $item->fotos->first()->foto)
                     : asset('assets/images/no-image.png'),
@@ -77,9 +78,10 @@ class ProdukCustomerController extends Controller
             ->where(function ($q) use ($query) {
                 $q->whereRaw('nama_produk ILIKE ?', ["%{$query}%"])
                     ->orWhereRaw('deskripsi ILIKE ?', ["%{$query}%"])
-                    ->orWhereRaw('jenis ILIKE ?', ["%{$query}%"])
-                    ->orWhereRaw('jenis_lain ILIKE ?', ["%{$query}%"])
-                    ->orWhereRaw('warna_lain ILIKE ?', ["%{$query}%"]);
+                    ->orWhereRaw('warna_lain ILIKE ?', ["%{$query}%"])
+                    ->orWhereRaw('kategori', function ($k) use ($query) {
+                        $k->where('nama_kategori', 'ILIKE', "%{$query}%");
+                    });
             })
             ->orderBy('nama_produk', 'asc')
             ->paginate($perPage);
@@ -92,7 +94,7 @@ class ProdukCustomerController extends Controller
                     'harga' => $item->harga,
                     'diskon' => $item->diskon ?? 0,
                     'jumlah' => $item->jumlah,
-                    'jenis' => $item->jenis ?? '-',
+                    'kategori' => $item->kategori->nama_kategori ?? '-',
                     'foto' => $item->fotos->isNotEmpty()
                         ? asset('storage/' . $item->fotos->first()->foto)
                         : asset('assets/images/no-image.png'),
@@ -114,5 +116,36 @@ class ProdukCustomerController extends Controller
         $item = Produk::with('fotos')->findOrFail($id);
         return view('layouts.partials_user.modal-beli', compact('item'))->render()
             . view('layouts.partials_user.modal-cart', compact('item'))->render();
+    }
+
+    public function kategori($kategoriId, Request $request)
+    {
+        // Ambil kategori
+        $kategori = Kategori::findOrFail($kategoriId);
+
+        // Query produk sesuai kategori
+        $query = Produk::where('kategori_id', $kategori->id);
+
+        // Sorting jika ada parameter sort
+        if ($request->has('sort')) {
+            switch ($request->sort) {
+                case 'harga_terendah':
+                    $query->orderBy('harga', 'asc');
+                    break;
+                case 'harga_tertinggi':
+                    $query->orderBy('harga', 'desc');
+                    break;
+                case 'nama_az':
+                    $query->orderBy('nama_produk', 'asc');
+                    break;
+                case 'nama_za':
+                    $query->orderBy('nama_produk', 'desc');
+                    break;
+            }
+        }
+
+        $produks = $query->get();
+
+        return view('customer.kategori-produk', compact('kategori', 'produks'));
     }
 }

@@ -154,7 +154,7 @@
                 </div>
 
                 <div class="text-sm font-semibold text-gray-800 flex-shrink-0">
-                    IDR {{ number_format($checkoutItem['subtotal'], 0, ',', '.') }}
+                    Rp{{ number_format($checkoutItem['subtotal'], 0, ',', '.') }}
                 </div>
             </div>
 
@@ -162,7 +162,7 @@
 
             <div class="flex justify-between font-semibold text-sm mt-3 border-t pt-2">
                 <span>Total Bayar</span>
-                <span>IDR {{ number_format($total, 0, ',', '.') }}</span>
+                <span>Rp{{ number_format($total, 0, ',', '.') }}</span>
             </div>
 
             <p class="text-xs text-center text-gray-400 mt-2">

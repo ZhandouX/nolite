@@ -3,7 +3,7 @@
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Pesanan Terbaru</h3>
     </div>
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 border-b-2 border-gray-700 dark:border-gray-100">
             <thead class="bg-gray-50 dark:bg-gray-700">
                 <tr>
                     <th
@@ -39,7 +39,7 @@
                             {{ $order->created_at->translatedFormat('d M Y') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            IDR {{ number_format($order->subtotal, 0, ',', '.') }}
+                            Rp{{ number_format($order->subtotal, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php

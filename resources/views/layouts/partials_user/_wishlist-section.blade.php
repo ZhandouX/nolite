@@ -48,7 +48,7 @@
                                 {{ $item->produk->nama_produk }}
                             </h3>
                             <p class="text-red-600 font-bold text-sm sm:text-base mt-1">
-                                IDR {{ number_format($item->produk->harga, 0, ',', '.') }}
+                                Rp{{ number_format($item->produk->harga, 0, ',', '.') }}
                             </p>
                         </div>
                     </div>

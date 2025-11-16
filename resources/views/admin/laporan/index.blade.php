@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex items-center">
@@ -65,7 +65,7 @@
                             <input type="date" id="tanggal_awal" name="tanggal_awal"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fa-solid fa-calendar text-gray-400"></i>
+                                <!-- <i class="fa-solid fa-calendar text-gray-400"></i> -->
                             </div>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                             <input type="date" id="tanggal_akhir" name="tanggal_akhir"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fa-solid fa-calendar text-gray-400"></i>
+                                <!-- <i class="fa-solid fa-calendar text-gray-400"></i> -->
                             </div>
                         </div>
                     </div>
@@ -87,8 +87,8 @@
                     <!-- Tombol Tampilkan -->
                     <div class="lg:col-span-2 flex items-end">
                         <button type="submit"
-                            class="w-full h-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center">
-                            <i class="fa-solid fa-eye mr-2"></i>
+                            class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center">
+                            <i data-lucide="eye" class="w-3 h-3 md:w-5 md:h-5 mr-2"></i>
                             Tampilkan
                         </button>
                     </div>
@@ -599,7 +599,7 @@
                 setTimeout(() => {
                     el.classList.add('transition-all', 'duration-500');
                     el.classList.remove('opacity-0', 'translate-y-4');
-                }, index * 100);
+                });
             });
         });
     </script>
@@ -618,7 +618,7 @@
         }
 
         .animate-fade-in-up {
-            animation: fadeInUp 0.5s ease-out;
+            animation: fadeInUp 0.3s ease-out;
         }
 
         /* Custom scrollbar */

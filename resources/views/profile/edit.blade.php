@@ -121,9 +121,11 @@
                                             </div>
                                             <div class="space-y-2">
                                                 <div class="flex items-baseline gap-1">
-                                                    <span class="text-sm font-medium text-gray-500">IDR</span>
+                                                    <span class="text-sm font-medium text-gray-500">
+                                                        Rp
+                                                    </span>
                                                     <span class="text-[20px] md:text-2xl font-bold text-red-900">
-                                                        {{ number_format($order->subtotal, 0, ',', '.') }}
+                                                    {{ number_format($order->subtotal, 0, ',', '.') }}
                                                     </span>
                                                 </div>
                                                 <p class="text-xs text-gray-500">

@@ -13,23 +13,17 @@
         <h2 class="font-semibold mb-2 text-sm">Kategori</h2>
 
         @php
-            $routeMap = [
-                'T-shirt' => 'customer.kategori-tshirt',
-                'Hoodie' => 'customer.kategori-hoodie',
-                'Jersey' => 'customer.kategori-jersey',
-            ];
-            $currentRoute = Route::currentRouteName();
+            // Ambil semua kategori dari DB
+            $kategoris = \App\Models\Kategori::all();
+            $currentKategoriId = request('kategori_id'); // Bisa dikirim via GET
         @endphp
 
-        @foreach($routeMap as $cat => $routeName)
-            @php
-                $isChecked = strtolower($currentRoute) === strtolower($routeName);
-            @endphp
+        @foreach($kategoris as $kategori)
             <label class="block text-sm text-gray-700 cursor-pointer">
-                <input type="radio" name="kategori" value="{{ $cat }}" {{ $isChecked ? 'checked' : '' }}
-                    onclick="handleCategoryClick(this, '{{ route($routeName) }}', '{{ route('customer.allProduk') }}')"
+                <input type="radio" name="kategori_id" value="{{ $kategori->id }}" {{ $currentKategoriId == $kategori->id ? 'checked' : '' }}
+                    onclick="window.location.href='{{ route('customer.kategori-produk', $kategori->id) }}'"
                     class="mr-2 accent-gray-600">
-                {{ $cat }}
+                {{ $kategori->nama_kategori }}
             </label>
         @endforeach
     </div>

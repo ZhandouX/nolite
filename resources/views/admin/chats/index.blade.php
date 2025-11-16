@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-8">
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -20,7 +20,7 @@
                 <div class="md:col-span-5">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i data-lucide="search" class="text-gray-400"></i>
+                            <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
                         </div>
                         <input 
                             type="text" 
@@ -45,9 +45,9 @@
                 <div class="md:col-span-2">
                     <button 
                         type="submit" 
-                        class="w-full h-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        class="w-full h-full bg-black dark:bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-2xl transition-colors duration-200 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                     >
-                        <i data-lucide="search" class="text-sm mr-2"></i>
+                        <i data-lucide="search" class="w-5 h-5 mr-2"></i>
                         <span class="text-sm font-semibold">Cari</span>
                     </button>
                 </div>
@@ -81,7 +81,7 @@
             <!-- Daftar Chat -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transition-all duration-300">
                 <!-- Header Tabel -->
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-gray-700/50">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <i class="fa-solid fa-users text-primary-500 mr-2"></i>
@@ -98,21 +98,21 @@
                 <!-- Tabel -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                        <thead class="bg-gray-800 dark:bg-gray-700">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     No
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Nama Pengguna
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Pesan Terakhir
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Waktu
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Aksi
                                 </th>
                             </tr>
@@ -248,7 +248,6 @@
         const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
         elements.forEach((el, index) => {
             el.classList.add('fade-in');
-            el.style.animationDelay = `${index * 0.1}s`;
         });
     });
 </script>

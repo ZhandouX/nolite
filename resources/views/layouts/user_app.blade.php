@@ -6,13 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nolite Aspiciens</title>
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/logonolite.png') }}" />
-    <link rel="stylesheet" href="/assets/css/user/style.css" />
+    <link rel="stylesheet" href="{{ asset('/assets/css/user/style.css') }}" />
     <link rel="stylesheet" href="/assets/css/user/keranjang.css" />
     <link rel="stylesheet" href="/assets/css/auth/login.css">
     <link rel="stylesheet" href="/assets/css/auth/register.css">
     <link rel="stylesheet" href="/assets/css/user/kategori.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -35,27 +34,8 @@
 
     @yield('content')
 
-    {{-- FOOTER KONDISIONAL --}}
-    @php
-        $routeName = Route::currentRouteName();
-        $footerFullRoutes = [
-            'customer.dashboard',
-            'customer.all-produk',
-            'customer.kategori-hoodie',
-            'customer.kategori-tshirt',
-            'customer.kategori-jersey',
-            'customer.unggulan',
-            'customer.diskon'
-        ];
-    @endphp
-
-    @if (in_array($routeName, $footerFullRoutes))
-        {{-- FOOTER LENGKAP --}}
-        @include('layouts.partials_user.footer')
-    @else
-        {{-- FOOTER SIMPEL --}}
-        @include('layouts.partials_user.simple-footer')
-    @endif
+    {{-- FOOTER --}}
+    @include('layouts.partials_user._footer')
 
     <!-- BUTTON GROUP -->
     <div class="fixed bottom-20 right-4 lg:bottom-2 md:right-6 flex flex-col items-end gap-4 z-50">
@@ -75,7 +55,7 @@
                 <!-- TEKS ANIMASI -->
                 <div id="chat-tooltip"
                     class="relative bg-gray-800 text-white text-[12px] px-3 py-2 rounded-xl shadow-lg opacity-0 translate-x-4
-            transition-all duration-500 ease-out max-w-[250px] w-max max-h-[50px] h-max whitespace-normal break-words leading-snug overflow-hidden">
+            transition-all duration-500 ease-out max-w-[250px] w-max max-h-[120px] h-max whitespace-normal break-words leading-snug overflow-hidden">
                     <span class="typing-text"></span>
                 </div>
 
@@ -122,25 +102,17 @@
     @endforeach
     @include('layouts.partials_user.modals.login')
     @include('layouts.partials_user.modals.register')
-    {{-- Tambahkan di bagian bawah layout utama --}}
-
 
     {{-- ====================================== --}}
     {{-- ============= JAVASCRIPT ============= --}}
     {{-- ====================================== --}}
-
     {{-- MODALS CONTAINER untuk produk dari search --}}
     <div id="dynamicModalsContainer"></div>
-
-
-
     <script>
-        if (window.lucide) lucide.createIcons();
-
         document.addEventListener("DOMContentLoaded", () => {
             const tooltip = document.getElementById("chat-tooltip");
             const arrow = document.getElementById("chat-arrow");
-            const fullText = "Halo! Saya asisten AI Nolite Aspiciens. Ada yang ingin kamu tanyakan?";
+            const fullText = "Halo {{ explode(' ', auth()->user()->name)[0] }}! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?";
             let index = 0;
 
             // Delay awal sebelum tooltip muncul
@@ -168,6 +140,7 @@
         });
     </script>
 
+    {{-- MODAL FUNCTION --}}
     <script>
         // Fungsi modal dasar (fallback)
         function openModal(modalId) {
@@ -189,9 +162,6 @@
         }
     </script>
     <script>
-        // ==========================
-        // Load modal produk secara dinamis
-        // ==========================
         async function loadProductModals(productId) {
             // Cek jika modal sudah ada
             if (document.getElementById(`productModal-${productId}`)) return;
@@ -201,8 +171,9 @@
                 const html = await response.text();
                 document.getElementById('dynamicModalsContainer').innerHTML += html;
 
-                // Refresh ikon Lucide jika ada
-                if (typeof lucide !== 'undefined') lucide.createIcons();
+                // Render ulang icon Lucide (bundler)
+                createIcons({ icons });
+
             } catch (error) {
                 console.error('Error loading modals:', error);
             }
@@ -250,6 +221,119 @@
         };
     </script>
     <script src="/assets/js/user/keranjang-popup.js"></script>
+    <script>
+        // ===========================
+        // KERANJANG POPUP & FUNCTIONS
+        // ===========================
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ✅ Fungsi menentukan container sesuai ukuran layar
+            function getCartPopupContainer() {
+                return window.innerWidth >= 1024
+                    ? document.getElementById('cartPopupDesktop')
+                    : document.getElementById('cartPopupMobile');
+            }
+
+            // ✅ Refresh isi popup (mengecek isi keranjang dari server)
+            function refreshCartPopup() {
+                fetch("{{ url('/keranjang/cek/') }}", {
+                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        const container = getCartPopupContainer();
+                        if (!container) return;
+                        container.innerHTML = '';
+
+                        if (data.items && data.items.length > 0) {
+                            const totalProdukUnik = data.items.length;
+                            showCartPopup(totalProdukUnik);
+                            animateCartBadge(totalProdukUnik);
+                        } else {
+                            animateCartBadge(0);
+                        }
+                    })
+                    .catch(err => console.error('Gagal memuat popup keranjang:', err));
+            }
+
+            // ✅ Fungsi menampilkan popup keranjang
+            function showCartPopup(totalProduk) {
+                const container = getCartPopupContainer();
+                if (!container) return;
+
+                // Hapus popup sebelumnya
+                container.innerHTML = '';
+
+                // Buat elemen popup baru
+                const popup = document.createElement('div');
+                popup.className = `
+                    bg-gray-400 hover:bg-gray-500 text-white rounded-2xl shadow-2xl
+                    flex items-center justify-between gap-1 md:gap-3 px-3 py-3 md:px-5 md:py-4
+                    w-52 md:w-80 cursor-pointer
+                    transition-all duration-300 backdrop-blur-sm
+                    opacity-0 translate-y-3
+                `;
+
+                popup.innerHTML = `
+                    <div class="flex items-center gap-3 relative">
+                        <div class="relative">
+                            <i class="fa-solid fa-shopping-cart text-md md:text-lg"></i>
+                            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-[9px] md:text-xs font-bold rounded-full px-1.5 py-0.5">
+                                ${totalProduk}
+                            </span>
+                        </div>
+                        <span class="text-[10px] md:text-base font-medium">
+                            Ada <strong>${totalProduk}</strong> produk di keranjang!
+                        </span>
+                    </div>
+                    <button class="text-gray-300 hover:text-white text-lg font-bold">×</button>
+                `;
+
+                // Event klik tombol close
+                popup.querySelector('button').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    popup.classList.add('opacity-0', 'translate-y-3');
+                    setTimeout(() => popup.remove(), 300); // animasi keluar
+                });
+
+                // Event klik popup ke halaman keranjang
+                popup.addEventListener('click', (e) => {
+                    if (e.target.closest('button')) return; // jika klik tombol, abaikan
+                    window.location.href = "{{ route('keranjang.index') }}";
+                });
+
+                // Tambahkan ke container
+                container.appendChild(popup);
+                
+                // Efek animasi muncul
+                requestAnimationFrame(() => {
+                    popup.classList.remove('opacity-0', 'translate-y-3');
+                    popup.classList.add('opacity-100', 'translate-y-0');
+                });
+                createIcons({ icons });
+            }
+
+            // ✅ Fungsi animasi badge jumlah item
+            function animateCartBadge(total) {
+                const badge = document.getElementById('cartBadge');
+                if (!badge) return;
+
+                if (total > 0) {
+                    badge.textContent = total;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('animate-bounce');
+                    setTimeout(() => badge.classList.remove('animate-bounce'), 300);
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+            
+            // =======================
+            // REFRESH CART ON LOAD
+            // =======================
+            refreshCartPopup();
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menuBtn = document.getElementById("menuBtn");

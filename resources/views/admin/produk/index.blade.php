@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen bg-transparent dark:bg-gray-900 transition-colors duration-300 py-8">
+        <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -22,7 +22,7 @@
                     </div>
 
                     <a href="{{ route('admin.produk.create') }}"
-                        class="inline-flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                        class="inline-flex items-center justify-center px-4 py-3 bg-green-600 hover:bg-green-700 dark:bg-gradient-to-r dark:from-green-600 dark:to-green-500 dark:hover:bg-gradient-to-r dark:hover:from-green-600 dark:hover:to-green-700 text-white font-medium rounded-3xl transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                         <i class="fa-solid fa-plus mr-2"></i>
                         Tambah Produk
                     </a>
@@ -32,10 +32,10 @@
             <!-- Card Container -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transition-all duration-300">
                 <!-- Table Header -->
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-gray-700/50">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <i class="fa-solid fa-list text-primary-500 mr-2"></i>
+                            <i class="fa-solid fa-list text-primary-500 mr-3"></i>
                             <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
                                 Semua Produk
                             </h4>
@@ -49,26 +49,26 @@
                 <!-- Table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                        <thead class="bg-gray-800 dark:bg-gray-700">
                             <tr>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Produk
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Warna & Ukuran
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Harga
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Foto
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-3 text-right text-xs font-medium text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                                     Aksi
                                 </th>
                             </tr>
@@ -97,7 +97,7 @@
                                                     <span
                                                         class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                                                         <i class="fa-solid fa-tag mr-1"></i>
-                                                        {{ $produk->jenis }}
+                                                        {{ $produk->kategori?->nama_kategori ?? '-' }}
                                                     </span>
                                                     <span
                                                         class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $produk->jumlah > 0 ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' }}">
@@ -169,7 +169,7 @@
                                                 @endphp
                                                 <div class="flex items-center space-x-2">
                                                     <span class="text-lg font-bold text-gray-900 dark:text-white">
-                                                        IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                                        Rp{{ number_format($hargaDiskon, 0, ',', '.') }}
                                                     </span>
                                                     <span
                                                         class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold {{ $warnaBadge }} {{ $warnaBadgeText }}">
@@ -177,14 +177,14 @@
                                                     </span>
                                                 </div>
                                                 <div class="text-sm text-gray-500 dark:text-gray-400 line-through">
-                                                    IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                                    Rp{{ number_format($produk->harga, 0, ',', '.') }}
                                                 </div>
                                                 <div class="text-xs {{ $warnaText }} font-medium">
-                                                    Hemat IDR {{ number_format($potongan, 0, ',', '.') }}
+                                                    Hemat Rp{{ number_format($potongan, 0, ',', '.') }}
                                                 </div>
                                             @else
                                                 <div class="text-lg font-bold text-gray-900 dark:text-white">
-                                                    IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                                    Rp{{ number_format($produk->harga, 0, ',', '.') }}
                                                 </div>
                                                 <div class="text-xs text-gray-500 dark:text-gray-400">
                                                     Tanpa diskon
@@ -242,20 +242,20 @@
                                                         <a href="{{ route('admin.produk.show', $produk->id) }}"
                                                             class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150"
                                                             role="menuitem">
-                                                            <i class="fa-solid fa-eye mr-2 text-blue-500"></i>
+                                                            <i data-lucide="eye" class="w-5 h-5 mr-2 text-blue-500"></i>
                                                             Lihat Detail
                                                         </a>
                                                         <a href="{{ route('admin.produk.edit', $produk->id) }}"
                                                             class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150"
                                                             role="menuitem">
-                                                            <i class="fa-solid fa-edit mr-2 text-green-500"></i>
+                                                            <i data-lucide="square-pen" class="w-5 h-5 mr-2 text-blue-500"></i>
                                                             Edit Produk
                                                         </a>
                                                         <button
                                                             onclick="openDiscountModal({{ $produk->id }}, {{ $produk->diskon ?? 0 }})"
                                                             class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150"
                                                             role="menuitem">
-                                                            <i class="fa-solid fa-percent mr-2 text-purple-500"></i>
+                                                            <i data-lucide="percent" class="w-5 h-5 mr-2 text-purple-500"></i>
                                                             Beri Diskon
                                                         </button>
                                                         <form action="{{ route('admin.produk.destroy', $produk->id) }}"
@@ -267,7 +267,7 @@
                                                             <button type="submit"
                                                                 class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150"
                                                                 role="menuitem">
-                                                                <i class="fa-solid fa-trash mr-2"></i>
+                                                                <i data-lucide="trash-2" class="w-5 h-5 mr-2"></i>
                                                                 Hapus Produk
                                                             </button>
                                                         </form>
@@ -348,9 +348,9 @@
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden transition-opacity duration-300">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-95"
             x-data="{ diskon: 0 }" x-init="$watch('diskon', value => {
-                     if (value > 100) diskon = 100;
-                     if (value < 0) diskon = 0;
-                 })">
+                         if (value > 100) diskon = 100;
+                         if (value < 0) diskon = 0;
+                     })">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                     <i class="fa-solid fa-percent text-purple-500 mr-2"></i>
@@ -376,7 +376,7 @@
                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors duration-200"
                             placeholder="Masukkan persentase diskon (0-100)">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                            <span class="text-gray-500 dark:text-gray-400">%</span>
+                            <span class="text-gray-500 dark:text-gray-400 mr-8">%</span>
                         </div>
                     </div>
                     <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -419,20 +419,20 @@
     </div>
 
     <style>
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
 
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
         }
 
         /* Custom scrollbar untuk tabel */
@@ -570,5 +570,34 @@
                 tableContainer.classList.add('table-scrollbar');
             }
         });
+
+        // Add fade-in animation
+        document.addEventListener('DOMContentLoaded', function () {
+            const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
+            elements.forEach((el, index) => {
+                el.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => {
+                    el.classList.add('transition-all', 'duration-500');
+                    el.classList.remove('opacity-0', 'translate-y-4');
+                }, index * 100);
+            });
+        });
     </script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
 @endpush

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex items-center">
@@ -144,22 +144,21 @@
                                                                 Jumlah: {{ $item->jumlah }} ×
                                                                 @if($item->produk->diskon && $item->produk->diskon > 0)
                                                                     <span class="line-through text-gray-400 mr-1">
-                                                                        IDR {{ number_format($item->produk->harga, 0, ',', '.') }}
+                                                                        Rp{{ number_format($item->produk->harga, 0, ',', '.') }}
                                                                     </span>
                                                                     <span class="text-red-600 dark:text-red-400 font-semibold">
-                                                                        IDR
-                                                                        {{ number_format($item->produk->harga - ($item->produk->harga * $item->produk->diskon / 100), 0, ',', '.') }}
+                                                                        Rp{{ number_format($item->produk->harga - ($item->produk->harga * $item->produk->diskon / 100), 0, ',', '.') }}
                                                                     </span>
                                                                 @else
                                                                     <span class="text-gray-700 dark:text-gray-300 font-semibold">
-                                                                        IDR {{ number_format($item->produk->harga, 0, ',', '.') }}
+                                                                        Rp{{ number_format($item->produk->harga, 0, ',', '.') }}
                                                                     </span>
                                                                 @endif
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <div class="mt-1 text-xs font-semibold text-primary-600 dark:text-primary-400">
-                                                        Subtotal: IDR {{ number_format($item->subtotal, 0, ',', '.') }}
+                                                        Subtotal: Rp{{ number_format($item->subtotal, 0, ',', '.') }}
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -172,7 +171,7 @@
                                                 <div
                                                     class="flex justify-between items-center text-sm font-bold text-gray-900 dark:text-white">
                                                     <span>Total:</span>
-                                                    <span>IDR {{ number_format($totalOrder, 0, ',', '.') }}</span>
+                                                    <span>Rp{{ number_format($totalOrder, 0, ',', '.') }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -440,7 +439,6 @@
             const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
             elements.forEach((el, index) => {
                 el.classList.add('fade-in');
-                el.style.animationDelay = `${index * 0.1}s`;
             });
 
             // Tambahkan class untuk custom scrollbar

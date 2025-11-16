@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Breadcrumb & Header -->
             <div class="mb-8">
                 <nav class="flex mb-4" aria-label="Breadcrumb">
@@ -113,13 +113,13 @@
                                     <div class="space-y-2">
                                         <!-- Harga Asli -->
                                         <div class="text-gray-400 dark:text-gray-500 line-through text-lg font-medium">
-                                            IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                            Rp{{ number_format($produk->harga, 0, ',', '.') }}
                                         </div>
 
                                         <!-- Harga Setelah Diskon -->
                                         <div class="flex items-baseline gap-3">
-                                            <span class="text-3xl font-bold text-primary-600 dark:text-primary-400">
-                                                IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                            <span class="text-3xl font-bold text-gray-600 dark:text-blue-400">
+                                                Rp{{ number_format($hargaDiskon, 0, ',', '.') }}
                                             </span>
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
                                                 -{{ $produk->diskon }}%
@@ -129,12 +129,12 @@
                                         <!-- Info Hemat -->
                                         <div class="text-sm text-green-600 dark:text-green-400 font-medium">
                                             <i class="fa-solid fa-piggy-bank mr-1"></i>
-                                            Hemat IDR {{ number_format($hemat, 0, ',', '.') }}
+                                            Hemat Rp{{ number_format($hemat, 0, ',', '.') }}
                                         </div>
                                     </div>
                                 @else
                                     <div class="text-3xl font-bold text-primary-600 dark:text-primary-400">
-                                        IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                        Rp{{ number_format($produk->harga, 0, ',', '.') }}
                                     </div>
                                 @endif
 
@@ -228,7 +228,7 @@
                                 <i class="fa-solid fa-info-circle text-primary-500 mr-2"></i>
                                 Informasi Tambahan
                             </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 text-sm">
                                 <div class="flex items-center text-gray-600 dark:text-gray-400">
                                     <i class="fa-solid fa-calendar-plus mr-3 text-gray-400"></i>
                                     <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">Dibuat:</span>
@@ -306,7 +306,7 @@
     });
     </script>
 
-    <style>
+    <!-- <style>
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
@@ -315,5 +315,5 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-    </style>
+    </style> -->
 @endsection

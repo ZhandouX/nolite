@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk;
+use App\Models\Kategori;
 use App\Models\ProdukFoto;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +14,7 @@ class ProdukController extends Controller
     /* INDEX */
     public function index()
     {
-        $produks = Produk::with('fotos')->paginate(10);
+        $produks = Produk::with('fotos', 'kategori')->paginate(10);
         return view('admin.produk.index', compact('produks'));
 
     }
@@ -21,8 +22,12 @@ class ProdukController extends Controller
     /* CREATE */
     public function create()
     {
-        return view('admin.produk.create');
+        // Ambil semua kategori untuk dropdown
+        $kategoris = Kategori::all();
+
+        return view('admin.produk.create', compact('kategoris'));
     }
+
 
     public function store(Request $request)
     {
@@ -34,7 +39,7 @@ class ProdukController extends Controller
             'deskripsi' => 'required|string',
             'harga' => 'required|numeric',
             'jumlah' => 'required|integer',
-            'jenis' => 'required|string|max:250',
+            'kategori_id' => 'required|exists:kategoris,id',
             'ukuran' => 'nullable|array',
             'ukuran.*' => 'string|in:XS,S,M,L,XL,XXL',
             'foto' => 'nullable',
@@ -55,8 +60,8 @@ class ProdukController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'jumlah' => $request->jumlah,
-            'jenis' => $request->jenis,   // langsung simpan jenis (tanpa "jenis_lain")
-            'ukuran' => $request->ukuran ?? [], // Simpan ukuran array
+            'kategori_id' => $request->kategori_id,
+            'ukuran' => $request->ukuran ?? [],
         ]);
 
         foreach ($request->file('foto', []) as $file) {
@@ -94,7 +99,7 @@ class ProdukController extends Controller
             'deskripsi' => 'required|string',
             'harga' => 'required|numeric',
             'jumlah' => 'required|integer',
-            'jenis' => 'required|string|max:250',
+            'kategori_id' => 'required|exists:kategoris,id',
             'ukuran' => 'nullable|array',
             'ukuran.*' => 'string|in:XS,S,M,L,XL,XXL',
             'foto' => 'nullable',
@@ -115,7 +120,7 @@ class ProdukController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'jumlah' => $request->jumlah,
-            'jenis' => $request->jenis,
+            'kategori_id' => $request->kategori_id,
             'ukuran' => $request->ukuran ?? [],
         ]);
 

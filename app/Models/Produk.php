@@ -16,7 +16,7 @@ class Produk extends Model
         'deskripsi',
         'harga',
         'jumlah',
-        'jenis',
+        'kategori_id',
         'jenis_lain',
         'foto',
         'diskon'
@@ -26,6 +26,11 @@ class Produk extends Model
         'warna' => 'array',
         'ukuran' => 'array',
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
 
     public function fotos()
     {

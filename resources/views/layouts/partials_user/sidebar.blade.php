@@ -96,25 +96,19 @@
                     </button>
 
                     <!-- DROPDOWN MENU -->
+                    @php
+                        $kategoris = \App\Models\Kategori::all(); // Ambil semua kategori dari database
+                    @endphp
+
                     <ul class="hidden group-hover:block mt-1 ml-0 space-y-1 bg-transparent rounded-lg p-1">
-                        <li>
-                            <a href="{{ route('customer.kategori-tshirt') }}"
-                                class="flex items-center px-2 py-1.5 pl-10 text-[12px] md:px-4 md:py-2.5 md:pl-12 md:text-sm text-gray-600 rounded-md hover:bg-gray-600 hover:text-white transition">
-                                T-Shirt
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('customer.kategori-hoodie') }}"
-                                class="flex items-center px-2 py-1.5 pl-10 text-[12px] md:px-4 md:py-2.5 md:pl-12 md:text-sm text-gray-600 rounded-md hover:bg-gray-600 hover:text-white transition">
-                                Hoodie
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('customer.kategori-jersey') }}"
-                                class="flex items-center px-2 py-1.5 pl-10 text-[12px] md:px-4 md:py-2.5 md:pl-12 md:text-sm text-gray-600 rounded-md hover:bg-gray-600 hover:text-white transition">
-                                Jersey
-                            </a>
-                        </li>
+                        @foreach($kategoris as $k)
+                            <li>
+                                <a href="{{ route('customer.kategori-produk', $k->id) }}"
+                                    class="flex items-center px-2 py-1.5 pl-10 text-[12px] md:px-4 md:py-2.5 md:pl-12 md:text-sm text-gray-600 rounded-md hover:bg-gray-600 hover:text-white transition">
+                                    {{ $k->nama_kategori }}
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </li>
             </ul>

@@ -6,8 +6,7 @@
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex items-center">
-                    <div
-                        class="shrink-0 h-12 w-12 rounded-xl bg-primary-500 flex items-center justify-center shadow-sm">
+                    <div class="shrink-0 h-12 w-12 rounded-xl bg-primary-500 flex items-center justify-center shadow-sm">
                         <i class="fa-solid fa-users text-white text-lg"></i>
                     </div>
                     <div class="ml-4">
@@ -30,7 +29,7 @@
                             <i class="fa-solid fa-users text-blue-600 dark:text-blue-400 text-xl"></i>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Pengguna</p>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Total Pengguna</p>
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total'] }}</p>
                         </div>
                     </div>
@@ -83,21 +82,24 @@
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div class="flex items-center">
                             <i class="fa-solid fa-list text-primary-500 mr-2"></i>
-                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                Daftar Pengguna
-                            </h4>
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mr-3">Daftar Pengguna</h4>
                         </div>
 
                         <!-- Form Pencarian -->
                         <form method="GET" class="flex-1 sm:max-w-md">
-                            <div class="relative">
+                            <div class="flex flex-cols gap-3">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fa-solid fa-search text-gray-400"></i>
                                 </div>
                                 <input type="text" name="search" value="{{ request('search') }}"
                                     class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
                                     placeholder="Cari pengguna...">
+                                <button type="submit"
+                                    class="bg-primary-500 px-4 py-3 rounded-xl text-white hover:bg-gray-500">
+                                    <i data-lucide="search" class="w-5 h-5 stroke-[3]"></i>
+                                </button>
                             </div>
+
                         </form>
                     </div>
                 </div>
@@ -225,30 +227,34 @@
                                                         @if ($user->status == 'aktif')
                                                             <form action="{{ route('admin.users.block', $user->id) }}" method="POST"
                                                                 class="block" role="menuitem">
-                                                                @csrf @method('PATCH')
+                                                                @csrf
+                                                                @method('PATCH')
                                                                 <button type="submit"
                                                                     class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
-                                                                    <i class="fa-solid fa-ban mr-2 text-yellow-500"></i>
-                                                                    Blokir Pengguna
+                                                                    <i
+                                                                        class="fa-solid fa-ban mr-2 w-4 h-4 text-yellow-500"></i>Blokir
+                                                                    Pengguna
                                                                 </button>
                                                             </form>
                                                             <form action="{{ route('admin.users.nonaktif', $user->id) }}"
                                                                 method="POST" class="block" role="menuitem">
-                                                                @csrf @method('PATCH')
+                                                                @csrf
+                                                                @method('PATCH')
                                                                 <button type="submit"
                                                                     class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
-                                                                    <i class="fa-solid fa-pause mr-2 text-gray-500"></i>
-                                                                    Nonaktifkan
+                                                                    <i
+                                                                        class="fa-solid fa-pause mr-2 w-4 h-4 text-gray-500"></i>Nonaktifkan
                                                                 </button>
                                                             </form>
                                                         @elseif($user->status == 'nonaktif' || $user->status == 'diblokir')
                                                             <form action="{{ route('admin.users.activate', $user->id) }}"
                                                                 method="POST" class="block" role="menuitem">
-                                                                @csrf @method('PATCH')
+                                                                @csrf
+                                                                @method('PATCH')
                                                                 <button type="submit"
                                                                     class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
-                                                                    <i class="fa-solid fa-play mr-2 text-green-500"></i>
-                                                                    Aktifkan
+                                                                    <i
+                                                                        class="fa-solid fa-play mr-2 w-4 h-4 text-green-500"></i>Aktifkan
                                                                 </button>
                                                             </form>
                                                         @endif
@@ -259,11 +265,11 @@
                                                             onsubmit="return confirm('Hapus permanen pengguna ini?')"
                                                             class="border-t border-gray-200 dark:border-gray-600"
                                                             role="menuitem">
-                                                            @csrf @method('DELETE')
+                                                            @csrf
+                                                            @method('DELETE')
                                                             <button type="submit"
                                                                 class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
-                                                                <i class="fa-solid fa-trash mr-2"></i>
-                                                                Hapus Permanen
+                                                                <i class="fa-solid fa-trash mr-2 w-4 h-4"></i>Hapus Permanen
                                                             </button>
                                                         </form>
                                                     </div>
@@ -297,7 +303,8 @@
                                                 </div>
                                                 <div>
                                                     <h4 class="text-lg font-medium text-gray-900 dark:text-white">
-                                                        {{ $user->name }}</h4>
+                                                        {{ $user->name }}
+                                                    </h4>
                                                     <p class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $user->id }}</p>
                                                 </div>
                                             </div>
@@ -315,11 +322,13 @@
                                                     class="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
                                                     <span
                                                         class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</span>
-                                                    <span
-                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                            @if($user->status == 'aktif') bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200
-                                                            @elseif($user->status == 'nonaktif') bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300
-                                                            @else bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 @endif">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                            @if($user->status == 'aktif') bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200
+                                                                            @elseif($user->status == 'nonaktif') bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300
+                                                                            @else 
+                                                                                bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 
+                                                                            @endif
+                                                                            ">
                                                         {{ ucfirst($user->status) }}
                                                     </span>
                                                 </div>
@@ -458,7 +467,6 @@
             const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
             elements.forEach((el, index) => {
                 el.classList.add('fade-in');
-                el.style.animationDelay = `${index * 0.1}s`;
             });
         });
     </script>

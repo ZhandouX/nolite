@@ -6,60 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Nolite Aspiciens</title>
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/logonolite.png') }}" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-in': 'slideIn 0.3s ease-out',
-                        'pulse-slow': 'pulse 3s infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideIn: {
-                            '0%': { transform: 'translateX(-100%)' },
-                            '100%': { transform: 'translateX(0)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .sidebar-transition {
-                transition: all 0.3s ease;
-            }
-            .chart-loading {
-                opacity: 0;
-                transform: translateY(10px);
-                transition: opacity 0.5s ease, transform 0.5s ease;
-            }
-            .chart-loaded {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
 
     @stack('style')
 
@@ -71,96 +22,162 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 </head>
 
-<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+<body class="h-full bg-gray-200 dark:bg-gray-900 transition-colors duration-300 pt-20">
     <div class="flex h-full">
+
         <!-- Sidebar -->
         @include('layouts.partials_admin._sidebar')
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- TOGGLE -->
+            <div class="hidden md:flex items-center fixed top-20 left-18 z-50">
+                <button id="sidebar-toggle"
+                    class="hidden md:flex bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-br-lg">
+                    <i data-lucide="panel-left-close" class="toggle-desktop w-5 h-5"></i>
+                </button>
+            </div>
             <!-- Navbar -->
             @include('layouts.partials_admin._navbar')
 
             <!-- Content Area -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900">
-                <!-- Statistik -->
-                @yield('content')
+            <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                <div class="p-6">
+                    @yield('content')
+                </div>
 
+                <div class="flex flex-col bg-gray-200 dark:bg-gray-800 px-6 py-3 border-t-2 border-gray-500">
+                    <div class="grid grid-cols-2">
+                        <p class="text-xs text-left text-gray-700 dark:text-gray-300">Nolite Aspiciens</p>
+                        <span class="text-xs text-right text-gray-700 dark:text-gray-300">&copy; {{ date('Y') }}. All rights reserved.</span>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
-    {{-- FOOTER --}}
-    @include('layouts.partials_admin._footer')
 
     {{-- JAVASCRIPT NEWS STATISTIC --}}
     @isset($newsPerMonth)
         <script>
             var newsPerMonth = @json($newsPerMonth->values());
         </script>
-        <script src="/assets/js/dashboard-chart.js"></script>
+        <script src="/assets/js/dashboard.js"></script>
     @endisset
 
     {{-- MOMENT & DATEPICKR --}}
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    {{-- NOTIFICATIONS --}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function () {
+            const notifCount = document.getElementById('notif-count');
+            const notifList = document.getElementById('notification-list');
+
+            function updateNotifications() {
+                axios.get("{{ route('admin.notifications') }}")
+                    .then(res => {
+                        const notifications = res.data.notifications;
+
+                        // Hitung total
+                        let total = 0;
+                        notifications.forEach(n => total += n.count);
+
+                        // Update badge
+                        if (total > 0) {
+                            notifCount.textContent = total;
+                            notifCount.classList.remove('hidden');
+                        } else {
+                            notifCount.classList.add('hidden');
+                        }
+
+                        // Update dropdown
+                        notifList.innerHTML = '';
+                        notifications.forEach(n => {
+                            if (n.count > 0) {
+                                notifList.insertAdjacentHTML('beforeend', `
+                            <a href="${n.url}" class="flex items-start p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-${n.color}-100 dark:bg-${n.color}-900 flex items-center justify-center">
+                                    <i data-lucide="${n.icon}" class="h-5 w-5 text-${n.color}-600 dark:text-${n.color}-400"></i>
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">${n.title}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${n.message}</p>
+                                </div>
+                            </a>
+                        `);
+                            }
+                        });
+
+                        if (total === 0) {
+                            notifList.innerHTML = `<div class="p-4 text-center text-sm text-gray-500 dark:text-gray-400">Tidak ada notifikasi baru</div>`;
+                        }
+
+                        // Render Lucide icons
+                        lucide.createIcons();
+                    })
+                    .catch(err => console.error(err));
+            }
+
+            // Polling setiap 10 detik
+            updateNotifications();
+            setInterval(updateNotifications, 10000);
+        });
     </script>
+
+    {{-- SIDEBAR & THEMES TOGGLE --}}
     <script>
-        // Toggle Sidebar
+        // Toggle Sidebar Mobile
         const sidebar = document.getElementById('sidebar');
+        // const navbar = document.getElementById('navbar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
         const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const sidebarClose = document.getElementById('sidebar-close');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('w-20');
-
-            // Sembunyikan teks di sidebar ketika dikompres
-            const sidebarTexts = sidebar.querySelectorAll('span, .sidebar-text, p, h1');
-            sidebarTexts.forEach(text => {
-                text.classList.toggle('hidden');
-            });
-
-            // Sembunyikan info pengguna ketika dikompres
-            // const userInfo = sidebar.querySelector('.ml-3');
-            // if (userInfo) userInfo.classList.toggle('hidden');
-
-            // Animasi Toggle button (rotate icon)
-            const toggleIcon = sidebarToggle.querySelector('.toggle-desktop');
-            if (sidebar.classList.contains('w-20')) {
-                toggleIcon.style.transform = 'rotate(180deg)'; // saat sidebar ditutup
-            } else {
-                toggleIcon.style.transform = 'rotate(0deg)'; // saat sidebar dibuka
-            }
-        });
-
+        // Mobile toggle
         mobileMenuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('w-20');
-
-            // Sembunyikan teks di sidebar ketika dikompres
-            const sidebarTexts = sidebar.querySelectorAll('span, .sidebar-text, p, h1');
-            sidebarTexts.forEach(text => {
-                text.classList.toggle('hidden');
-            });
-
-            // Sembunyikan info pengguna ketika dikompres
-            // const userInfo = sidebar.querySelector('.ml-3');
-            // if (userInfo) userInfo.classList.toggle('hidden');
-
-            // Animasi Toggle button (rotate icon)
-            const toggleIcon = mobileMenuToggle.querySelector('.toggle-mobile');
-            if (sidebar.classList.contains('w-20')) {
-                toggleIcon.style.transform = 'rotate(180deg)'; // saat sidebar ditutup
-            } else {
-                toggleIcon.style.transform = 'rotate(0deg)'; // saat sidebar dibuka
-            }
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
         });
+
+        // Close sidebar on mobile
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        });
+
+        // Close sidebar when clicking overlay
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        });
+
+        // Desktop toggle (untuk mode collapsed)
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('md:w-64');
+                sidebar.classList.toggle('md:w-20');
+
+                // Sembunyikan teks di sidebar
+                const sidebarTexts = sidebar.querySelectorAll('span, .sidebar-text, p, h1');
+                sidebarTexts.forEach(text => text.classList.toggle('hidden'));
+
+                // Sembunyikan brand logo/header
+                // const navbarBrand = document.querySelectorAll('.brand-nav');
+                // navbarBrand.forEach(brand => brand.classList.toggle('md:hidden'));
+
+                // Animasi Toggle button (rotate icon)
+                const toggleIcon = sidebarToggle.querySelector('.toggle-desktop');
+                if (sidebar.classList.contains('md:w-20')) {
+                    toggleIcon.style.transform = 'rotate(180deg)'; // saat sidebar ditutup
+                } else {
+                    toggleIcon.style.transform = 'rotate(0deg)'; // saat sidebar dibuka
+                }
+            });
+        }
 
         // Toggle Tema Gelap/Terang
         const themeToggle = document.getElementById('theme-toggle');
@@ -190,6 +207,17 @@
                 themeIconLight.classList.remove('hidden');
                 themeIconDark.classList.add('hidden');
             }
+        });
+
+        // Close sidebar when clicking a link on mobile
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) { // Mobile
+                    sidebar.classList.add('-translate-x-full');
+                    sidebarOverlay.classList.add('hidden');
+                }
+            });
         });
     </script>
 

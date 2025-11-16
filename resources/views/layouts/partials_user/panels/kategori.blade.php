@@ -1,38 +1,23 @@
 <div id="panel-kategori" class="tab-panel hidden mt-4 md:mt-10">
     <div id="kategoriGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 max-w-6xl mx-auto px-4">
-        {{-- T-SHIRT --}}
-        <a href="{{ route('customer.kategori-tshirt') }}"
-            class="kategori-item-wrapper group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-            <div class="kategori-item">
-                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
-                    alt="T-Shirt" />
-                <div class="kategori-overlay">
-                    <h3 class="text-xl sm:text-xl md:text-2xl lg:text-4xl">T-SHIRT</h3>
-                </div>
-            </div>
-        </a>
+        @php
+            $kategoris = \App\Models\Kategori::all();
+        @endphp
 
-        {{-- HOODIE --}}
-        <a href="{{ route('customer.kategori-hoodie') }}"
-            class="kategori-item-wrapper group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-            <div class="kategori-item">
-                <img src="{{ asset('assets/images/banner/hoodie-1.jpg') }}" alt="Hoodie" />
-                <div class="kategori-overlay">
-                    <h3 class="text-xl sm:text-xl md:text-2xl lg:text-4xl">HOODIE</h3>
+        @foreach($kategoris as $index => $kategori)
+            <a href="{{ route('customer.kategori-produk', $kategori->id) }}"
+               class="kategori-item-wrapper group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div class="kategori-item relative">
+                    <img src="{{ $kategori->foto_sampul ? asset('storage/' . $kategori->foto_sampul) : 'https://via.placeholder.com/600x400?text='.$kategori->nama_kategori }}"
+                         alt="{{ $kategori->nama_kategori }}" class="w-full h-full object-cover" />
+                    <div class="kategori-overlay absolute inset-0 flex items-center justify-center bg-black/25">
+                        <h3 class="text-xl sm:text-xl md:text-2xl lg:text-4xl text-white font-bold">
+                            {{ strtoupper($kategori->nama_kategori) }}
+                        </h3>
+                    </div>
                 </div>
-            </div>
-        </a>
-
-        {{-- JERSEY --}}
-        <a href="{{ route('customer.kategori-jersey') }}"
-            class="kategori-item-wrapper group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-            <div class="kategori-item">
-                <img src="{{ asset('assets/images/banner/jersey.jpg') }}" alt="Jersey" />
-                <div class="kategori-overlay">
-                    <h3 class="text-xl sm:text-xl md:text-2xl lg:text-4xl">JERSEY</h3>
-                </div>
-            </div>
-        </a>
+            </a>
+        @endforeach
     </div>
 </div>
 
@@ -41,10 +26,9 @@
         const grid = document.getElementById('kategoriGrid');
         const items = grid.querySelectorAll('.kategori-item-wrapper');
 
-        // Cek apakah jumlah item ganjil
+        // Jika jumlah item ganjil, col-span-2 hanya untuk tampilan kecil
         if (items.length % 2 !== 0) {
             const lastItem = items[items.length - 1];
-            // Tambahkan col-span-2 hanya untuk tampilan kecil
             lastItem.classList.add('col-span-2', 'sm:col-span-1', 'lg:col-span-1');
         }
     });

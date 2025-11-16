@@ -109,6 +109,14 @@ class ProfileController extends Controller
         ]);
     }
 
+    /* PROFILE ADMIN */
+    public function profileAdmin(Request $request)
+    {
+        return view('profile.profile-admin', [
+            'user' => $request->user(),
+        ]);
+    }
+
     public function account()
     {
         $user = auth()->user();
