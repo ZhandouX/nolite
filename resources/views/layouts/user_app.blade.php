@@ -112,7 +112,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             const tooltip = document.getElementById("chat-tooltip");
             const arrow = document.getElementById("chat-arrow");
-            const fullText = "Halo {{ explode(' ', auth()->user()->name)[0] }}! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?";
+            const fullText = "Halo @auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?";
             let index = 0;
 
             // Delay awal sebelum tooltip muncul

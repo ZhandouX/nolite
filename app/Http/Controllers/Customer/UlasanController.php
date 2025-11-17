@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ulasan;
+use App\Models\UlasanFoto;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UlasanController extends Controller
 {
@@ -20,6 +22,15 @@ class UlasanController extends Controller
             'komentar' => 'nullable|string',
             'fotos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
+
+        // Cegah duplikasi ulasan
+        $existing = Ulasan::where('order_item_id', $request->order_item_id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if ($existing) {
+            return response()->json(['error' => 'Anda sudah membuat ulasan untuk produk ini.'], 422);
+        }
 
         $ulasan = Ulasan::create([
             'user_id' => Auth::id(),
@@ -38,50 +49,72 @@ class UlasanController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Ulasan berhasil dikirim.');
+        return response()->json(['success' => 'Ulasan berhasil dikirim.']);
     }
 
-    // EDIT
+    public function show($ulasanId)
+    {
+        $ulasan = Ulasan::with(['produk.fotos', 'fotos', 'user'])
+            ->where('id', $ulasanId)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        return response()->json($ulasan);
+    }
+
+    public function edit($ulasanId)
+    {
+        $ulasan = Ulasan::with(['produk.fotos', 'fotos'])
+            ->where('id', $ulasanId)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        return response()->json($ulasan);
+    }
+
     public function update(Request $request, Ulasan $ulasan)
     {
+        // Pastikan ulasan milik user yang login
+        if ($ulasan->user_id != Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'komentar' => 'required|string|max:1000',
-            'fotos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'fotos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5120'
         ]);
 
-        $ulasan->rating = $request->rating;
-        $ulasan->komentar = $request->komentar;
-        $ulasan->save();
+        $ulasan->update([
+            'rating' => $request->rating,
+            'komentar' => $request->komentar,
+        ]);
 
-        if($request->hasFile('fotos')){
-            foreach($request->file('fotos') as $foto){
-                $path = $foto->store('ulasan', 'public');
+        // Simpan foto baru
+        if ($request->hasFile('fotos')) {
+            foreach ($request->file('fotos') as $file) {
+                $path = $file->store('ulasan', 'public');
                 $ulasan->fotos()->create(['foto' => $path]);
             }
         }
 
-        return redirect()->back()->with('success', 'Ulasan berhasil diperbarui!');
+        return response()->json(['success' => 'Ulasan berhasil diperbarui!']);
     }
 
-    // SHOW
-    public function show($orderId)
+    public function hapusFoto($fotoId)
     {
-        $order = Order::with([
-            'items.produk.fotos',
-            'items.ulasan' => function ($q) {
-                $q->where('user_id', Auth::id());
-            },
-        ])
-            ->where('id', $orderId)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        $foto = UlasanFoto::findOrFail($fotoId);
+        $ulasan = $foto->ulasan;
 
-        // Tandai apakah sudah diulas (cek setiap order item apakah punya ulasan oleh user ini)
-        $order->sudah_diulas = $order->items->contains(function ($item) {
-            return !empty($item->ulasan);
-        });
+        // Pastikan foto milik ulasan user yang login
+        if ($ulasan->user_id != Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
-        return view('ulasan.show', compact('order'));
+        // Hapus file dari storage
+        Storage::disk('public')->delete($foto->foto);
+        $foto->delete();
+
+        return response()->json(['success' => 'Foto berhasil dihapus']);
     }
 }

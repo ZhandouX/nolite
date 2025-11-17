@@ -160,9 +160,11 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     // ULASAN
     Route::post('/ulasan', [UlasanController::class, 'store'])->name('customer.ulasan.store');
-    Route::get('/ulasan/{order}', [UlasanController::class, 'show'])->name('customer.ulasan.show');
+    Route::get('/ulasan/{ulasan}', [UlasanController::class, 'show'])->name('customer.ulasan.show');
     Route::put('/ulasan/{ulasan}', [UlasanController::class, 'update'])->name('ulasan.update');
-
+    Route::get('/ulasan/{ulasan}/edit', [UlasanController::class, 'edit'])->name('ulasan.edit'); // Baru
+    Route::delete('/ulasan-foto/{foto}', [UlasanController::class, 'hapusFoto'])->name('ulasan.foto.hapus'); // Baru
+    
     // WISHLIST
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle/{produkId}', [WishlistController::class, 'toggleWishlist'])->name('wishlist.toggle');

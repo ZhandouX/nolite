@@ -16,7 +16,7 @@
                                 Chat dengan {{ $chat->user->name ?? 'Pengguna' }}
                             </h1>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Kelola percakapan dengan pengguna
+                                Kelola percakapan dengan {{ $chat->user->name ?? 'Pengguna' }}
                             </p>
                         </div>
                     </div>

@@ -72,7 +72,9 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-8 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full"></div>
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">User Terbaru</h2>
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">
+                        Pengguna Terbaru
+                    </h2>
                 </div>
                 <div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <i data-lucide="users" class="w-5 h-5 text-green-600 dark:text-green-400"></i>
@@ -84,18 +86,14 @@
                     <div
                         class="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 group border border-transparent hover:border-gray-100 dark:hover:border-gray-600">
                         <div class="shrink-0 relative">
-                            <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 
+                            <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-emerald-600 
                                 flex items-center justify-center text-white font-semibold text-lg 
-                                group-hover:from-green-600 group-hover:to-emerald-700 transition-all">
+                                group-hover:from-blue-600 group-hover:to-emerald-700 transition-all">
                                 {{ collect(explode(' ', $user->name))->map(fn($word) => strtoupper(substr($word, 0, 1)))->take(2)->implode('') }}
                             </div>
                             <div
                                 class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
-                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                                <i data-lucide="check" class="w-3 h-3 text-white"></i>
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">

@@ -17,7 +17,7 @@
                             Detail Pesanan
                         </h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Informasi lengkap pesanan #{{ $order->id }}
+                            Informasi lengkap pesanan <span class="bg-primary-500/20 font-bold ml-2 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-bl-lg rounded-tr-lg">#NA-ORD-{{ $order->id }}</span>
                         </p>
                     </div>
                 </div>

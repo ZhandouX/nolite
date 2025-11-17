@@ -12,4 +12,9 @@ class Kategori extends Model
     {
         return $this->hasMany(Produk::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

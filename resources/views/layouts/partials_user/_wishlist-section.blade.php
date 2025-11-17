@@ -2,13 +2,14 @@
 <div id="wishlist" class="tab-content hidden text-gray-700">
     @if($wishlists->isEmpty())
         <div class="text-center text-gray-500 py-10">
-            <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="No wishlist"
-                class="mx-auto w-full mb-3 opacity-70">
-            <p class="text-base">No items in Wishlist</p>
-            <small class="block text-sm mb-3">Add products to your wishlist to view them here.</small>
+            <i class="fa-solid fa-heart mb-3 opacity-70 text-red-500 text-5xl"></i>
+            <p class="text-base">Tidak ada produk dalam Wishlist</p>
+            <small class="block text-sm mb-3">
+                Tambahkan produk ke wishlist Anda untuk melihatnya di sini.
+            </small>
             <a href="{{ route('customer.allProduk') }}"
                 class="inline-block px-4 py-2 bg-red-900 text-white rounded-lg hover:bg-red-700 transition font-medium">
-                Browse Products
+                Telusuri Produk
             </a>
         </div>
     @else

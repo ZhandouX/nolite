@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="p-2 md:p-3 bg-green-100/50 dark:bg-green-900/20 rounded-lg group-hover:bg-green-100 dark:group-hover:bg-green-900/30 transition-colors">
-                <i data-lucide="wallet" class="w-4 h-4 md:w-6 md:h-6 text-green-600 dark:text-green-400"></i>
+                <i data-lucide="circle-dollar-sign" class="w-4 h-4 md:w-6 md:h-6 text-green-600 dark:text-green-400"></i>
             </div>
         </div>
     </div>
@@ -90,7 +90,7 @@
                 </div>
             </div>
             <div class="p-2 md:p-3 bg-yellow-100/50 dark:bg-yellow-900/20 rounded-lg group-hover:bg-yellow-100 dark:group-hover:bg-yellow-900/30 transition-colors">
-                <i data-lucide="circle-dollar-sign" class="w-4 h-4 md:w-6 md:h-6 text-yellow-600 dark:text-yellow-400"></i>
+                <i data-lucide="wallet" class="w-4 h-4 md:w-6 md:h-6 text-yellow-600 dark:text-yellow-400"></i>
             </div>
         </div>
     </div>

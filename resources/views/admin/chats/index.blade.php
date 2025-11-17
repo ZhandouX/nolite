@@ -3,15 +3,22 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-6">
     <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
+        
         <!-- Header -->
         <div class="mb-8">
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                <i data-lucide="messages-square" class="mr-3 text-primary-500"></i> 
-                Manajemen Chat Pengguna
-            </h3>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Kelola percakapan dan pesan dari pengguna aplikasi
-            </p>
+            <div class="flex items-center">
+                <div class="shrink-0 h-12 w-12 rounded-xl bg-primary-500 flex items-center justify-center shadow-sm">
+                    <i data-lucide="messages-square" class="text-white text-lg"></i>
+                </div>
+                <div class="ml-4">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                        Manajemen Chat Pengguna
+                    </h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Kelola Percakapan dan pesan dari pengguna
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Form Pencarian & Filter -->

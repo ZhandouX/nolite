@@ -13,10 +13,10 @@
                         </div>
                         <div class="ml-4">
                             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                                Daftar Produk
+                                Manajemen Produk
                             </h1>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Kelola produk dan inventory toko Anda
+                                Kelola produk <strong>Nolite Aspiciens</strong>
                             </p>
                         </div>
                     </div>
@@ -137,13 +137,13 @@
                                                     @if(is_array($produk->ukuran))
                                                         @foreach($produk->ukuran as $ukuran)
                                                             <span
-                                                                class="inline-block px-2 py-1 text-xs rounded bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                                                                class="inline-block px-2 py-1 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                                                                 {{ $ukuran }}
                                                             </span>
                                                         @endforeach
                                                     @else
                                                         <span
-                                                            class="inline-block px-2 py-1 text-xs rounded bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                                                            class="inline-block px-2 py-1 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                                                             {{ $produk->ukuran }}
                                                         </span>
                                                     @endif

@@ -14,7 +14,7 @@
                     </div>
                     <div class="ml-4">
                         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                            Daftar Order
+                            Manajemen Pesanan
                         </h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                             Kelola dan pantau semua pesanan pelanggan
@@ -95,7 +95,7 @@
                                     <!-- ID Order -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            #{{ $order->id }}
+                                            #NA-ORD-{{ $order->id }}
                                         </div>
                                         <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                             {{ $order->created_at->format('d M Y, H:i') }}

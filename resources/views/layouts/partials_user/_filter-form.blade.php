@@ -3,7 +3,7 @@
     <div class="mb-6 mt-6">
         <div class="relative">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk..."
-                class="w-full border border-gray-300 rounded-md pl-8 pr-3 py-1.5 text-sm focus:ring focus:ring-blue-200 focus:outline-none">
+                class="w-full border border-gray-300 bg-white rounded-md pl-8 pr-3 py-1.5 text-sm focus:ring focus:ring-blue-200 focus:outline-none">
             <i class="fa fa-search absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
         </div>
     </div>
@@ -20,9 +20,9 @@
 
         @foreach($kategoris as $kategori)
             <label class="block text-sm text-gray-700 cursor-pointer">
-                <input type="radio" name="kategori_id" value="{{ $kategori->id }}" {{ $currentKategoriId == $kategori->id ? 'checked' : '' }}
+                <input type="radio" name="kategori_id" value="{{ $kategori->id }}"
                     onclick="window.location.href='{{ route('customer.kategori-produk', $kategori->id) }}'"
-                    class="mr-2 accent-gray-600">
+                    class="mr-2 accent-gray-600" {{ request()->route('kategori') == $kategori->id ? 'checked' : '' }}>
                 {{ $kategori->nama_kategori }}
             </label>
         @endforeach
@@ -50,9 +50,9 @@
     <div class="mb-6">
         <h2 class="font-semibold mb-2 text-sm">Harga</h2>
         <input type="number" name="harga_min" placeholder="Min" value="{{ request('harga_min') }}"
-            class="w-full mb-2 border rounded-md p-1 text-sm">
+            class="w-full mb-2 bg-white border rounded-md p-1 text-sm">
         <input type="number" name="harga_max" placeholder="Max" value="{{ request('harga_max') }}"
-            class="w-full border rounded-md p-1 text-sm">
+            class="w-full bg-white border rounded-md p-1 text-sm">
     </div>
 
     {{-- SIZES --}}

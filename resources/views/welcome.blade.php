@@ -97,7 +97,7 @@
                 <!-- TEKS ANIMASI -->
                 <div id="chat-tooltip"
                     class="relative bg-gray-800 text-white text-[12px] px-3 py-2 rounded-xl shadow-lg opacity-0 translate-x-4
-            transition-all duration-500 ease-out max-w-[250px] w-max max-h-[50px] h-max whitespace-normal break-words leading-snug overflow-hidden">
+            transition-all duration-500 ease-out max-w-[250px] w-max max-h-[120px] h-max whitespace-normal break-words leading-snug overflow-hidden">
                     <span class="typing-text"></span>
                 </div>
 
@@ -155,7 +155,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             const tooltip = document.getElementById("chat-tooltip");
             const arrow = document.getElementById("chat-arrow");
-            const fullText = "Halo! Saya asisten AI Nolite Aspiciens. Ada yang ingin kamu tanyakan?";
+            const fullText = "Halo @auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?";
             let index = 0;
 
             // Delay awal sebelum tooltip muncul

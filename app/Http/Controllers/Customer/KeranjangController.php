@@ -53,7 +53,7 @@ class KeranjangController extends Controller
 
             session()->put('keranjang', $keranjang);
 
-            return response()->json(['message' => 'Produk ditambahkan ke keranjang (session).']);
+            return response()->json(['message' => 'Produk ditambahkan ke keranjang.']);
         }
 
         // Kalau sudah login → simpan ke database

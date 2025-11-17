@@ -14,7 +14,7 @@
                             Edit Produk
                         </h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Perbarui informasi produk yang sudah ada
+                            Perbarui informasi produk <span class="text-gray-700 dark:text-gray-300 font-bold bg-primary-500/20 rounded-lg px-3 py-1">{{ old('nama_produk', $produk->nama_produk) }}</span>
                         </p>
                     </div>
                 </div>

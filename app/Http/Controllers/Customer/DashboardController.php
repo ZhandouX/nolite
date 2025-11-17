@@ -35,7 +35,7 @@ class DashboardController extends Controller
     // DETAIL PRODUK
     public function show($id)
     {
-        $produk = Produk::with(['fotos', 'ulasan.user', 'ulasan.fotos', 'kategori'])->findOrFail($id);
+        $produk = Produk::with(['fotos', 'ulasan.user', 'ulasan.fotos', 'ulasan.orderItem', 'kategori'])->findOrFail($id);
 
         // Hitung rata-rata rating dan jumlah ulasan
         $totalUlasan = $produk->ulasan->count();

@@ -29,7 +29,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-700">Alamat Email</label>
                     <input type="email" name="email" value="{{ old('email', Auth::user()->email ?? '') }}"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
                         placeholder="kamu@email.com">
                     <p class="text-xs text-gray-400 mt-1">Kami akan mengirim detail pesanan ke email kamu</p>
                 </div>
@@ -38,7 +38,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-700">Nama Lengkap Penerima</label>
                     <input type="text" name="nama_penerima" value="{{ old('nama_penerima') }}"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
                         required>
                 </div>
 
@@ -46,7 +46,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-700">Nomor HP Penerima</label>
                     <input type="text" name="no_hp" value="{{ old('no_hp') }}"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
                         required>
                 </div>
 
@@ -89,7 +89,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-700">Detail Alamat</label>
                     <textarea name="alamat_detail" rows="2"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-1 focus:ring-gray-400"
                         placeholder="Nama jalan, nomor rumah, patokan, dll" required>{{ old('alamat_detail') }}</textarea>
                 </div>
 

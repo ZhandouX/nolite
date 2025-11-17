@@ -84,10 +84,10 @@
                                     {{-- HARGA --}}
                                     <div class="flex flex-col items-end ml-2">
                                         @if($diskon > 0)
-                                            <p class="line-through text-gray-400 text-xs">IDR {{ number_format($produk->harga, 0, ',', '.') }}</p>
-                                            <p class="font-bold text-red-600 text-sm">IDR {{ number_format($hargaFinal, 0, ',', '.') }}</p>
+                                            <p class="line-through text-gray-400 text-xs">Rp{{ number_format($produk->harga, 0, ',', '.') }}</p>
+                                            <p class="font-bold text-red-600 text-sm">Rp{{ number_format($hargaFinal, 0, ',', '.') }}</p>
                                         @else
-                                            <p class="font-bold text-gray-800 text-sm">IDR {{ number_format($hargaFinal, 0, ',', '.') }}</p>
+                                            <p class="font-bold text-gray-800 text-sm">Rp{{ number_format($hargaFinal, 0, ',', '.') }}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -146,17 +146,17 @@
                 <div class="space-y-2 mb-3">
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Subtotal</span>
-                        <span id="subtotal" class="font-medium">IDR 0</span>
+                        <span id="subtotal" class="font-medium">Rp0</span>
                     </div>
                     <!-- <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Biaya Layanan</span>
-                        <span class="font-medium">IDR 0</span>
+                        <span class="font-medium">Rp0</span>
                     </div> -->
                 </div>
                 
                 <div class="flex justify-between text-base font-bold border-t border-gray-200 pt-3">
                     <span>Total</span>
-                    <span id="total" class="text-blue-600">IDR 0</span>
+                    <span id="total" class="text-blue-600">Rp0</span>
                 </div>
 
                 <form id="checkout-form" action="{{ route('customer.checkout.store') }}" method="POST">

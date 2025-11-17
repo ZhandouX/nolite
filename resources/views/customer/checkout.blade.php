@@ -7,21 +7,21 @@
     $checkoutItems = session('checkout_items', []);
 @endphp
 
-<div class="pt-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+<div class="pt-[40px] pb-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
     <form action="{{ route('customer.checkout.proses') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @csrf
 
         {{-- FORM LEFT --}}
         <div class="md:col-span-2 bg-white p-4 sm:p-5 rounded-lg shadow-md">
-            <h2 class="text-base font-semibold mb-4">Detail Alamat</h2>
+            <h2 class="text-base font-semibold mb-4">Detail Informasi Penerima</h2>
 
             <div class="space-y-4 text-sm">
 
                 {{-- EMAIL --}}
                 <div>
-                    <label class="block text-gray-700 font-medium">Alamat Email (Opsional)</label>
+                    <label class="block text-gray-700 font-medium">Alamat Email</label>
                     <input type="email" name="email" value="{{ old('email', Auth::user()->email ?? '') }}"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
                         placeholder="kamu@email.com">
                 </div>
 
@@ -29,7 +29,7 @@
                 <div>
                     <label class="block text-gray-700 font-medium">Nama Lengkap Penerima</label>
                     <input type="text" name="nama_penerima" value="{{ old('nama_penerima') }}"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
                         required>
                 </div>
 
@@ -37,7 +37,7 @@
                 <div>
                     <label class="block text-gray-700 font-medium">Nomor HP Penerima</label>
                     <input type="text" name="no_hp" value="{{ old('no_hp') }}"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
                         required>
                 </div>
 
@@ -79,7 +79,7 @@
                 <div>
                     <label class="block text-gray-700 font-medium">Detail Alamat</label>
                     <textarea name="alamat_detail" rows="2"
-                        class="w-full mt-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
+                        class="w-full mt-1 bg-white border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-gray-300 text-sm"
                         placeholder="Nama jalan, nomor rumah, patokan, dll" required>{{ old('alamat_detail') }}</textarea>
                 </div>
 

@@ -28,7 +28,7 @@ class ProfileController extends Controller
             ->latest()
             ->get();
 
-        // Ambil Order user + relasi item, produk, foto, dan ulasan (filter berdasarkan user)
+        // Ambil Order user + relasi item, produk, foto, dan ulasan (filter ulasan milik user)
         $orders = Order::with([
             'items.produk.fotos',
             'items.ulasan' => function ($q) use ($user) {
@@ -39,11 +39,10 @@ class ProfileController extends Controller
             ->latest()
             ->get();
 
-        // Tambahkan flag apakah order sudah memiliki ulasan (cek per order jika ada satu item yang punya ulasan)
+        // Tentukan apakah order sudah pernah diulas
         $orders->each(function ($order) {
             $order->sudah_diulas = $order->items->contains(function ($item) {
-                // $item->ulasan adalah object (hasOne) atau null
-                return !empty($item->ulasan);
+                 return $item->ulasan !== null;
             });
         });
 

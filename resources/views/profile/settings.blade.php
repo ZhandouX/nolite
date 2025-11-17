@@ -173,3 +173,5 @@
         }
     </script>
 @endsection
+
+@push('scripts')
