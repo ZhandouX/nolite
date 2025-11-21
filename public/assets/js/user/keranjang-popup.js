@@ -63,15 +63,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 const icon = document.getElementById(`heart-icon-${produkId}`);
                 if (icon) {
                     if (data.status === 'added') {
-                        icon.classList.remove('text-gray-300');
-                        icon.classList.add('text-red-500');
+                        icon.classList.remove('text-gray-300', 'fill-none');
+                        icon.classList.add('text-red-500', 'fill-red-500');
                     } else {
-                        icon.classList.remove('text-red-500');
-                        icon.classList.add('text-gray-300');
+                        icon.classList.remove('text-red-500', 'fill-red-500');
+                        icon.classList.add('text-gray-300', 'fill-none');
                     }
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(error));
     };
 
     // =======================
@@ -93,11 +93,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =======================
-    // FORMAT IDR
+    // FORMAT Rupiah (Rp)
     // =======================
-    function formatIDR(angka) {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
-            .format(angka).replace('Rp', 'IDR');
+    function formatRp(angka) {
+        return "Rp" + new Intl.NumberFormat('id-ID', {
+            minimumFractionDigits: 0
+        }).format(angka);
     }
 
     // =======================
@@ -120,8 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const checkoutBtn = document.getElementById('checkout-btn');
         const selectedItems = document.getElementById('selected-items');
 
-        if (subtotalEl) subtotalEl.textContent = formatIDR(total);
-        if (totalEl) totalEl.textContent = formatIDR(total);
+        if (subtotalEl) subtotalEl.textContent = formatRp(total);
+        if (totalEl) totalEl.textContent = formatRp(total);
         if (checkoutBtn) checkoutBtn.disabled = selected.length === 0;
         if (selectedItems) selectedItems.value = JSON.stringify(selected);
     }
@@ -133,7 +134,108 @@ document.addEventListener("DOMContentLoaded", function () {
         updateTotal();
     });
 
-    
+    // ✅ Fungsi menentukan container sesuai ukuran layar
+    function getCartPopupContainer() {
+        return window.innerWidth >= 1024
+            ? document.getElementById('cartPopupDesktop')
+            : document.getElementById('cartPopupMobile');
+    }
+
+    // ✅ Refresh isi popup (mengecek isi keranjang dari server)
+    function refreshCartPopup() {
+        fetch(window.Laravel.routes.keranjangCek, {
+            headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const container = getCartPopupContainer();
+                if (!container) return;
+                container.innerHTML = '';
+
+                if (data.items && data.items.length > 0) {
+                    const totalProdukUnik = data.items.length;
+                    showCartPopup(totalProdukUnik);
+                    animateCartBadge(totalProdukUnik);
+                } else {
+                    animateCartBadge(0);
+                }
+            })
+            .catch(err => console.error('Gagal memuat popup keranjang:', err));
+    }
+
+    // ✅ Fungsi menampilkan popup keranjang
+    function showCartPopup(totalProduk) {
+        const container = getCartPopupContainer();
+        if (!container) return;
+
+        // Hapus popup sebelumnya
+        container.innerHTML = '';
+
+        // Buat elemen popup baru
+        const popup = document.createElement('div');
+        popup.className = `
+                    bg-gray-400 hover:bg-gray-500 text-white rounded-2xl shadow-2xl
+                    flex items-center justify-between gap-1 md:gap-3 px-5 py-2 md:py-4
+                    w-[250px] lg:w-80 cursor-pointer
+                    transition-all duration-300 backdrop-blur-sm
+                    opacity-0 translate-y-3
+                `;
+
+        popup.innerHTML = `
+                    <div class="flex items-center gap-3 relative">
+                        <div class="relative">
+                            <i data-lucide="shopping-cart" class="w-4 h-4 lg:w-6 lg:h-6"></i>
+                            <span class="absolute -top-1 -right-2 bg-red-600 text-white text-[9px] md:text-xs font-bold rounded-full px-1.5 py-0.5">
+                                ${totalProduk}
+                            </span>
+                        </div>
+                        <span class="text-xs lg:text-base font-medium">
+                            Ada <strong>${totalProduk}</strong> produk di keranjang
+                        </span>
+                    </div>
+                    <button class="text-gray-300 hover:text-white text-lg font-bold">×</button>
+                `;
+
+        // Event klik tombol close
+        popup.querySelector('button').addEventListener('click', (e) => {
+            e.stopPropagation();
+            popup.classList.add('opacity-0', 'translate-y-3');
+            setTimeout(() => popup.remove(), 300); // animasi keluar
+        });
+
+        // Event klik popup ke halaman keranjang
+        popup.addEventListener('click', (e) => {
+            if (e.target.closest('button')) return; // jika klik tombol, abaikan
+            window.location.href = window.Laravel.routes.keranjangIndex;
+        });
+
+        // Tambahkan ke container
+        container.appendChild(popup);
+        if (window.createIcons) {
+            window.createIcons({ icons: window.lucideIcons });
+        }
+
+        // Efek animasi muncul
+        requestAnimationFrame(() => {
+            popup.classList.remove('opacity-0', 'translate-y-3');
+            popup.classList.add('opacity-100', 'translate-y-0');
+        });
+    }
+
+    // ✅ Fungsi animasi badge jumlah item
+    function animateCartBadge(total) {
+        const badge = document.getElementById('cartBadge');
+        if (!badge) return;
+
+        if (total > 0) {
+            badge.textContent = total;
+            badge.classList.remove('hidden');
+            badge.classList.add('animate-bounce');
+            setTimeout(() => badge.classList.remove('animate-bounce'), 300);
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
 
     // =======================
     // ADD TO CART

@@ -18,3 +18,25 @@
         transform: translateY(0);
     }
 }
+
+
+/* Untuk Chrome, Safari, Edge (Webkit browsers) */
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Track */
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Thumb */
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}

@@ -3,10 +3,24 @@
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 animate-fade-in-up">
         <div class="max-w-screen mx-auto">
-            <!-- Header Section -->
+            <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Customer Service</h1>
-                <p class="text-gray-600 dark:text-gray-400">Kelola percakapan dan pesan dari pengguna</p>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center">
+                        <div
+                            class="shrink-0 h-12 w-12 rounded-tl-xl rounded-br-xl bg-primary-500 flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-shirt text-white text-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                                Manajemen Customer Service
+                            </h1>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                Kelola percakapan dan pesan dari pelanggan
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Success Message -->

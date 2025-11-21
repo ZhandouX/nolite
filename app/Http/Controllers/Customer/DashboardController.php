@@ -15,19 +15,19 @@ class DashboardController extends Controller
     // INDEX
     public function index()
     {
-        // PRODUK TERBARU + STATISTIK
-        $produk = Produk::with('fotos')
+        // Query sekali saja dari database
+        $allProduk = Produk::with('fotos')
             ->withStatistik()
-            ->orderByDesc('produks.created_at')
-            ->take(6)
+            ->orderByDesc('created_at')
             ->get();
 
-        // PRODUK DISKON + STATISTIK
-        $produkDiskon = Produk::with('fotos')
-            ->withStatistik()
-            ->where('produks.diskon', '>', 0)
-            ->orderByDesc('produks.created_at')
-            ->get();
+        // PRODUK BARU (6 TERATAS)
+        $produk = $allProduk->take(6);
+
+        // PRODUK DISKON (6 TERATAS)
+        $produkDiskon = $allProduk
+            ->where('diskon', '>', 0)
+            ->take(6);
 
         return view('customer.dashboard', compact('produk', 'produkDiskon'));
     }
@@ -56,7 +56,7 @@ class DashboardController extends Controller
 
         // SEARCH
         if ($request->filled('search')) {
-            $query->where('nama_produk', 'like', '%' . $request->search . '%');
+            $query->where('nama_produk', 'ILIKE', '%' . $request->search . '%');
         }
 
         // CATEGORY FILTER
@@ -83,7 +83,7 @@ class DashboardController extends Controller
 
         // SIZE
         if ($request->filled('ukuran')) {
-            $query->whereJsonContains('ukuran', $request->ukuran);
+            $query->whereJsonContains('produks.ukuran', $request->ukuran);
         }
 
         // SORT
@@ -111,6 +111,7 @@ class DashboardController extends Controller
         return view('customer.all-produk', compact('produks'));
     }
 
+    // PRODUK UNGGULAN
     public function unggulanProduk()
     {
         $produks = Produk::with('fotos')
@@ -121,7 +122,7 @@ class DashboardController extends Controller
         return view('customer.unggulan', compact('produks'));
     }
 
-    // === PRODUK DISKON ===
+    // PRODUK DISKON
     public function diskonProduk()
     {
         $produks = Produk::with('fotos')

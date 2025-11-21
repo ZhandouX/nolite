@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/assets/css/auth/login.css">
     <link rel="stylesheet" href="/assets/css/auth/register.css">
     <link rel="stylesheet" href="/assets/css/user/kategori.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -22,14 +21,14 @@
 
 <body>
     {{-- SIDEBAR --}}
-    @include('layouts.partials_user.sidebar')
+    @include('layouts.partials_user._sidebar')
 
     {{-- OVERLAY --}}
     <div id="overlay"></div>
 
     {{-- HEADER --}}
     <header>
-        @include('layouts.partials_user.navbar')
+        @include('layouts.partials_user._navbar')
     </header>
 
     {{-- HERO SLIDER --}}
@@ -48,13 +47,13 @@
         <button class="tab" data-category="diskon">Diskon</button>
     </div>
 
-    {{-- PANEL: CATEGORY --}}
+    {{-- PANEL ==> KATEGORI --}}
     @include('layouts.partials_user.panels.kategori')
 
-    {{-- PANEL: DISKON --}}
+    {{-- PANEL ==> PRODUK DISKON --}}
     @include('layouts.partials_user.panels.diskon')
 
-    {{-- PANEL: ALL PRODUK --}}
+    {{-- PANEL ==> SEMUA PRODUK --}}
     @include('layouts.partials_user.panels.all-produk')
 
     <div class="see-all">
@@ -63,6 +62,7 @@
         </a>
     </div>
 
+    {{-- BUTTON BOXS ==> LIHAT SEMUA PRODUK | TENTANG KAMI | SEMUA PRODUK --}}
     <div class="extra-icons">
         <div class="icon-box">
             <i data-lucide="info"></i>
@@ -76,10 +76,10 @@
         </div>
     </div>
 
-    {{-- FOOTER KONDISIONAL --}}
+    {{-- FOOTER --}}
     @include('layouts.partials_user._footer')
 
-    <!-- BUTTON GROUP -->
+    {{-- BUTTON GROUP ==> BACK TO TOP | CHATBOT | CART POPUP --}}
     <div class="fixed bottom-20 right-4 lg:bottom-2 md:right-6 flex flex-col items-end gap-4 z-50">
 
         <!-- BACK TO TOP BUTTON -->
@@ -145,13 +145,13 @@
     @include('layouts.partials_user.modals.login')
     @include('layouts.partials_user.modals.register')
 
-    {{-- ====================================== --}}
-    {{-- ============= JAVASCRIPT ============= --}}
-    {{-- ====================================== --}}
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script>
-        if (window.lucide) lucide.createIcons();
+    {{-- ============================================= --}}
+    {{-- ============= LIBARY JAVASCRIPT ============= --}}
+    {{-- ============================================= --}}
 
+    {{-- ===== JS ====> MODALS CONTAINER untuk produk dari search --}}
+    <div id="dynamicModalsContainer"></div>
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tooltip = document.getElementById("chat-tooltip");
             const arrow = document.getElementById("chat-arrow");
@@ -182,296 +182,128 @@
             }, 800); // Delay 800ms sebelum mulai
         });
     </script>
+
+    {{-- ===== JS ====> MODAL FUNCTION --}}
     <script>
-        // === Sidebar Toggle (Tailwind Version) ===
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("overlay");
-        const menuBtn = document.getElementById("menuBtn");
-        const closeSidebar = document.getElementById("closeSidebar");
-        const backToTopButton = document.getElementById("backToTop");
-
-        if (menuBtn && sidebar && overlay) {
-            menuBtn.addEventListener("click", () => {
-                // Sidebar muncul
-                sidebar.classList.remove("-translate-x-full");
-                sidebar.classList.add("translate-x-0");
-
-                // Overlay aktif
-                overlay.classList.remove("opacity-0", "pointer-events-none");
-                overlay.classList.add("opacity-100", "pointer-events-auto");
-            });
-
-            closeSidebar.addEventListener("click", () => {
-                // Sidebar sembunyi
-                sidebar.classList.remove("translate-x-0");
-                sidebar.classList.add("-translate-x-full");
-
-                // Overlay nonaktif
-                overlay.classList.remove("opacity-100", "pointer-events-auto");
-                overlay.classList.add("opacity-0", "pointer-events-none");
-            });
-
-            overlay.addEventListener("click", () => {
-                sidebar.classList.remove("translate-x-0");
-                sidebar.classList.add("-translate-x-full");
-                overlay.classList.remove("opacity-100", "pointer-events-auto");
-                overlay.classList.add("opacity-0", "pointer-events-none");
-            });
-        }
-
-        // === Dropdown Sidebar ===
-        document.querySelectorAll(".dropdown-toggle").forEach((toggle) => {
-            toggle.addEventListener("click", function (e) {
-                e.preventDefault();
-                this.parentElement.classList.toggle("open");
-            });
-        });
-
-        // === Simple Search Filter ===
-        const searchInput = document.querySelector(".search-bar input");
-
-        if (searchInput) {
-            searchInput.addEventListener("input", function () {
-                const value = this.value.toLowerCase();
-                allProducts.forEach((prod) => {
-                    const text = prod.innerText.toLowerCase();
-                    prod.style.display = text.includes(value) ? "block" : "none";
-                });
-            });
-        }
-
-        // === Inisialisasi Lucide Icon ===
-        if (typeof lucide !== "undefined") {
-            lucide.createIcons();
-        }
-
-        // === Hero Slider ===
-        let slides = document.querySelectorAll(".slide");
-        let currentSlide = 0;
-
-        function changeSlide() {
-            slides[currentSlide].classList.remove("active");
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add("active");
-        }
-
-        // IMAGES SLIDER
-        setInterval(changeSlide, 4000);
-
-        function openDetail(productName) {
-            alert("Buka detail produk: " + productName);
-        }
-
-        // === Footer Payment Toggle ===
-        function toggleFooterPayment() {
-            const logosMobile = document.getElementById("footerLogosMobile");
-            const icon = document.getElementById("footerIcon");
-
-            logosMobile.classList.toggle("hidden");
-            icon.classList.toggle("rotate-180");
-        }
-
-        // === Back To Top Button ===
-        window.addEventListener("scroll", () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.remove("hidden");
-                backToTopButton.classList.add("flex");
-            } else {
-                backToTopButton.classList.add("hidden");
-                backToTopButton.classList.remove("flex");
+        // Fungsi modal dasar (fallback)
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
             }
-        });
+        }
 
-        backToTopButton.addEventListener("click", () => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-
-        // === Re-initialize Lucide (safe call) ===
-        if (typeof lucide !== "undefined") {
-            lucide.createIcons();
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
         }
     </script>
+
+    {{-- ===== JS ====> LOAD GLOBAL MODAL (BELI & KERANJANG) --}}
+    <script>
+        async function loadProductModals(productId) {
+            // Cek jika modal sudah ada
+            if (document.getElementById(`productModal-${productId}`)) return;
+
+            try {
+                const response = await fetch(`/get-product-modals/${productId}`);
+                const html = await response.text();
+                document.getElementById('dynamicModalsContainer').innerHTML += html;
+
+                // Render ulang icon Lucide (bundler)
+                if (window.createIcons) window.createIcons();
+
+            } catch (error) {
+                console.error('Error loading modals:', error);
+            }
+        }
+
+        // Override openModal function untuk handle dynamic loading
+        const originalOpenModal = window.openModal;
+        window.openModal = async function (modalId) {
+            const productId = modalId.match(/\d+/)[0];
+
+            // Load modal jika belum ada
+            await loadProductModals(productId);
+
+            // Tunggu sebentar untuk memastikan modal sudah di-inject
+            setTimeout(() => {
+                if (originalOpenModal) {
+                    originalOpenModal(modalId);
+                } else {
+                    // Fallback jika function asli tidak ada
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.addEventListener('click', function (e) {
+                            if (e.target === modal) closeModal(modalId);
+                        });
+                    }
+                }
+            }, 100);
+        };
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="/assets/js/user/landing-page.js"></script>
+
+    {{-- ===== JS ====> CART POPUP --}}
     <script>
         window.Laravel = {
             csrfToken: "{{ csrf_token() }}",
+            isLoggedIn: @json(auth()->check()),
             routes: {
                 keranjangIndex: "{{ route('keranjang.index') }}",
                 keranjangStore: "{{ route('keranjang.store') }}",
                 keranjangBase: "{{ url('keranjang') }}",
                 keranjangCek: "{{ url('/keranjang/cek') }}",
+                keranjangSessionUpdate: "{{ route('keranjang.session.update') }}",
                 wishlistToggle: "{{ url('/wishlist/toggle') }}",
                 allCategory: "{{ url('produk') }}"
             }
         };
     </script>
+
     <script src="/assets/js/user/keranjang-popup.js"></script>
+
+    {{-- ===== JS ====> HIDDEN BRAND NAV --}}
     <script>
-        // ===========================
-        // KERANJANG POPUP & FUNCTIONS
-        // ===========================
         document.addEventListener("DOMContentLoaded", function () {
+            const menuBtn = document.getElementById("menuBtn");
+            const closeSidebar = document.getElementById("closeSidebar");
+            const sidebar = document.getElementById("sidebar");
+            const headerLogo = document.getElementById("headerLogo");
 
-            // ✅ Fungsi menentukan container sesuai ukuran layar
-            function getCartPopupContainer() {
-                return window.innerWidth >= 1024
-                    ? document.getElementById('cartPopupDesktop')
-                    : document.getElementById('cartPopupMobile');
-            }
+            // Saat tombol menu diklik → buka sidebar dan sembunyikan logo
+            if (menuBtn) {
+                menuBtn.addEventListener("click", function () {
+                    sidebar.classList.remove("-translate-x-full");
+                    sidebar.classList.add("translate-x-0");
 
-            // ✅ Refresh isi popup (mengecek isi keranjang dari server)
-            function refreshCartPopup() {
-                fetch("{{ url('/keranjang/cek/') }}", {
-                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" }
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        const container = getCartPopupContainer();
-                        if (!container) return;
-                        container.innerHTML = '';
-
-                        if (data.items && data.items.length > 0) {
-                            const totalProdukUnik = data.items.length;
-                            showCartPopup(totalProdukUnik);
-                            animateCartBadge(totalProdukUnik);
-                        } else {
-                            animateCartBadge(0);
-                        }
-                    })
-                    .catch(err => console.error('Gagal memuat popup keranjang:', err));
-            }
-
-            // ✅ Fungsi menampilkan popup keranjang
-            function showCartPopup(totalProduk) {
-                const container = getCartPopupContainer();
-                if (!container) return;
-
-                // Hapus popup sebelumnya
-                container.innerHTML = '';
-
-                // Buat elemen popup baru
-                const popup = document.createElement('div');
-                popup.className = `
-                    bg-gray-400 hover:bg-gray-500 text-white rounded-2xl shadow-2xl
-                    flex items-center justify-between gap-1 md:gap-3 px-5 py-4
-                    w-48 md:w-80 cursor-pointer
-                    transition-all duration-300 backdrop-blur-sm
-                    opacity-0 translate-y-3
-                `;
-
-                popup.innerHTML = `
-                    <div class="flex items-center gap-3 relative">
-                        <div class="relative">
-                            <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-                            <span class="absolute -top-1 -right-2 bg-red-600 text-white text-[9px] md:text-xs font-bold rounded-full px-1.5 py-0.5">
-                                ${totalProduk}
-                            </span>
-                        </div>
-                        <span class="text-xs md:text-base font-medium">
-                            Ada <strong>${totalProduk}</strong> produk di keranjang
-                        </span>
-                    </div>
-                    <button class="text-gray-300 hover:text-white text-lg font-bold">×</button>
-                `;
-
-                // Event klik tombol close
-                popup.querySelector('button').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    popup.classList.add('opacity-0', 'translate-y-3');
-                    setTimeout(() => popup.remove(), 300); // animasi keluar
-                });
-
-                // Event klik popup ke halaman keranjang
-                popup.addEventListener('click', (e) => {
-                    if (e.target.closest('button')) return; // jika klik tombol, abaikan
-                    window.location.href = "{{ route('keranjang.index') }}";
-                });
-
-                // Tambahkan ke container
-                container.appendChild(popup);
-
-                // Efek animasi muncul
-                requestAnimationFrame(() => {
-                    popup.classList.remove('opacity-0', 'translate-y-3');
-                    popup.classList.add('opacity-100', 'translate-y-0');
+                    // Sembunyikan logo
+                    headerLogo.classList.add("opacity-0", "pointer-events-none");
                 });
             }
 
-            // ✅ Fungsi animasi badge jumlah item
-            function animateCartBadge(total) {
-                const badge = document.getElementById('cartBadge');
-                if (!badge) return;
+            // Saat tombol closeSidebar diklik → tutup sidebar dan tampilkan logo
+            if (closeSidebar) {
+                closeSidebar.addEventListener("click", function () {
+                    sidebar.classList.add("-translate-x-full");
+                    sidebar.classList.remove("translate-x-0");
 
-                if (total > 0) {
-                    badge.textContent = total;
-                    badge.classList.remove('hidden');
-                    badge.classList.add('animate-bounce');
-                    setTimeout(() => badge.classList.remove('animate-bounce'), 300);
-                } else {
-                    badge.classList.add('hidden');
-                }
+                    // Tampilkan lagi logo
+                    headerLogo.classList.remove("opacity-0", "pointer-events-none");
+                });
             }
-
-            // =======================
-            // REFRESH CART ON LOAD
-            // =======================
-            refreshCartPopup();
         });
     </script>
 
-    {{-- HIDDEN BUTTON --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleBtn = document.getElementById('toggleButtons');
-            const toggleIcon = document.getElementById('toggleIcon');
-            const chatBtn = document.getElementById('chat-toggle');
-            const backBtn = document.getElementById('backToTop');
-            const divider = document.getElementById('toggleDivider');
-
-            let isOpen = false;
-
-            toggleBtn.addEventListener('click', () => {
-                isOpen = !isOpen;
-
-                if (isOpen) {
-                    // Munculkan tombol tambahan dengan animasi
-                    [chatBtn, backBtn].forEach((btn, i) => {
-                        setTimeout(() => {
-                            btn.classList.remove('opacity-0', 'translate-y-6', 'rotate-45', 'pointer-events-none');
-                            btn.classList.add('opacity-100', 'translate-y-0', 'rotate-0', 'pointer-events-auto');
-                        }, i * 100);
-                    });
-
-                    // Munculkan garis divider
-                    divider.classList.remove('opacity-0', 'scale-x-0');
-                    divider.classList.add('opacity-100', 'scale-x-100');
-
-                    // Flip icon toggle
-                    toggleIcon.style.transform = 'rotate(180deg)';
-                } else {
-                    // Sembunyikan tombol tambahan dengan stagger
-                    [backBtn, chatBtn].forEach((btn, i) => {
-                        setTimeout(() => {
-                            btn.classList.add('opacity-0', 'translate-y-6', 'rotate-45', 'pointer-events-none');
-                            btn.classList.remove('opacity-100', 'translate-y-0', 'rotate-0', 'pointer-events-auto');
-                        }, i * 100);
-                    });
-
-                    // Sembunyikan garis divider
-                    divider.classList.add('opacity-0', 'scale-x-0');
-                    divider.classList.remove('opacity-100', 'scale-x-100');
-
-                    // Flip kembali icon toggle
-                    toggleIcon.style.transform = 'rotate(0deg)';
-                }
-            });
-
-            // Tombol back to top
-            backBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-    </script>
-
+    {{-- ===== JS ====> TABS / MAIN PANELS --}}
     <script>
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -493,86 +325,8 @@
             });
         });
     </script>
-    {{-- JS: KATEGORI --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const allProducts = @json($produk);
-            window.showCategory = function (jenis) {
-                const kategoriPanel = document.getElementById('panel-kategori');
-                const filteredPanel = document.getElementById('filtered-category');
-                const grid = document.getElementById('filtered-products');
-                const bannerTitle = document.getElementById('category-banner-title');
-                const bannerImg = document.getElementById('category-banner-img');
-                kategoriPanel.classList.add('hidden');
-                filteredPanel.classList.remove('hidden');
-                bannerTitle.textContent = jenis;
-                const bannerMap = {
-                    'T-Shirt': '/assets/images/banner/tshirt.jpeg',
-                    'Hoodie': '/assets/images/banner/hoodie-1.jpg',
-                    'Jersey': '/assets/images/banner/jersey.jpg',
-                };
-                bannerImg.src = bannerMap[jenis] || '/assets/images/default-banner.jpg';
-                const filtered = allProducts.filter(p => p.jenis === jenis);
-                grid.innerHTML = '';
 
-                if (filtered.length === 0) {
-                    grid.innerHTML = `<p class='col-span-3 text-center text-gray-500 text-lg py-12'>Belum ada produk untuk kategori ${jenis}</p>`;
-                    return;
-                }
-
-                filtered.forEach(item => {
-                    const foto = item.fotos?.length ? `/storage/${item.fotos[0].foto}` : `/assets/images/no-image.png`;
-
-                    const card = `
-                                                                            <div class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                                                                                data-id="${item.id}" data-nama="${item.nama_produk}" data-harga="${item.harga}"
-                                                                                data-foto="${foto}" data-category="${item.kategori ?? 'umum'}">
-
-                                                                                <a href="/produk/detail/${item.id}" class="block overflow-hidden rounded-t-2xl bg-gray-50">
-                                                                                    <img src="${foto}" alt="${item.nama_produk}" class="w-full h-72 object-contain group-hover:scale-105 transition-transform duration-500 p-4">
-                                                                                </a>
-
-                                                                                <div class="p-6 flex flex-col gap-3">
-                                                                                    <h3 class="text-center text-xl font-bold text-gray-900 line-clamp-1">${item.nama_produk}</h3>
-                                                                                    <p class="text-center text-lg text-black font-bold">
-                                                                                        IDR ${new Intl.NumberFormat('id-ID').format(item.harga)}
-                                                                                    </p>
-
-                                                                                    <div class="flex gap-2 w-full mt-2">
-                                                                                        <!-- CART -->
-                                                                                        <button
-                                                                                            class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md flex items-center justify-center flex-shrink-0"
-                                                                                            onclick="openModal('productModal-${item.id}')" title="Tambah ke Keranjang">
-                                                                                            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
-                                                                                                <path stroke-linecap='round' stroke-linejoin='round'
-                                                                                                    d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'/>
-                                                                                            </svg>
-                                                                                        </button>
-
-                                                                                        <!-- BUY -->
-                                                                                        <button
-                                                                                            class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-400 transform hover:scale-105 transition-all duration-200 shadow-md font-semibold flex-1 min-w-0 flex items-center justify-center gap-2"
-                                                                                            onclick="openModal('productBeliModal-${item.id}')">
-                                                                                            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
-                                                                                                <path stroke-linecap='round' stroke-linejoin='round' d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'/>
-                                                                                            </svg>
-                                                                                            <span>Beli Sekarang</span>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>`;
-                    grid.insertAdjacentHTML('beforeend', card);
-                });
-            };
-
-            window.backToCategories = function () {
-                document.getElementById('filtered-category').classList.add('hidden');
-                document.getElementById('panel-kategori').classList.remove('hidden');
-            };
-        });
-    </script>
-
-    {{-- JS: LOGIN & REGISTER MODAL --}}
+    {{-- ===== JS ====> LOGIN & REGISTER MODAL --}}
     <script>
         //Login Modal
         function openLoginModal() {
@@ -669,7 +423,7 @@
         });
     </script>
 
-    {{-- SESSION LOGIN --}}
+    {{-- ===== JS ====> SESSION LOGIN --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             @if(!empty($showLoginModal) && $showLoginModal)

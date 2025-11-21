@@ -8,7 +8,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div class="flex items-center">
                         <div
-                            class="shrink-0 h-12 w-12 rounded-xl bg-primary-500 flex items-center justify-center shadow-sm">
+                            class="shrink-0 h-12 w-12 rounded-tl-xl rounded-br-xl bg-primary-500 flex items-center justify-center shadow-sm">
                             <i class="fa-solid fa-shirt text-white text-lg"></i>
                         </div>
                         <div class="ml-4">
@@ -453,8 +453,6 @@
             background: #475569;
         }
     </style>
-
-
 @endsection
 
 @push('scripts')

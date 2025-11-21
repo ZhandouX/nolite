@@ -37,7 +37,7 @@
 
                             {{-- Tombol hapus wishlist --}}
                             <button type="button" data-id="{{ $item->id }}"
-                                class="remove-wishlist absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow hover:scale-110 transition duration-200">
+                                class="remove-wishlist absolute bottom-2 right-2 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow hover:scale-110 transition duration-200">
                                 <i class="fa-solid fa-heart text-red-500 text-lg"></i>
                             </button>
                         </div>
@@ -45,12 +45,35 @@
                         {{-- Info produk --}}
                         <div class="p-2 sm:p-3 text-center">
                             <h3
-                                class="font-semibold text-gray-800 text-xs sm:text-sm truncate leading-tight group-hover:text-red-800 transition-colors">
+                                class="font-semibold montserrat text-gray-800 text-xs sm:text-sm truncate leading-tight group-hover:text-red-800 transition-colors">
                                 {{ $item->produk->nama_produk }}
                             </h3>
-                            <p class="text-red-600 font-bold text-sm sm:text-base mt-1">
-                                Rp{{ number_format($item->produk->harga, 0, ',', '.') }}
-                            </p>
+                            
+                            {{-- HARGA --}}
+                            <div class="h-5 sm:h-6 flex items-center gap-1.5">
+                                @if ($item->produk->has_diskon)
+                                    <div class="flex items-baseline gap-0 md:gap-1">
+                                        <span class="text-xs md:text-sm font-medium text-gray-500">
+                                            Rp
+                                        </span>
+                                        <span class="text-sm md:text-xl font-bold text-red-900 truncate">
+                                            {{ $item->produk->harga_diskon }}
+                                        </span>
+                                    </div>
+                                    <p class="flex-shrink-0 text-[10px] sm:text-xs text-gray-400 line-through truncate">
+                                        {{ $item->produk->harga_format }}
+                                    </p>
+                                @else
+                                    <div class="flex items-baseline gap-0 md:gap-1">
+                                        <span class="text-xs md:text-sm font-medium text-gray-500">
+                                            Rp
+                                        </span>
+                                        <span class="text-sm md:text-xl font-bold text-gray-900 truncate">
+                                            {{ $item->produk->harga_format }}
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach

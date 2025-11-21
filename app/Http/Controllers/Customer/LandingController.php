@@ -28,12 +28,15 @@ class LandingController extends Controller
         $produk = Produk::with('fotos')
             ->latest()
             ->take(6)
+            ->withStatistik()
             ->get();
 
         // 🔹 Ambil semua produk yang memiliki diskon
         $produkDiskon = Produk::with('fotos')
+            ->withStatistik()
             ->where('diskon', '>', 0)
             ->latest()
+            ->take(6)
             ->get();
 
         // 🔹 Tambahkan logika untuk menampilkan modal login otomatis

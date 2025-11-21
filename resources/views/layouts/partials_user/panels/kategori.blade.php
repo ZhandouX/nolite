@@ -9,9 +9,9 @@
                class="kategori-item-wrapper group block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
                 <div class="kategori-item relative">
                     <img src="{{ $kategori->foto_sampul ? asset('storage/' . $kategori->foto_sampul) : 'https://via.placeholder.com/600x400?text='.$kategori->nama_kategori }}"
-                         alt="{{ $kategori->nama_kategori }}" class="w-full h-full object-cover" />
+                         alt="{{ $kategori->nama_kategori }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div class="kategori-overlay absolute inset-0 flex items-center justify-center bg-black/25">
-                        <h3 class="text-xl sm:text-xl md:text-2xl lg:text-4xl text-white font-bold">
+                        <h3 class="text-xl sm:text-xl md:text-2xl lg:text-4xl text-white font-bold montserrat">
                             {{ strtoupper($kategori->nama_kategori) }}
                         </h3>
                     </div>

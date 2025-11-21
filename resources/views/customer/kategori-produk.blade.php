@@ -18,7 +18,7 @@
                         ? asset('storage/' . $kategori->foto_sampul)
                         : asset('assets/images/banner/default.jpg') }}" alt="Banner {{ $kategori->nama_kategori }}">
                     <div class="banner-overlay absolute inset-0 flex items-center justify-center bg-black/25">
-                        <h1 class="text-2xl sm:text-3xl font-bold text-white">{{ $kategori->nama_kategori }}</h1>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-white montserrat">{{ $kategori->nama_kategori }}</h1>
                     </div>
                 </div>
 
@@ -26,7 +26,10 @@
                 <div class="flex gap-2 mb-0 lg:mb-4 justify-between lg:hidden">
                     <button id="mobileOpenFilterBtn"
                         class="flex-1 flex items-center justify-center gap-2 border border-gray-700 text-gray-700 bg-transparent rounded-lg px-4 py-2 hover:bg-gray-600 hover:text-white transition">
-                        <i data-lucide="funnel" class="w-5 h-5"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h18M4 8h16l-6 8v4l-4-2v-2l-6-8z" />
+                        </svg>
                         Filter
                     </button>
 

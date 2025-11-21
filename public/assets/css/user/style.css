@@ -573,11 +573,7 @@ header .nav-links a {
     text-align: center;
   }
 
-  header {
-    padding: 2px 9px;
-    z-index: 50;
-    align-items: center;
-  }
+  
 
   .nav-links {
     display: none;
@@ -980,21 +976,20 @@ input[type=number] {
 }
 
 .scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
+  width: 0;
+  height: 0;
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+  background: transparent;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 10px;
+  background: transparent;
 }
 
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+.scrollbar-thin {
+  scrollbar-width: none;
 }
 
 .line-clamp-2 {
@@ -1034,3 +1029,5 @@ input[type=number] {
 .checkout-btn:active {
   transform: translateY(0);
 }
+
+/* Custom Scrollbar */

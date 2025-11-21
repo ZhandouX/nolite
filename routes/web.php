@@ -187,7 +187,7 @@ Route::get('/produk/{id}', [DashboardController::class, 'show'])->name('produk.d
 // SEARCH ROUTES
 // ============================================
 
-// Route untuk search produk (Simple)
+// Route untuk search produk
 Route::get('/search-produk', [ProdukCustomerController::class, 'search'])
     ->name('produk.search');
 
@@ -251,7 +251,7 @@ Route::get('/keranjang/cek', function () {
     }
 });
 Route::get('/keranjang/count', [KeranjangController::class, 'count'])->name('keranjang.count');
-Route::patch('keranjang/{id}', [KeranjangController::class, 'updateQuantity']);
+Route::patch('keranjang/{id}', [KeranjangController::class, 'updateQuantity'])->name('keranjang.update');
 Route::post('/keranjang/session/update', [KeranjangController::class, 'updateSession'])
     ->name('keranjang.session.update');
 

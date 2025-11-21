@@ -1,6 +1,6 @@
 <form method="GET" action="{{ route('customer.allProduk') }}">
     {{-- SEARCH --}}
-    <div class="mb-6 mt-6">
+    <div class="mb-3 mt-3">
         <div class="relative">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk..."
                 class="w-full border border-gray-300 bg-white rounded-md pl-8 pr-3 py-1.5 text-sm focus:ring focus:ring-blue-200 focus:outline-none">
@@ -9,13 +9,13 @@
     </div>
 
     {{-- CATEGORY --}}
-    <div class="mb-6">
+    <div class="mb-3">
         <h2 class="font-semibold mb-2 text-sm">Kategori</h2>
 
         @php
             // Ambil semua kategori dari DB
             $kategoris = \App\Models\Kategori::all();
-            $currentKategoriId = request('kategori_id'); // Bisa dikirim via GET
+            $currentKategoriId = request('kategori_id');
         @endphp
 
         @foreach($kategoris as $kategori)
@@ -29,7 +29,8 @@
     </div>
 
     {{-- TYPE --}}
-    <div id="filterTipeForm" class="space-y-1">
+    <div id="filterTipeForm" class="space-y-1 mb-3">
+        <h2 class="font-semibold mb-2 text-sm">Sortis Berdasarkan</h2>
         <label class="text-sm block">
             <input type="radio" name="tipe" value="all" {{ request()->routeIs('customer.allProduk') ? 'checked' : '' }}>
             Semua
@@ -58,7 +59,7 @@
     {{-- SIZES --}}
     <div class="mb-6">
         <h2 class="font-semibold mb-2 text-sm">Ukuran</h2>
-        @foreach(['S', 'M', 'L', 'XL'] as $size)
+        @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as $size)
             <button type="submit" name="ukuran" value="{{ $size }}"
                 class="px-2 py-1 text-sm border rounded-md hover:bg-gray-100 {{ request('ukuran') == $size ? 'bg-gray-200 border-blue-500' : '' }}">
                 {{ $size }}

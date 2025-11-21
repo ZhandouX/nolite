@@ -3,13 +3,13 @@
 @section('title', 'My Account')
 
 @section('content')
-    <div class="bg-gray-100 text-gray-800 min-h-screen py-10 px-2 md:px-4 flex justify-center items-start pt-20 md:pt-9">
+    <div class="bg-gray-100 text-gray-800 min-h-screen py-10 px-2 md:px-4 flex justify-center items-start pt-20 lg:pt-9">
         <div class="w-full md:max-w-3xl">
 
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-2xl font-semibold">
-                    Hai {{ Auth::user()->name ?? 'User' }}
+                    Hai {{ Auth::user()->name ?? 'Pelanggan Nolite' }}
                 </h1>
                 <a href="{{ route('profile.settings') }}"
                     class="border border-red-900 text-red-900 px-4 py-2 rounded-lg hover:bg-gray-600 hover:text-white transition">
@@ -48,7 +48,7 @@
                 @include('layouts.partials_user.panels.orders')
 
                 <!-- Wishlist Content -->
-                @include('layouts.partials_user._wishlist-section')
+                @include('layouts.partials_user.panels._wishlist-section')
             </div>
         </div>
     </div>

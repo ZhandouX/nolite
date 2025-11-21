@@ -18,7 +18,7 @@
     @else
         <div id="ordersGrid"
             class="max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 @foreach ($orders as $order)
                     @php
                         $firstItem = $order->items->first();
@@ -38,19 +38,19 @@
                                         class="w-20 h-20 object-contain opacity-30">
                                 </div>
                             @endif
-                            <div class="absolute top-0 right-1 sm:top-1 sm:right-1 md:top-3 md:right-3 z-20 py-0 md:py-0">
+                            <div class="absolute top-0 right-1 z-20 py-0 md:py-0">
                                 <span
                                     class="px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold rounded-full
-                                                                {{ $order->status === 'selesai' ? 'bg-green-500/90 text-white' : '' }}
-                                                                {{ $order->status === 'menunggu' ? 'bg-yellow-500/90 text-white' : '' }}
-                                                                {{ $order->status === 'diproses' ? 'bg-blue-500/90 text-white' : '' }}
-                                                                {{ $order->status === 'dikirim' ? 'bg-purple-500/90 text-white' : '' }}
-                                                                {{ $order->status === 'batal' ? 'bg-red-500/90 text-white' : '' }}">
-                                    {{ ucfirst($order->status) }}
+                                        {{ $order->status === 'selesai' ? 'bg-green-500/90 text-white' : '' }}
+                                        {{ $order->status === 'menunggu' ? 'bg-yellow-500/90 text-white' : '' }}
+                                        {{ $order->status === 'diproses' ? 'bg-blue-500/90 text-white' : '' }}
+                                        {{ $order->status === 'dikirim' ? 'bg-purple-500/90 text-white' : '' }}
+                                        {{ $order->status === 'batal' ? 'bg-red-500/90 text-white' : '' }}">
+                                        {{ ucfirst($order->status) }}
                                 </span>
                             </div>
 
-                            <div class="absolute bottom-1 left-0 md:left-6 md:left-3">
+                            <div class="absolute bottom-1 left-0">
                                 <span
                                     class="px-3 py-1 bg-red-900/90 text-white text-xs font-medium rounded-full shadow-sm min-w-[60px] text-center">
                                     {{ $order->items->count() }}
@@ -59,9 +59,9 @@
                             </div>
                         </div>
 
-                        <div class="py-1 px-4 mb-2 md:p-5">
+                        <div class="py-1 px-2 md:px-4 mb-2 md:p-5">
                             <div class="flex items-center justify-between mb-1 md:mb-3">
-                                <h3 class="font-bold text-gray-800 text-base truncate">
+                                <h3 class="font-bold text-gray-800 text-xs md:text-base truncate">
                                     {{ $firstItem->nama_produk }}
                                     @if ($order->items->count() > 1)
                                         <span class="font-medium">+{{ $order->items->count() - 1 }}
@@ -72,15 +72,15 @@
                             </div>
                             <div class="space-y-2">
                                 <div class="flex items-baseline gap-1">
-                                    <span class="text-sm font-medium text-gray-500">
+                                    <span class="text-xs md:text-sm font-medium text-gray-500">
                                         Rp
                                     </span>
-                                    <span class="text-[20px] md:text-2xl font-bold text-red-900">
+                                    <span class="text-[16px] md:text-2xl font-bold text-red-900">
                                         {{ number_format($order->subtotal, 0, ',', '.') }}
                                     </span>
                                 </div>
-                                <p class="text-xs text-gray-500">
-                                    Order #{{ $order->id }}
+                                <p class="text-[10px] md:text-xs text-gray-500 line-clamp-1">
+                                    ID: #ORD-NA-{{ $order->id }}
                                 </p>
                             </div>
                         </div>

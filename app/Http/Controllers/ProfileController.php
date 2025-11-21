@@ -16,8 +16,6 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    // app/Http/Controllers/ProfileController.php
-
     public function edit(Request $request): View
     {
         $user = $request->user();

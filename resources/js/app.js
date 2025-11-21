@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     createIcons({ icons });
 });
 
+window.createIcons = createIcons;
+window.lucideIcons = icons;
+
 window.Alpine = Alpine;
 
 Alpine.start();

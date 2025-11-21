@@ -37,6 +37,28 @@ class Produk extends Model
         return $this->hasMany(ProdukFoto::class, 'produk_id');
     }
 
+    public function getHargaDiskonAttribute()
+    {
+        // Jika ada diskon
+        $harga = ($this->diskon > 0)
+            ? $this->harga - ($this->harga * $this->diskon / 100)
+            : $this->harga;
+
+        // Formatting rupiah
+        return number_format($harga, 0, ',', '.');
+    }
+
+    public function getHargaFormatAttribute()
+    {
+        // Harga asli terformat
+        return number_format($this->harga, 0, ',', '.');
+    }
+
+    public function getHasDiskonAttribute()
+    {
+        return $this->diskon > 0;
+    }
+
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class);
@@ -59,21 +81,28 @@ class Produk extends Model
         return $this->hasMany(Ulasan::class, 'produk_id')->with('user', 'fotos');
     }
 
-    // Local scope
     public function scopeWithStatistik($query)
     {
-        return $query->select(
-            'produks.*',
-            DB::raw('COALESCE(SUM(order_items.jumlah), 0) as total_terjual'),
-            DB::raw('COALESCE(AVG(ulasans.rating), 0) as average_rating'),
-            DB::raw('COUNT(ulasans.id) as total_ulasan')
-        )
-            ->leftJoin('order_items', 'order_items.produk_id', '=', 'produks.id')
-            ->leftJoin('orders', function ($join) {
-                $join->on('orders.id', '=', 'order_items.order_id')
-                    ->where('orders.status', '=', 'selesai');
-            })
-            ->leftJoin('ulasans', 'ulasans.produk_id', '=', 'produks.id')
-            ->groupBy('produks.id');
+        return $query
+            ->addSelect([
+                // total terjual
+                'total_terjual' => OrderItem::query()
+                    ->join('orders', function ($join) {
+                        $join->on('orders.id', '=', 'order_items.order_id')
+                            ->where('orders.status', '=', 'selesai');
+                    })
+                    ->selectRaw('COALESCE(SUM(order_items.jumlah), 0)')
+                    ->whereColumn('order_items.produk_id', 'produks.id'),
+
+                // average rating
+                'average_rating' => Ulasan::query()
+                    ->selectRaw('COALESCE(AVG(ulasans.rating), 0)')
+                    ->whereColumn('ulasans.produk_id', 'produks.id'),
+
+                // total ulasan
+                'total_ulasan' => Ulasan::query()
+                    ->selectRaw('COALESCE(COUNT(*), 0)')
+                    ->whereColumn('ulasans.produk_id', 'produks.id'),
+            ]);
     }
 }

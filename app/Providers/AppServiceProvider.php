@@ -13,6 +13,8 @@ use App\Models\Chat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use App\Http\View\Composers\WishlistComposer;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -57,6 +59,8 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with(compact('produkTerbaru', 'produkDiskon'));
         });
+
+        View::composer('*', WishlistComposer::class);
 
         // Multi bahasa
         App::setLocale(Session::get('locale', 'id'));

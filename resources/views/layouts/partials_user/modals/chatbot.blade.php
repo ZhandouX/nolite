@@ -1,9 +1,9 @@
 <div id="chat-container"
-    class="hidden z-[10000] fixed bottom-0 right-0 lg:bottom-4 lg:right-4 w-full h-full lg:w-96 lg:h-[450px] bg-white rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden animate__animated animate__fadeInUp dark:bg-gray-800">
+    class="hidden z-[10000] fixed bottom-0 right-0 lg:bottom-4 lg:right-4 w-full h-full lg:w-96 lg:h-[450px] bg-white lg:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate__animated animate__fadeInUp dark:bg-gray-800">
 
     <!-- Header -->
     <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600 bg-black rounded-t-2xl">
+        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600 bg-black lg:rounded-t-2xl">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                 <i class="fa-solid fa-robot text-white text-sm"></i>

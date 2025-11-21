@@ -14,6 +14,17 @@
 
     @stack('style')
 
+    <style>
+        .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+
     <!-- DATEPICKR CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
@@ -41,7 +52,7 @@
             @include('layouts.partials_admin._navbar')
 
             <!-- Content Area -->
-            <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 hide-scrollbar">
                 <div class="p-6">
                     @yield('content')
                 </div>
@@ -56,6 +67,7 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     {{-- JAVASCRIPT NEWS STATISTIC --}}
     @isset($newsPerMonth)
         <script>
@@ -116,7 +128,7 @@
                         }
 
                         // Render Lucide icons
-                        lucide.createIcons();
+                        window.createIcons({ icons: window.lucideIcons });
                     })
                     .catch(err => console.error(err));
             }
@@ -222,7 +234,7 @@
     </script>
 
     <!-- Script Modal -->
-    <script>
+    <!-- <script>
         const pesananButton = document.getElementById('pesananButton');
         const pesananModal = document.getElementById('pesananModal');
         const closeModal = document.getElementById('closeModal');
@@ -243,9 +255,9 @@
                 pesananModal.classList.add('hidden');
             }
         });
-    </script>
+    </script> -->
 
-    <script>
+    <!-- <script>
         document.addEventListener("DOMContentLoaded", function () {
             const dateInput = document.querySelector("#news-date-filter");
 
@@ -288,7 +300,7 @@
 
             observer.observe(document.body, { attributes: true, attributeFilter: ["data-bs-theme"] });
         });
-    </script>
+    </script> -->
 
     @stack('scripts')
 </body>

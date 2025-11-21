@@ -6,7 +6,7 @@
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex items-center">
-                    <div class="shrink-0 h-12 w-12 rounded-xl bg-primary-500 flex items-center justify-center shadow-sm">
+                    <div class="shrink-0 h-12 w-12 rounded-tl-xl rounded-br-xl bg-primary-500 flex items-center justify-center shadow-sm">
                         <i class="fa-solid fa-plus text-white text-lg"></i>
                     </div>
                     <div class="ml-4">
@@ -256,9 +256,9 @@
 
                                             <span
                                                 class="w-10 h-10 rounded-full border-2 border-gray-300 dark:border-gray-600
-                                                                                                                    transition-all duration-200 peer-checked:scale-110 peer-checked:border-primary-500 peer-checked:ring-2 peer-checked:ring-primary-200
-                                                                                                                    hover:scale-105 hover:shadow-md flex items-center justify-center shadow-sm
-                                                                                                                    {{ $warnaClass }}">
+                                                                                                                            transition-all duration-200 peer-checked:scale-110 peer-checked:border-primary-500 peer-checked:ring-2 peer-checked:ring-primary-200
+                                                                                                                            hover:scale-105 hover:shadow-md flex items-center justify-center shadow-sm
+                                                                                                                            {{ $warnaClass }}">
                                                 @if($warna === 'Other')
                                                     <span class="text-xs text-gray-700 font-bold">+</span>
                                                 @endif
@@ -303,10 +303,10 @@
 
                                             <span
                                                 class="inline-flex items-center justify-center w-full py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600
-                                                                                                            text-gray-700 dark:text-gray-300 font-medium text-sm transition-all duration-200
-                                                                                                            peer-checked:bg-primary-500 peer-checked:text-white peer-checked:border-primary-500
-                                                                                                            hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white
-                                                                                                            bg-white dark:bg-gray-700">
+                                                                                                                    text-gray-700 dark:text-gray-300 font-medium text-sm transition-all duration-200
+                                                                                                                    peer-checked:bg-primary-500 peer-checked:text-white peer-checked:border-primary-500
+                                                                                                                    hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white
+                                                                                                                    bg-white dark:bg-gray-700">
                                                 {{ $uk }}
                                             </span>
                                         </label>
@@ -668,23 +668,23 @@
                         const wrapper = document.createElement("div");
                         wrapper.className = "relative group animate-fade-in";
                         wrapper.innerHTML = `
-                                                                                                                                                            <div class="relative aspect-square rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md transition-all duration-300 bg-white dark:bg-gray-700">
-                                                                                                                                                                <img src="${e.target.result}" 
-                                                                                                                                                                     class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
-                                                                                                                                                                     alt="Preview ${index + 1}"
-                                                                                                                                                                     loading="lazy">
-                                                                                                                                                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
-                                                                                                                                                                    <button type="button" 
-                                                                                                                                                                            data-index="${index}" 
-                                                                                                                                                                            class="delete-btn opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all duration-300 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg">
-                                                                                                                                                                        <i class="fa-solid fa-trash text-sm"></i>
-                                                                                                                                                                    </button>
+                                                                                                                                                                <div class="relative aspect-square rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md transition-all duration-300 bg-white dark:bg-gray-700">
+                                                                                                                                                                    <img src="${e.target.result}" 
+                                                                                                                                                                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                                                                                                                                                                         alt="Preview ${index + 1}"
+                                                                                                                                                                         loading="lazy">
+                                                                                                                                                                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
+                                                                                                                                                                        <button type="button" 
+                                                                                                                                                                                data-index="${index}" 
+                                                                                                                                                                                class="delete-btn opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all duration-300 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg">
+                                                                                                                                                                            <i class="fa-solid fa-trash text-sm"></i>
+                                                                                                                                                                        </button>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="absolute top-2 left-2 bg-primary-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow">
+                                                                                                                                                                        ${index + 1}
+                                                                                                                                                                    </div>
                                                                                                                                                                 </div>
-                                                                                                                                                                <div class="absolute top-2 left-2 bg-primary-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow">
-                                                                                                                                                                    ${index + 1}
-                                                                                                                                                                </div>
-                                                                                                                                                            </div>
-                                                                                                                                                        `;
+                                                                                                                                                            `;
                         previewContainer.appendChild(wrapper);
                     };
                     reader.readAsDataURL(file);
@@ -742,21 +742,21 @@
         // Animasi CSS
         const style = document.createElement('style');
         style.textContent = `
-                /* Custom scrollbar */
-                textarea::-webkit-scrollbar {
-                    width: 6px;
-                }
-                textarea::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                textarea::-webkit-scrollbar-thumb {
-                    background: #cbd5e1;
-                    border-radius: 3px;
-                }
-                .dark textarea::-webkit-scrollbar-thumb {
-                    background: #475569;
-                }
-            `;
+                    /* Custom scrollbar */
+                    textarea::-webkit-scrollbar {
+                        width: 6px;
+                    }
+                    textarea::-webkit-scrollbar-track {
+                        background: transparent;
+                    }
+                    textarea::-webkit-scrollbar-thumb {
+                        background: #cbd5e1;
+                        border-radius: 3px;
+                    }
+                    .dark textarea::-webkit-scrollbar-thumb {
+                        background: #475569;
+                    }
+                `;
         document.head.appendChild(style);
     </script>
 
@@ -900,19 +900,19 @@
                             item.dataset.nama = k.nama_kategori;
 
                             item.innerHTML = `
-                                                        <div class="relative overflow-hidden">
-                                                    <img src="${k.foto_sampul ? '/storage/' + k.foto_sampul : 'https://via.placeholder.com/400x200?text=' + k.nama_kategori}"
-                                                        class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
-                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                                </div>
-                                                <div class="p-4 flex justify-between items-center">
-                                                    <h3 class="font-semibold text-gray-800 dark:text-white">${k.nama_kategori}</h3>
-                                                    <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                        <button class="editKategoriBtn bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm px-3 py-2 rounded-lg hover:from-blue-600 hover:to-indigo-600 shadow-sm hover:shadow-md transition-all duration-200">Edit</button>
-                                                        <button class="hapusKategoriBtn bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm px-3 py-2 rounded-lg hover:from-red-600 hover:to-pink-600 shadow-sm hover:shadow-md transition-all duration-200">Hapus</button>
+                                                            <div class="relative overflow-hidden">
+                                                        <img src="${k.foto_sampul ? '/storage/' + k.foto_sampul : 'https://via.placeholder.com/400x200?text=' + k.nama_kategori}"
+                                                            class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                                     </div>
-                                                </div>
-                                                    `;
+                                                    <div class="p-4 flex justify-between items-center">
+                                                        <h3 class="font-semibold text-gray-800 dark:text-white">${k.nama_kategori}</h3>
+                                                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                            <button class="editKategoriBtn bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm px-3 py-2 rounded-lg hover:from-blue-600 hover:to-indigo-600 shadow-sm hover:shadow-md transition-all duration-200">Edit</button>
+                                                            <button class="hapusKategoriBtn bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm px-3 py-2 rounded-lg hover:from-red-600 hover:to-pink-600 shadow-sm hover:shadow-md transition-all duration-200">Hapus</button>
+                                                        </div>
+                                                    </div>
+                                                        `;
 
                             kategoriList.prepend(item);
                         }
@@ -948,66 +948,65 @@
     </script>
 
     <script>
-    function kategoriDropdown() {
-        return {
-            open: false,
-            query: '',
+        function kategoriDropdown() {
+            return {
+                open: false,
+                query: '',
 
-            // aman untuk halaman CREATE dan EDIT
-            selectedId: '{{ old('kategori_id', isset($produk) ? $produk->kategori_id : '') }}',
+                // aman untuk halaman CREATE dan EDIT
+                selectedId: '{{ old('kategori_id', isset($produk) ? $produk->kategori_id : '') }}',
 
-            selectedText: {!! json_encode(
-                old('kategori_id')
-                    ? (\App\Models\Kategori::find(old('kategori_id'))->nama_kategori ?? 'Pilih Kategori Produk')
-                    : (isset($produk)
-                        ? ($produk->kategori->nama_kategori ?? 'Pilih Kategori Produk')
-                        : 'Pilih Kategori Produk'
-                    )
-            ) !!},
+                selectedText: {!! json_encode(
+        old('kategori_id')
+        ? (\App\Models\Kategori::find(old('kategori_id'))->nama_kategori ?? 'Pilih Kategori Produk')
+        : (isset($produk)
+            ? ($produk->kategori->nama_kategori ?? 'Pilih Kategori Produk')
+            : 'Pilih Kategori Produk'
+        )
+    ) !!},
 
-            activeDescendant: null,
-            filteredCount: 0,
+                activeDescendant: null,
+                filteredCount: 0,
 
-            init() {
-                this.$nextTick(() => { this.updateFilteredCount(); });
-            },
+                init() {
+                    this.$nextTick(() => { this.updateFilteredCount(); });
+                },
 
-            select(id, text) {
-                this.selectedId = id;
-                this.selectedText = text;
-                this.open = false;
-                this.query = '';
-                this.updateFilteredCount();
-            },
+                select(id, text) {
+                    this.selectedId = id;
+                    this.selectedText = text;
+                    this.open = false;
+                    this.query = '';
+                    this.updateFilteredCount();
+                },
 
-            setActive(id) {
-                this.activeDescendant = id ? 'item-' + id : null;
-            },
+                setActive(id) {
+                    this.activeDescendant = id ? 'item-' + id : null;
+                },
 
-            filterMatch(name) {
-                const q = this.query.trim().toLowerCase();
-                const matches = q === '' ? true : name.toLowerCase().includes(q);
+                filterMatch(name) {
+                    const q = this.query.trim().toLowerCase();
+                    const matches = q === '' ? true : name.toLowerCase().includes(q);
 
-                if (this.open) this.$nextTick(() => this.updateFilteredCount());
+                    if (this.open) this.$nextTick(() => this.updateFilteredCount());
 
-                return matches;
-            },
+                    return matches;
+                },
 
-            updateFilteredCount() {
-                const panel = this.$root.querySelector('div[role="listbox"]');
-                if (!panel) {
-                    this.filteredCount = 0;
-                    return;
+                updateFilteredCount() {
+                    const panel = this.$root.querySelector('div[role="listbox"]');
+                    if (!panel) {
+                        this.filteredCount = 0;
+                        return;
+                    }
+                    const lis = Array.from(panel.querySelectorAll('ul > li'));
+
+                    this.filteredCount = lis.filter(li => {
+                        if (li.textContent.trim() === 'Tidak ada kategori ditemukan.') return false;
+                        return window.getComputedStyle(li).display !== 'none';
+                    }).length;
                 }
-                const lis = Array.from(panel.querySelectorAll('ul > li'));
-
-                this.filteredCount = lis.filter(li => {
-                    if (li.textContent.trim() === 'Tidak ada kategori ditemukan.') return false;
-                    return window.getComputedStyle(li).display !== 'none';
-                }).length;
             }
         }
-    }
-</script>
-
+    </script>
 @endpush

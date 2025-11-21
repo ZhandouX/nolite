@@ -18,18 +18,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
 
     @stack('style')
+    <style>
+        .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     {{-- SIDEBAR --}}
-    @include('layouts.partials_user.sidebar')
+    @include('layouts.partials_user._sidebar')
 
     {{-- OVERLAY --}}
     <div id="overlay"></div>
 
     {{-- NAVBAR --}}
     <header>
-        @include('layouts.partials_user.navbar')
+        @include('layouts.partials_user._navbar')
     </header>
 
     @yield('content')
@@ -38,38 +48,38 @@
     @include('layouts.partials_user._footer')
 
     <!-- BUTTON GROUP -->
-    <div class="fixed bottom-20 right-4 lg:bottom-2 md:right-6 flex flex-col items-end gap-4 z-50">
+    <div class="fixed bottom-[130px] right-4 lg:bottom-[75px] flex flex-col items-end gap-2 z-50">
 
         <!-- BACK TO TOP BUTTON -->
-        <button id="backToTop" title="Kembali ke atas" class="group w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl 
-        hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
-        border border-gray-600/30 backdrop-blur-sm">
-            <i class="fa-solid fa-chevron-up text-lg group-hover:animate-bounce"></i>
+        <button id="backToTop" title="Kembali ke atas" class="group w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl 
+                    hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
+                    border border-gray-600/30 backdrop-blur-sm">
+            <i class="fa-solid fa-chevron-up text-lg md:text-lg group-hover:animate-bounce"></i>
         </button>
 
         <!-- WRAPPER CHATBOT -->
         <div class="relative flex items-center gap-3">
 
             <!-- WRAPPER TOOLTIP -->
-            <div class="absolute inline-block right-16 pointer-events-none">
+            <div class="absolute inline-block right-12 md:right-16 pointer-events-none">
                 <!-- TEKS ANIMASI -->
                 <div id="chat-tooltip"
                     class="relative bg-gray-800 text-white text-[12px] px-3 py-2 rounded-xl shadow-lg opacity-0 translate-x-4
-            transition-all duration-500 ease-out max-w-[250px] w-max max-h-[120px] h-max whitespace-normal break-words leading-snug overflow-hidden">
-                    <span class="typing-text"></span>
+                                transition-all duration-500 ease-out max-w-[250px] w-max max-h-[120px] h-max whitespace-normal break-words leading-snug overflow-hidden">
+                    <span class="typing-text text-[10px] md:text-xs"></span>
                 </div>
 
                 <!-- Segitiga kecil -->
                 <div id="chat-arrow" class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0 
-            border-t-8 border-t-transparent border-l-8 border-l-gray-800 border-b-8 border-b-transparent
-            opacity-0 translate-x-4 transition-all duration-500 ease-out">
+                            border-t-8 border-t-transparent border-l-8 border-l-gray-800 border-b-8 border-b-transparent
+                            opacity-0 translate-x-4 transition-all duration-500 ease-out">
                 </div>
             </div>
 
             <!-- CHATBOT BUTTON -->
-            <button id="chat-toggle" title="Chat AI Nolite" class="group w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center shadow-xl
-        hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
-        border border-gray-400/40 backdrop-blur-sm relative">
+            <button id="chat-toggle" title="Chat AI Nolite" class="group w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center shadow-xl
+                        hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
+                        border border-gray-400/40 backdrop-blur-sm relative">
 
                 <!-- Ikon AI -->
                 <i data-lucide="sparkles"
@@ -84,15 +94,15 @@
         {{-- CHATBOT MODAL (MOBILE) --}}
         @include('layouts.partials_user.modals.chatbot')
 
-        {{-- KERANJANG POPUP (MOBILE) --}}
-        <div id="cartPopupMobile" class="group flex items-center justify-center shadow-xl 
-        hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1 relative">
-        </div>
+    </div>
+    {{-- KERANJANG POPUP (MOBILE) --}}
+    <div id="cartPopupMobile" class="fixed bottom-20 right-4 flex items-center justify-center shadow-xl 
+    hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1">
+    </div>
 
-        {{-- KERANJANG POPUP (DESKTOP) --}}
-        <div id="cartPopupDesktop" class="group hidden lg:flex z-50 flex-col gap-1
-            sm:scale-100 scale-75 transition-all duration-300">
-        </div>
+    {{-- KERANJANG POPUP (DESKTOP) --}}
+    <div id="cartPopupDesktop" class="fixed bottom-2 right-4 hidden lg:flex z-50 flex-col gap-1
+        sm:scale-100 scale-75 transition-all duration-300">
     </div>
 
     {{-- MODALS --}}
@@ -103,10 +113,13 @@
     @include('layouts.partials_user.modals.login')
     @include('layouts.partials_user.modals.register')
 
-    {{-- ====================================== --}}
-    {{-- ============= JAVASCRIPT ============= --}}
-    {{-- ====================================== --}}
-    {{-- MODALS CONTAINER untuk produk dari search --}}
+
+    
+    {{-- ============================================= --}}
+    {{-- ============= LIBARY JAVASCRIPT ============= --}}
+    {{-- ============================================= --}}
+
+    {{-- ===== JS ====> MODALS PRODUCT (BELI & CART) SEARCH RESULT --}}
     <div id="dynamicModalsContainer"></div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -140,7 +153,7 @@
         });
     </script>
 
-    {{-- MODAL FUNCTION --}}
+    {{-- ===== JS ====> MODAL FUNCTION --}}
     <script>
         // Fungsi modal dasar (fallback)
         function openModal(modalId) {
@@ -161,6 +174,8 @@
             }
         }
     </script>
+
+    {{-- ===== JS ====> LOAD GLOBAL MODAL (BELI & KERANJANG) --}}
     <script>
         async function loadProductModals(productId) {
             // Cek jika modal sudah ada
@@ -207,13 +222,17 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="/assets/js/user/landing-page.js"></script>
     <script src="/assets/js/user/auth-modal.js"></script>
+
+    {{-- ===== JS ====> CART POPUP --}}
     <script>
         window.Laravel = {
             csrfToken: "{{ csrf_token() }}",
+            isLoggedIn: @json(auth()->check()),
             routes: {
                 keranjangIndex: "{{ route('keranjang.index') }}",
                 keranjangStore: "{{ route('keranjang.store') }}",
                 keranjangBase: "{{ url('keranjang') }}",
+                keranjangSessionUpdate: "{{ route('keranjang.session.update') }}",
                 keranjangCek: "{{ url('/keranjang/cek') }}",
                 wishlistToggle: "{{ url('/wishlist/toggle') }}",
                 allCategory: "{{ url('produk') }}"
@@ -221,119 +240,8 @@
         };
     </script>
     <script src="/assets/js/user/keranjang-popup.js"></script>
-    <script>
-        // ===========================
-        // KERANJANG POPUP & FUNCTIONS
-        // ===========================
-        document.addEventListener("DOMContentLoaded", function () {
 
-            // ✅ Fungsi menentukan container sesuai ukuran layar
-            function getCartPopupContainer() {
-                return window.innerWidth >= 1024
-                    ? document.getElementById('cartPopupDesktop')
-                    : document.getElementById('cartPopupMobile');
-            }
-
-            // ✅ Refresh isi popup (mengecek isi keranjang dari server)
-            function refreshCartPopup() {
-                fetch("{{ url('/keranjang/cek/') }}", {
-                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" }
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        const container = getCartPopupContainer();
-                        if (!container) return;
-                        container.innerHTML = '';
-
-                        if (data.items && data.items.length > 0) {
-                            const totalProdukUnik = data.items.length;
-                            showCartPopup(totalProdukUnik);
-                            animateCartBadge(totalProdukUnik);
-                        } else {
-                            animateCartBadge(0);
-                        }
-                    })
-                    .catch(err => console.error('Gagal memuat popup keranjang:', err));
-            }
-
-            // ✅ Fungsi menampilkan popup keranjang
-            function showCartPopup(totalProduk) {
-                const container = getCartPopupContainer();
-                if (!container) return;
-
-                // Hapus popup sebelumnya
-                container.innerHTML = '';
-
-                // Buat elemen popup baru
-                const popup = document.createElement('div');
-                popup.className = `
-                    bg-gray-400 hover:bg-gray-500 text-white rounded-2xl shadow-2xl
-                    flex items-center justify-between gap-1 md:gap-3 px-3 py-3 md:px-5 md:py-4
-                    w-52 md:w-80 cursor-pointer
-                    transition-all duration-300 backdrop-blur-sm
-                    opacity-0 translate-y-3
-                `;
-
-                popup.innerHTML = `
-                    <div class="flex items-center gap-3 relative">
-                        <div class="relative">
-                            <i class="fa-solid fa-shopping-cart text-md md:text-lg"></i>
-                            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-[9px] md:text-xs font-bold rounded-full px-1.5 py-0.5">
-                                ${totalProduk}
-                            </span>
-                        </div>
-                        <span class="text-[10px] md:text-base font-medium">
-                            Ada <strong>${totalProduk}</strong> produk di keranjang!
-                        </span>
-                    </div>
-                    <button class="text-gray-300 hover:text-white text-lg font-bold">×</button>
-                `;
-
-                // Event klik tombol close
-                popup.querySelector('button').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    popup.classList.add('opacity-0', 'translate-y-3');
-                    setTimeout(() => popup.remove(), 300); // animasi keluar
-                });
-
-                // Event klik popup ke halaman keranjang
-                popup.addEventListener('click', (e) => {
-                    if (e.target.closest('button')) return; // jika klik tombol, abaikan
-                    window.location.href = "{{ route('keranjang.index') }}";
-                });
-
-                // Tambahkan ke container
-                container.appendChild(popup);
-                
-                // Efek animasi muncul
-                requestAnimationFrame(() => {
-                    popup.classList.remove('opacity-0', 'translate-y-3');
-                    popup.classList.add('opacity-100', 'translate-y-0');
-                });
-                createIcons({ icons });
-            }
-
-            // ✅ Fungsi animasi badge jumlah item
-            function animateCartBadge(total) {
-                const badge = document.getElementById('cartBadge');
-                if (!badge) return;
-
-                if (total > 0) {
-                    badge.textContent = total;
-                    badge.classList.remove('hidden');
-                    badge.classList.add('animate-bounce');
-                    setTimeout(() => badge.classList.remove('animate-bounce'), 300);
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
-            
-            // =======================
-            // REFRESH CART ON LOAD
-            // =======================
-            refreshCartPopup();
-        });
-    </script>
+    {{-- ===== JS ====> HIDDEN BRAND NAV --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menuBtn = document.getElementById("menuBtn");
@@ -364,7 +272,8 @@
             }
         });
     </script>
-    {{-- SESSION LOGIN --}}
+
+    {{-- ===== JS ====> SESSION LOGIN --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             @if(!empty($showLoginModal) && $showLoginModal)

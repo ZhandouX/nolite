@@ -124,7 +124,8 @@ class ProdukCustomerController extends Controller
         $kategori = Kategori::findOrFail($kategoriId);
 
         // Query produk sesuai kategori
-        $query = Produk::where('kategori_id', $kategori->id);
+        $query = Produk::where('kategori_id', $kategori->id)
+            ->withStatistik();
 
         // Sorting jika ada parameter sort
         if ($request->has('sort')) {

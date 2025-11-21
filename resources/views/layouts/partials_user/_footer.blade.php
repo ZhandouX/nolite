@@ -1,9 +1,9 @@
 <footer class="text-white font-sans px-6 py-10 md:py-14" style="background-color: #000;">
     <div
-        class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-center md:text-left">
+        class="max-w-screen mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-center md:text-left">
         {{-- LEFT FOOTER --}}
-        <div class="flex-1 min-w-[220px] flex flex-col items-center md:items-start ml-0 md:-ml-10">
-            <p class="italic text-sm leading-relaxed text-white max-w-[260px] text-center md:text-left">
+        <div class="flex-1 min-w-[220px] flex flex-col items-center md:items-start ml-0 lg:-ml-2">
+            <p class="italic text-xs md:text-sm leading-relaxed text-white max-w-[260px] text-center md:text-left">
                 “Born for souls who find solace <br />
                  in the dark, reject the ordinary, <br />
                 and embrace their bold uniqueness.”
@@ -91,7 +91,7 @@
     </div>
 
     {{-- BOTTOM --}}
-    <div class="footer-bottom">
+    <div class="footer-bottom border-t-2 border-white/30">
         <p>&copy; {{ date('Y') }} Nolite Aspiciens. All Rights Reserved.</p>
     </div>
 </footer>
