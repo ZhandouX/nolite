@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Buat elemen popup baru
         const popup = document.createElement('div');
         popup.className = `
-                    bg-gray-400 hover:bg-gray-500 text-white rounded-2xl shadow-2xl
+                    bg-gray-400 hover:bg-gray-500 text-white rounded-2xl
                     flex items-center justify-between gap-1 md:gap-3 px-5 py-2 md:py-4
                     w-[250px] lg:w-80 cursor-pointer
                     transition-all duration-300 backdrop-blur-sm

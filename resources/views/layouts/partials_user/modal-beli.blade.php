@@ -1,5 +1,5 @@
 <div id="productBeliModal-{{ $item->id }}"
-    class="z-[9999] fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 backdrop-blur-sm">
+    class="z-[9999] fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-[340px] md:max-w-md p-6 relative">
 
        {{-- CLOSE --}}
@@ -9,36 +9,56 @@
         </button>
 
         {{-- CARD PRODUK --}}
-        <div class="flex items-center gap-4 mb-5 mt-5 bg-gray-100 rounded-lg p-2">
-            @if($item->fotos->isNotEmpty())
-                <img src="{{ asset('storage/' . $item->fotos->first()->foto) }}" alt="{{ $item->nama_produk }}"
-                    class="w-20 h-20 object-contain rounded-lg bg-gray-100">
-            @else
-                <img src="{{ asset('storage/default.png') }}" alt="No Image"
-                    class="w-20 h-20 object-contain rounded-lg bg-gray-100">
-            @endif
+        <div class="flex items-start gap-4 mt-5 mb-5 rounded-xl bg-gray-100 p-2">
+            <div class="relative w-20 h-20">
+                @if($item->fotos->isNotEmpty())
+                    <img src="{{ asset('storage/' . $item->fotos->first()->foto) }}"
+                        alt="{{ $item->nama_produk }}"
+                        class="w-full h-full object-contain rounded-xl">
+                @else
+                    <img src="{{ asset('assets/images/no-image.png') }}"
+                        alt="No Image"
+                        class="w-full h-full object-contain rounded-xl">
+                @endif
+
+                @if($item->diskon && $item->diskon > 0)
+                    <span class="absolute top-0 right-0 px-1 text-xs bg-red-500 text-white rounded-lg">
+                        {{ $item->diskon }}%
+                    </span>
+                @endif
+            </div>
+
             <div>
-                <p class="font-semibold montserrat text-left text-[14px] md:text-[14px] text-black line-clamp-2">
+                <p class="montserrat text-left text-[14px] md:text-lg font-semibold text-black line-clamp-2">
                     {{ $item->nama_produk }}
                 </p>
 
-                <div class="py-2">
+                <div class="py-0">
                     @if($item->diskon && $item->diskon > 0)
                         @php
                             $hargaDiskon = $item->harga - ($item->harga * $item->diskon / 100);
                         @endphp
-                        <div class="flex flex-col items-start gap-0 md:gap-1">
-                            <p class="text-[12px] md:text-sm text-gray-400 font-bold line-through">
-                                Rp{{ number_format($item->harga, 0, ',', '.') }}
-                            </p>
-                            <p class="text-[13px] md:text-base text-red-600 font-bold">
-                                Rp{{ number_format($hargaDiskon, 0, ',', '.') }}
-                                <span class="text-sm text-red-500">({{ $item->diskon }}%)</span>
+                        <div class="flex flex-col items-start gap-0">
+                            <p class="flex items-baseline gap-0">
+                                <span class="text-xs font-medium text-gray-500">
+                                    Rp
+                                </span>
+                                <span class="text-lg md:text-base font-bold text-red-900">
+                                    {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                </span>
+                                <span class="ml-2 px-1 text-xs text-gray-500 line-through">
+                                    Rp{{ number_format($item->harga, 0, ',', '.') }}
+                                </span>
                             </p>
                         </div>
                     @else
-                        <p class="text-left text-black font-bold">
-                            Rp{{ number_format($item->harga, 0, ',', '.') }}
+                        <p class="flex items-baseline gap-0 text-left text-black font-bold">
+                            <span class="text-xs font-medium text-gray-500">
+                                Rp
+                            </span>
+                            <span class="text-lg font-bold text-gray-900">
+                                {{ number_format($item->harga, 0, ',', '.') }}
+                            </span>
                         </p>
                     @endif
                 </div>
@@ -54,13 +74,13 @@
             {{-- PILIHAN WARNA --}}
             <div class="mb-4 color-section">
                 <div class="text-left">
-                    <p class="font-semibold mb-2">Warna:</p>
+                    <p class="font-semibold mb-2">Warna</p>
                 </div>
 
                 <div class="flex flex-wrap gap-2">
                     @foreach ($item->warna as $w)
                         <button type="button"
-                            class="color-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition {{ $loop->first ? 'border-blue-600 bg-blue-50' : '' }}"
+                            class="color-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition"
                             data-color="{{ $w }}" data-item="{{ $item->id }}">
                             {{ $w }}
                         </button>
@@ -74,13 +94,13 @@
             {{-- PILIHAN UKURAN --}}
             <div class="mb-4 size-section">
                 <div class="text-left">
-                    <p class="font-semibold mb-2">Ukuran:</p>
+                    <p class="font-semibold mb-2">Ukuran</p>
                 </div>
 
                 <div class="flex flex-wrap gap-2">
                     @foreach ($item->ukuran as $u)
                         <button type="button"
-                            class="size-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition {{ $loop->first ? 'border-blue-600 bg-blue-50' : '' }}"
+                            class="size-btn px-3 py-1 rounded border border-gray-300 text-sm hover:border-blue-600 transition"
                             data-size="{{ $u }}" data-item="{{ $item->id }}">
                             {{ $u }}
                         </button>
@@ -93,7 +113,7 @@
 
             {{-- JUMLAH PRODUK --}}
             <div class="flex flex-col space-y-3 border-t border-gray-200 pt-4">
-                <label class="text-sm font-semibold text-gray-800 text-center">Jumlah:</label>
+                <label class="text-sm font-semibold text-gray-800 text-center">Jumlah</label>
 
                 <div class="flex items-center justify-center gap-6">
                     <button type="button" onclick="updateQty(this, -1)"
@@ -118,7 +138,7 @@
                     </button>
                 </div>
 
-                <p class="text-xs text-gray-500 text-center">Stok tersedia: {{ $item->jumlah }}</p>
+                <p class="text-xs text-gray-500 text-center">Stok: <span class="font-bold">{{ $item->jumlah }}</span></p>
             </div>
 
             {{-- TOMBOL BELI --}}
@@ -137,61 +157,4 @@
     </div>
 </div>
 
-<script>
-    function openModal(id) {
-        const modal = document.getElementById(id);
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.addEventListener('click', function (e) {
-                if (e.target === modal) closeModal(id);
-            });
-        }
-    }
-
-    function closeModal(id) {
-        const modal = document.getElementById(id);
-        if (modal) modal.classList.add('hidden');
-    }
-
-    document.addEventListener('click', e => {
-        if (e.target.closest('.color-btn')) {
-            const btn = e.target.closest('.color-btn');
-            const itemId = btn.dataset.item;
-            document.querySelectorAll(`[data-item="${itemId}"].color-btn`)
-                .forEach(b => b.classList.remove('ring', 'ring-blue-400', 'bg-gray-100'));
-            btn.classList.add('ring', 'ring-blue-400', 'bg-gray-100');
-            document.getElementById(`selectedColor-${itemId}`).value = btn.dataset.color;
-        }
-
-        if (e.target.closest('.size-btn')) {
-            const btn = e.target.closest('.size-btn');
-            const itemId = btn.dataset.item;
-            document.querySelectorAll(`[data-item="${itemId}"].size-btn`)
-                .forEach(b => b.classList.remove('ring', 'ring-blue-400', 'bg-gray-100'));
-            btn.classList.add('ring', 'ring-blue-400', 'bg-gray-100');
-            document.getElementById(`selectedSize-${itemId}`).value = btn.dataset.size;
-        }
-    });
-
-    function updateQty(btn, change) {
-        const parent = btn.closest('div');
-        const input = parent.querySelector('input[type="number"]');
-        const max = parseInt(input.max);
-        const min = parseInt(input.min);
-        let value = parseInt(input.value) || 1;
-
-        value += change;
-        if (value < min) value = min;
-        if (value > max) value = max;
-
-        input.value = value;
-    }
-
-    function validateQty(input) {
-        const min = parseInt(input.min);
-        const max = parseInt(input.max);
-        let val = parseInt(input.value);
-        if (isNaN(val) || val < min) input.value = min;
-        if (val > max) input.value = max;
-    }
-</script>
+<script src="/assets/js/user/modals/checkout.js"></script>

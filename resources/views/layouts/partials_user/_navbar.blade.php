@@ -1,6 +1,6 @@
 <div class="left-header">
     <button id="menuBtn"
-        class="flex items-center justify-center w-8 h-8 cursor-pointer rounded-lg hover:bg-white/10 transition-all duration-300">
+        class="-ml-4 md:ml-0 flex items-center justify-center w-8 h-8 cursor-pointer rounded-lg hover:bg-white/10 transition-all duration-300">
         <i class="fa-solid fa-bars text-sm md:text-xl"></i>
     </button>
 </div>
@@ -59,7 +59,7 @@
             </div>
 
             <!-- LOADING STATE -->
-            <div id="loadingState" class="hidden flex-col items-center justify-center py-12">
+            <div id="loadingState" class="hidden flex-col text-center items-center justify-center py-12">
                 <div class="relative">
                     <div class="animate-spin rounded-full h-12 w-12 border-2 border-gray-300 border-t-gray-600 mx-auto">
                     </div>
@@ -70,7 +70,7 @@
             </div>
 
             <!-- NO RESULTS -->
-            <div id="noResults" class="hidden flex-col items-center justify-center py-12 px-6">
+            <div id="noResults" class="hidden flex flex-col items-center justify-center py-6 text-center">
                 <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                     <i class="fa-solid fa-search text-3xl text-gray-400"></i>
                 </div>
@@ -79,8 +79,8 @@
             </div>
 
             <!-- RESULTS GRID -->
-            <div id="resultsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 p-6">
-                <!-- Results akan muncul di sini -->
+            <div id="resultsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-center gap-4 p-4">
+                <!-- JS VIEW -->
             </div>
         </div>
     </div>
@@ -125,206 +125,3 @@
         @endauth
     </div>
 </nav>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchButton = document.getElementById('searchButton');
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
-        const searchOverlay = document.getElementById('searchOverlay');
-        const closeSearch = document.getElementById('closeSearch');
-        const resultsGrid = document.getElementById('resultsGrid');
-        const loadingState = document.getElementById('loadingState');
-        const noResults = document.getElementById('noResults');
-        const brandText = document.getElementById('brandText');
-
-        let searchTimeout;
-        let isSearchOpen = false;
-
-        // Toggle Search
-        searchButton.addEventListener('click', () => {
-            if (!isSearchOpen) {
-                searchInput.classList.remove('w-0');
-                searchInput.classList.add('w-48', 'md:w-64');
-                brandText.classList.add('hidden', 'md:flex');
-                searchInput.focus();
-                isSearchOpen = true;
-                return;
-            }
-
-            if (searchInput.value.trim().length >= 2) {
-                searchResults.classList.remove('hidden');
-                searchOverlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
-        });
-
-        // Close Search
-        function closeSearchResults() {
-            searchResults.classList.add('hidden');
-            searchOverlay.classList.add('hidden');
-            document.body.style.overflow = '';
-            resultsGrid.innerHTML = '';
-            loadingState.classList.add('hidden');
-            noResults.classList.add('hidden');
-        }
-
-        closeSearch.addEventListener('click', closeSearchResults);
-        searchOverlay.addEventListener('click', closeSearchResults);
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && isSearchOpen) {
-                closeSearchResults();
-                if (searchInput.value === '') {
-                    closeSearchInput();
-                }
-            }
-        });
-
-        function closeSearchInput() {
-            searchInput.classList.remove('w-48', 'md:w-64');
-            searchInput.classList.add('w-0');
-            searchInput.value = '';
-            brandText.classList.remove('hidden', 'md:flex');
-            isSearchOpen = false;
-        }
-
-        // Search Input Handler
-        searchInput.addEventListener('input', function () {
-            clearTimeout(searchTimeout);
-            const query = this.value.trim();
-
-            if (query.length >= 2) {
-                loadingState.classList.remove('hidden');
-                resultsGrid.classList.add('hidden');
-                noResults.classList.add('hidden');
-                searchResults.classList.remove('hidden');
-                searchOverlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-
-                searchTimeout = setTimeout(() => fetchSearchResults(query), 400);
-            } else {
-                closeSearchResults();
-            }
-        });
-
-        let autoCloseTimeout;
-
-        searchInput.addEventListener('focus', () => {
-            clearTimeout(autoCloseTimeout);
-        });
-
-        searchInput.addEventListener('blur', () => {
-            if (searchInput.value === '') {
-                autoCloseTimeout = setTimeout(() => closeSearchInput(), 10000);
-            }
-        });
-
-        // Fetch Search Results
-        async function fetchSearchResults(query) {
-            try {
-                const response = await fetch(`/search-produk?q=${encodeURIComponent(query)}`);
-                if (!response.ok) throw new Error('Gagal mengambil data');
-                const data = await response.json();
-
-                loadingState.classList.add('hidden');
-
-                if (!Array.isArray(data) || data.length === 0) {
-                    noResults.classList.remove('hidden');
-                    resultsGrid.classList.add('hidden');
-                } else {
-                    noResults.classList.add('hidden');
-                    resultsGrid.classList.remove('hidden');
-                    displayResults(data);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                loadingState.classList.add('hidden');
-                noResults.classList.remove('hidden');
-            }
-        }
-
-        // Display Results
-        function displayResults(products) {
-            resultsGrid.innerHTML = '';
-
-            products.forEach(prod => {
-                const foto = prod.foto || '/assets/images/no-image.png';
-                const nama = (prod.nama_produk || 'Produk Tanpa Nama').replace(/"/g, '&quot;');
-                const harga = Number(prod.harga) || 0;
-                const hargaDiskon = Number(prod.harga_diskon) || harga;
-                const diskon = Number(prod.diskon) || 0;
-                const jumlah = Number(prod.jumlah) || 0;
-
-                const stokStatus = jumlah > 0
-                    ? '<span class="text-green-600 text-xs font-semibold bg-green-50 px-2 py-1 rounded-full">Tersedia</span>'
-                    : '<span class="text-red-600 text-xs font-semibold bg-red-50 px-2 py-1 rounded-full">Stok Habis</span>';
-
-                let hargaHTML = '';
-                if (diskon > 0 && hargaDiskon < harga) {
-                    hargaHTML = `
-                        <div class="flex items-center justify-center gap-2 mb-2">
-                            <span class="text-gray-400 line-through text-xs">${formatRupiah(harga)}</span>
-                            <span class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-sm font-bold">
-                                ${formatRupiah(hargaDiskon)}
-                            </span>
-                        </div>
-                    `;
-                } else {
-                    hargaHTML = `<p class="text-gray-800 font-bold text-sm mb-2">${formatRupiah(harga)}</p>`;
-                }
-
-                const modalCartId = `productModal-${prod.id}`;
-                const modalBeliId = `productBeliModal-${prod.id}`;
-
-                const card = `
-                    <div class="group cursor-pointer bg-white rounded-2xl border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
-                        <div class="relative overflow-hidden">
-                            <img src="${foto}" alt="${nama}" 
-                                class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300">
-                            ${diskon > 0 ? `
-                                <div class="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-                                    -${diskon}%
-                                </div>
-                            ` : ''}
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 text-sm mb-2 line-clamp-2 leading-tight">${nama}</h4>
-                            ${hargaHTML}
-                            <div class="flex items-center justify-between mb-3">
-                                ${stokStatus}
-                            </div>
-                            ${jumlah > 0 ? `
-                                <div class="flex gap-2">
-                                    <button onclick="openModal('${modalCartId}')" 
-                                        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-3 rounded-lg text-xs transition-all duration-200 flex items-center justify-center gap-1">
-                                        <i class="fa-solid fa-cart-plus text-xs"></i>
-                                        Keranjang
-                                    </button>
-                                    <button onclick="openModal('${modalBeliId}')" 
-                                        class="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-medium py-2 px-3 rounded-lg text-xs transition-all duration-200">
-                                        Beli
-                                    </button>
-                                </div>
-                            ` : `
-                                <button disabled class="w-full bg-gray-100 text-gray-400 font-medium py-2 rounded-lg text-xs">
-                                    Stok Habis
-                                </button>
-                            `}
-                        </div>
-                    </div>
-                `;
-
-                resultsGrid.insertAdjacentHTML('beforeend', card);
-            });
-
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-
-        function formatRupiah(num) {
-            return new Intl.NumberFormat('id-ID').format(num);
-        }
-
-        window.displayResults = displayResults;
-    });
-</script>

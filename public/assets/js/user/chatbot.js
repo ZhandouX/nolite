@@ -1,0 +1,165 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const chatToggle = document.getElementById("chat-toggle");
+    const chatContainer = document.getElementById("chat-container");
+
+    chatToggle.addEventListener("click", () => {
+        chatContainer.classList.toggle("hidden");
+    });
+
+    const closeChat = document.getElementById("close-chat");
+    closeChat.addEventListener("click", () => {
+        chatContainer.classList.add("hidden");
+    });
+
+    // Chat form functionality for both mobile and desktop
+    const chatForm = document.getElementById("chatForm");
+    const chatbox = document.getElementById("chatbox");
+    const messageInput = document.getElementById("message");
+
+    chatForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const msg = messageInput.value.trim();
+        if (!msg) return;
+
+        // Add user message
+        chatbox.innerHTML += `
+                <div class="flex justify-end">
+                    <div class="max-w-[80%]">
+                        <div class="bg-primary-500 text-white px-4 py-2 rounded-2xl rounded-br-sm">
+                            ${msg}
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 block text-right">Sekarang</span>
+                    </div>
+                </div>
+            `;
+
+        messageInput.value = "";
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        // Show typing indicator
+        const typing = document.createElement("div");
+        typing.className = "flex justify-start";
+        typing.innerHTML = `
+                <div class="max-w-[80%]">
+                    <div class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-2xl rounded-bl-sm">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        chatbox.appendChild(typing);
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        try {
+            const response = await fetch(window.Chatbot.routes.chatbotAsk, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": window.Chatbot.csrf
+                },
+                body: JSON.stringify({ message: msg })
+            });
+
+            const data = await response.json();
+            typing.remove();
+
+            const replyText = data.reply || "Maaf, saya tidak menemukan informasi produk.";
+            const produkList = data.produk_list || [];
+
+            // Add bot reply
+            chatbox.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="max-w-[80%]">
+                            <div class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-2xl rounded-bl-sm">
+                                ${replyText}
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 block">Nolite Bot</span>
+                        </div>
+                    </div>
+                `;
+
+            // Add product cards if available
+            if (produkList.length > 0) {
+                const cardsHtml = produkList.map(p => `
+                        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div class="flex gap-3">
+                                <img src="${p.foto}" class="w-12 h-12 object-cover rounded-lg" alt="${p.nama_produk}">
+                                <div class="flex-1 min-w-0">
+                                    <h5 class="font-semibold text-gray-800 dark:text-gray-200 text-sm truncate">${p.nama_produk}</h5>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="text-xs text-gray-600 dark:text-gray-400">${p.ukuran}</span>
+                                        <span class="text-xs text-gray-600 dark:text-gray-400">•</span>
+                                        <span class="text-xs text-gray-600 dark:text-gray-400">${p.warna}</span>
+                                    </div>
+                                    <div class="text-primary-600 dark:text-primary-400 font-semibold text-sm mt-1">${p.harga}</div>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-400 text-xs mt-2 line-clamp-2">${p.deskripsi}</p>
+                            <a href="${window.Chatbot.routes.productAct}/${p.id}" 
+                               class="block w-full mt-3 text-center bg-primary-500 hover:bg-primary-600 text-white text-xs py-2 rounded-lg transition-colors duration-200">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    `).join('');
+
+                chatbox.innerHTML += `<div class="space-y-3 mt-3">${cardsHtml}</div>`;
+            }
+
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+        } catch (error) {
+            typing.remove();
+            chatbox.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="max-w-[80%]">
+                            <div class="bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-4 py-2 rounded-2xl rounded-bl-sm">
+                                Terjadi kesalahan koneksi ke server.
+                            </div>
+                        </div>
+                    </div>
+                `;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    });
+
+    // Auto-focus input when chat opens
+    chatToggle.addEventListener("click", () => {
+        setTimeout(() => {
+            messageInput.focus();
+        }, 300);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const tooltip = document.getElementById("chat-tooltip");
+    const arrow = document.getElementById("chat-arrow");
+    const fullText = `Halo ${window.Chatbot.tooltip}! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?`;
+    let index = 0;
+
+    // Delay awal sebelum tooltip muncul
+    setTimeout(() => {
+        // Tampilkan tooltip dan arrow
+        tooltip.classList.remove("opacity-0", "translate-x-4");
+        arrow.classList.remove("opacity-0", "translate-x-4");
+
+        // Mulai animasi typing
+        const typing = setInterval(() => {
+            if (index < fullText.length) {
+                tooltip.querySelector(".typing-text").textContent += fullText.charAt(index);
+                index++;
+            } else {
+                clearInterval(typing);
+
+                // Setelah selesai mengetik, tunggu 6 detik lalu sembunyikan
+                setTimeout(() => {
+                    tooltip.classList.add("opacity-0", "translate-x-4");
+                    arrow.classList.add("opacity-0", "translate-x-4");
+                }, 6000);
+            }
+        }, 50); // Kecepatan mengetik (50ms per huruf)
+    }, 800); // Delay 800ms sebelum mulai
+});
+

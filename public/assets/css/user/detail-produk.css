@@ -1,8 +1,3 @@
-/* Custom styles for the Tokopedia-inspired gray theme */
-.product-gallery {
-    top: 100px;
-}
-
 .mobile-fixed-actions {
     position: fixed;
     bottom: 0;
@@ -85,13 +80,6 @@
     background-color: #f9fafb;
     border-color: #9ca3af;
     transform: translateY(-1px);
-}
-
-.section-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
 }
 
 .price-tag {
@@ -514,13 +502,6 @@
     border-radius: 6px;
 }
 
-.section-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f3f4f6;
-}
-
 .btn-gray {
     background: #000;
     color: white;
@@ -608,16 +589,6 @@ color: black !important;
 /* Jika ingin yang selected kuning juga hitam teksnya */
 .color-option[data-color-lower="kuning"].selected {
 color: black !important;
-}
-
-.modern-toast {
-    margin-top: 70px !important; /* posisinya turun dari navbar */
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    padding: 12px 22px;
 }
 
 .review-card {

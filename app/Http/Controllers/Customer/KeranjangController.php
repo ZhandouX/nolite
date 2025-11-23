@@ -201,6 +201,7 @@ class KeranjangController extends Controller
         return response()->json(['count' => $count]);
     }
 
+    // UPDATE JUMLAH 
     public function updateQuantity(Request $request, $id)
     {
         $keranjang = Keranjang::findOrFail($id);
@@ -213,6 +214,7 @@ class KeranjangController extends Controller
         ]);
     }
 
+    // UPDATE SESSION
     public function updateSession(Request $request)
     {
         $key = $request->key;
@@ -228,5 +230,39 @@ class KeranjangController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Item tidak ditemukan di session']);
+    }
+
+    // CEK KERANJANG
+    public function check()
+    {
+        if (!Auth::check()) {
+            $cart = session('keranjang', []);
+            return response()->json([
+                'items' => array_values($cart)
+            ]);
+        }
+
+        $cart = Keranjang::where('user_id', Auth::id())
+            ->with(['produk.fotos'])
+            ->get()
+            ->map(function ($item) {
+                $foto = $item->produk->fotos->isNotEmpty()
+                    ? asset('storage/' . $item->produk->fotos->first()->foto)
+                    : asset('assets/images/no-image.png');
+
+                return [
+                    'id' => $item->id,
+                    'produk_id' => $item->produk_id,
+                    'nama' => $item->produk->nama_produk,
+                    'foto' => $foto,
+                    'harga' => $item->produk->harga,
+                    'jumlah' => $item->jumlah,
+                ];
+            });
+
+        return response()->json([
+            'items' => $cart,
+            'total_produk_unik' => $cart->count(),
+        ]);
     }
 }

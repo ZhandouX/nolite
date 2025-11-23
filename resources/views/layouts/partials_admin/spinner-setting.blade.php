@@ -40,22 +40,4 @@
 </div>
 
 {{-- JS: SPINNER ACTIONS --}}
-<script>
-    const gearBubble = document.getElementById('gearBubble');
-    const gearPopup = document.getElementById('gearPopup');
-    const closeBtn = document.getElementById('closeGearPopup');
-
-    gearBubble.addEventListener('click', () => {
-        gearPopup.style.display = gearPopup.style.display === 'flex' ? 'none' : 'flex';
-    });
-
-    closeBtn.addEventListener('click', () => {
-        gearPopup.style.display = 'none';
-    });
-
-    document.addEventListener('click', function (event) {
-        if (!gearPopup.contains(event.target) && !gearBubble.contains(event.target)) {
-            gearPopup.style.display = 'none';
-        }
-    });
-</script>
+<script src="/assets/js/admin/main.js"></script>

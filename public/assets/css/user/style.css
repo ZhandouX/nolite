@@ -381,6 +381,52 @@ header .nav-links a {
 /* ===================== */
 /* ====== SIDEBAR ====== */
 /* ===================== */
+@media (max-width: 768px) {
+  #sidebar-inner .header-logo {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      height: 60px;
+  }
+}
+
+/* Sidebar fix agar bisa scroll bagian atas tapi Chatbot tetap di bawah */
+#sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+#sidebar nav {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 70px;
+  /* beri ruang untuk menu chatbot bawah */
+}
+
+/* Bagian Chatbot tetap nempel di bawah */
+.sidebar-bottom {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  padding: 0.75rem;
+}
+
+.sidebar-bottom a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.sidebar-bottom a:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}
 .sidebar {
   position: fixed;
   top: 0;
@@ -1031,3 +1077,34 @@ input[type=number] {
 }
 
 /* Custom Scrollbar */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.modern-toast {
+    margin-top: 70px !important; /* posisinya turun dari navbar */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    padding: 12px 22px;
+    z-index: 9999;
+}

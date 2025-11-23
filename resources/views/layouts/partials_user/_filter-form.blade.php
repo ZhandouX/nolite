@@ -13,7 +13,6 @@
         <h2 class="font-semibold mb-2 text-sm">Kategori</h2>
 
         @php
-            // Ambil semua kategori dari DB
             $kategoris = \App\Models\Kategori::all();
             $currentKategoriId = request('kategori_id');
         @endphp

@@ -85,7 +85,7 @@
                                     <div class="flex flex-col items-end ml-2">
                                         @if($diskon > 0)
                                             <p class="line-through text-gray-400 text-xs">Rp{{ number_format($produk->harga, 0, ',', '.') }}</p>
-                                            <p class="font-bold text-red-600 text-sm">Rp{{ number_format($hargaFinal, 0, ',', '.') }}</p>
+                                            <p class="font-bold text-red-900 text-sm">Rp{{ number_format($hargaFinal, 0, ',', '.') }}</p>
                                         @else
                                             <p class="font-bold text-gray-800 text-sm">Rp{{ number_format($hargaFinal, 0, ',', '.') }}</p>
                                         @endif
@@ -186,27 +186,4 @@
             </div>
         </div>
     </div>
-
-    <style>
-        .scrollbar-thin::-webkit-scrollbar {
-            width: 4px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 10px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-        .line-clamp-1 {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    </style>
 @endsection

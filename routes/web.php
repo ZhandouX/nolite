@@ -40,28 +40,35 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
+        // ================
         // KATEGORI
+        // ================
         Route::resource('kategori', KategoriController::class);
-        Route::post('/kategori/store-ajax', [KategoriController::class, 'storeAjax'])->name('kategori.store-ajax');
-        Route::post('/kategori/{kategori}/update-ajax', [KategoriController::class, 'updateAjax'])->name('kategori.update-ajax');
-        Route::delete('/kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+        Route::prefix('kategori')->name('kategori.')->group(function () {
+            Route::post('/store-ajax', [KategoriController::class, 'storeAjax'])->name('store-ajax');
+            Route::post('/{kategori}/update-ajax', [KategoriController::class, 'updateAjax'])->name('update-ajax');
+            Route::delete('/{kategori}', [KategoriController::class, 'destroy'])->name('destroy');
+        });
 
         // DASHBOARD
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // HAPUS FOTO PRODUK DARI STORAGE
-        Route::delete('/produk/foto/{id}', [ProdukController::class, 'hapusFoto'])
-            ->name('produk.foto.hapus');
-
+        // ====================================
         // PRODUK
+        // ====================================
         Route::resource('produk', ProdukController::class);
-        Route::patch('/produk/{produk}/diskon', [ProdukController::class, 'updateDiskon'])
-            ->name('produk.diskon');
+        Route::prefix('produk')->name('produk.')->group(function () {
+            Route::delete('/foto/{id}', [ProdukController::class, 'hapusFoto'])->name('foto.hapus');
+            Route::patch('/{produk}/diskon', [ProdukController::class, 'updateDiskon'])->name('diskon');
+        });
 
+        // ============
         // ORDER
+        // ============
         Route::resource('order', AdminOrderController::class);
-        Route::post('/order/{order}/update-status', [AdminOrderController::class, 'updateStatus'])
-            ->name('order.updateStatus');
+        Route::prefix('order')->name('order.')->group(function () {
+            Route::post('/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('updateStatus');
+        });
 
         // ==========================
         // 📊 LAPORAN
@@ -79,17 +86,11 @@ Route::middleware(['auth', 'role:admin'])
         // 🧩 CHAT MANAGEMENT (ADMIN)
         // ==========================
         Route::prefix('chats')->name('chats.')->group(function () {
-            Route::get('/', [AdminChatController::class, 'index'])->name('index');              // daftar chat
-            Route::get('/{chat}', [AdminChatController::class, 'show'])->name('show');          // lihat chat
-            Route::post('/{chat}/send', [AdminChatController::class, 'send'])->name('send');    // kirim pesan
-    
-            // Hapus pesan tertentu
-            Route::delete('/message/{id}', [AdminChatController::class, 'deleteMessage'])
-                ->name('message.delete');
-
-            // Hapus seluruh chat (beserta semua pesan)
-            Route::delete('/{id}', [AdminChatController::class, 'deleteChat'])
-                ->name('delete');
+            Route::get('/', [AdminChatController::class, 'index'])->name('index');
+            Route::get('/{chat}', [AdminChatController::class, 'show'])->name('show');
+            Route::post('/{chat}/send', [AdminChatController::class, 'send'])->name('send');
+            Route::delete('/message/{id}', [AdminChatController::class, 'deleteMessage'])->name('message.delete');
+            Route::delete('/{id}', [AdminChatController::class, 'deleteChat'])->name('delete');
         });
 
 
@@ -100,32 +101,30 @@ Route::middleware(['auth', 'role:admin'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-            Route::get('/', 'index')->name('index');                // daftar
-            Route::get('/{user}', 'show')->name('show');            // detail
-            Route::patch('/{user}/block', 'block')->name('block');  // blokir
-            Route::patch('/{user}/activate', 'activate')->name('activate'); // aktifkan
-            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif'); // nonaktifkan
-            Route::delete('/{user}', 'destroy')->name('destroy');   // hapus permanen
+            Route::get('/', 'index')->name('index');
+            Route::get('/{user}', 'show')->name('show');
+            Route::patch('/{user}/block', 'block')->name('block');
+            Route::patch('/{user}/activate', 'activate')->name('activate');
+            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
+            Route::delete('/{user}', 'destroy')->name('destroy');
         });
 
         // ==========================
         // 💬 CUSTOMER SERVICE (ADMIN)
         // ==========================
         Route::prefix('customer-service')->name('customer-service.')->group(function () {
-            Route::get('/', [CustomerServiceAdminController::class, 'index'])
-                ->name('index'); // Route name: admin.customer-service.index
-    
-            Route::get('/{user}', [CustomerServiceAdminController::class, 'show'])
-                ->name('show'); // Route name: admin.customer-service.show
-    
-            Route::post('/reply/{id}', [CustomerServiceAdminController::class, 'reply'])
-                ->name('reply'); // Route name: admin.customer-service.reply
+            Route::get('/', [CustomerServiceAdminController::class, 'index'])->name('index');
+            Route::get('/{user}', [CustomerServiceAdminController::class, 'show'])->name('show');
+            Route::post('/reply/{id}', [CustomerServiceAdminController::class, 'reply'])->name('reply');
         });
 
         // =========================
         // NOTIFICATIONS
         // =========================
-        Route::get('/notifications', [NotificationController::class, 'notifications'])->name('notifications');
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [NotificationController::class, 'notifications'])->name('index');
+            Route::get('/all', [NotificationController::class, 'all'])->name('all');
+        });
     });
 
 
@@ -136,11 +135,8 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     // COSTUMER SERVICE
     Route::prefix('services')->name('services.')->group(function () {
-        Route::get('/customer-service', [CustomerServiceController::class, 'index'])
-            ->name('customer-service'); // hasil: services.customer-service
-
-        Route::post('/customer-service/send', [CustomerServiceController::class, 'sendMessage'])
-            ->name('customer-service.send'); // hasil: services.customer-service.send
+        Route::get('/customer-service', [CustomerServiceController::class, 'index'])->name('customer-service');
+        Route::post('/customer-service/send', [CustomerServiceController::class, 'sendMessage'])->name('customer-service.send');
     });
 
     // CHECKOUT
@@ -151,7 +147,8 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
 
     // ORDER
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
+    
     // SUCCESS PAGE
     Route::get('/checkout/success/{id}', function ($id) {
         $order = \App\Models\Order::with('items')->findOrFail($id);
@@ -159,41 +156,37 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     })->name('customer.order.success');
 
     // ULASAN
-    Route::post('/ulasan', [UlasanController::class, 'store'])->name('customer.ulasan.store');
-    Route::get('/ulasan/{ulasan}', [UlasanController::class, 'show'])->name('customer.ulasan.show');
-    Route::put('/ulasan/{ulasan}', [UlasanController::class, 'update'])->name('ulasan.update');
-    Route::get('/ulasan/{ulasan}/edit', [UlasanController::class, 'edit'])->name('ulasan.edit'); // Baru
-    Route::delete('/ulasan-foto/{foto}', [UlasanController::class, 'hapusFoto'])->name('ulasan.foto.hapus'); // Baru
+    Route::prefix('ulasan')->group(function () {
+        Route::post('/', [UlasanController::class, 'store'])->name('customer.ulasan.store');
+        Route::get('/{ulasan}', [UlasanController::class, 'show'])->name('customer.ulasan.show');
+        Route::put('/{ulasan}', [UlasanController::class, 'update'])->name('customer.ulasan.update');
+        Route::get('/{ulasan}/edit', [UlasanController::class, 'edit'])->name('customer.ulasan.edit');
+        Route::delete('/ulasan-foto/{foto}', [UlasanController::class, 'hapusFoto'])->name('customer.ulasan.ulasan-foto.delete');
+    });
     
     // WISHLIST
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/toggle/{produkId}', [WishlistController::class, 'toggleWishlist'])->name('wishlist.toggle');
-    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.remove');
+    Route::prefix('wishlist')->name('wishlist.')->group(function () {
+        Route::get('/', [WishlistController::class, 'index'])->name('index');
+        Route::post('/toggle/{produkId}', [WishlistController::class, 'toggleWishlist'])->name('toggle');
+        Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('remove');
+    });
 });
 
 
 // SEMUA PRODUK
-Route::get('/all-produk/customer', [DashboardController::class, 'allProduk'])->name('customer.allProduk');
-Route::get('/produk/unggulan', [DashboardController::class, 'unggulanProduk'])->name('customer.unggulan');
-Route::get('/produk/diskon', [DashboardController::class, 'diskonProduk'])->name('customer.diskon');
-
-// KATEGORI
+Route::prefix('produk')->group(function () {
+    Route::get('/all', [DashboardController::class, 'allProduk'])->name('customer.allProduk');
+    Route::get('/unggulan', [DashboardController::class, 'unggulanProduk'])->name('customer.unggulan');
+    Route::get('/diskon', [DashboardController::class, 'diskonProduk'])->name('customer.diskon');
+    Route::get('/{id}', [DashboardController::class, 'show'])->name('produk.detail');
+});
 Route::get('/kategori/{kategori}', [ProdukCustomerController::class, 'kategori'])->name('customer.kategori-produk');
 
-// DETAIL PRODUK
-Route::get('/produk/{id}', [DashboardController::class, 'show'])->name('produk.detail');
-
 // ============================================
-// SEARCH ROUTES
+// SEARCH
 // ============================================
-
-// Route untuk search produk
-Route::get('/search-produk', [ProdukCustomerController::class, 'search'])
-    ->name('produk.search');
-
-// Route untuk search dengan pagination (Alternative)
-Route::get('/search-produk-pagination', [ProdukCustomerController::class, 'searchWithPagination'])
-    ->name('produk.search.pagination');
+Route::get('/search-produk', [ProdukCustomerController::class, 'search'])->name('produk.search');
+Route::get('/search-produk-pagination', [ProdukCustomerController::class, 'searchWithPagination'])->name('produk.search.pagination');
 
 // ============================================
 // OPTIONAL: AUTOCOMPLETE ROUTES (fix)
@@ -215,55 +208,21 @@ Route::get('/autocomplete-produk', function (Request $request) {
 Route::get('/get-product-modals/{id}', [ProdukCustomerController::class, 'getProductModals']);
 
 // KERANJANG
-Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
-Route::post('/keranjang', [KeranjangController::class, 'store'])->name('keranjang.store');
-Route::delete('/keranjang/{id}', [KeranjangController::class, 'destroy'])
-    ->name('keranjang.destroy');
-Route::get('/keranjang/cek', function () {
-    if (!Auth::check()) {
-        $cart = session('keranjang', []);
-        return response()->json(['items' => array_values($cart)]);
-    } else {
-        $cart = Keranjang::where('user_id', Auth::id())
-            ->with(['produk.fotos'])
-            ->get()
-            ->map(function ($item) {
-                $foto = $item->produk->fotos->isNotEmpty()
-                    ? asset('storage/' . $item->produk->fotos->first()->foto)
-                    : asset('assets/images/no-image.png');
-
-                return [
-                    'id' => $item->id,
-                    'produk_id' => $item->produk_id,
-                    'nama' => $item->produk->nama_produk,
-                    'foto' => $foto,
-                    'harga' => $item->produk->harga,
-                    'jumlah' => $item->jumlah,
-                ];
-            });
-
-        $total_produk_unik = $cart->count();
-
-        return response()->json([
-            'items' => $cart,
-            'total_produk_unik' => $total_produk_unik,
-        ]);
-    }
+Route::prefix('keranjang')->name('keranjang.')->group(function () {
+    Route::get('/', [KeranjangController::class, 'index'])->name('index');
+    Route::post('/', [KeranjangController::class, 'store'])->name('store');
+    Route::delete('/{id}', [KeranjangController::class, 'destroy'])->name('destroy');
+    Route::get('/cek', [KeranjangController::class, 'check'])->name('check');
+    Route::get('/count', [KeranjangController::class, 'count'])->name('count');
+    Route::patch('/{id}', [KeranjangController::class, 'updateQuantity'])->name('update');
+    Route::post('/session/update', [KeranjangController::class, 'updateSession'])->name('session.update');
 });
-Route::get('/keranjang/count', [KeranjangController::class, 'count'])->name('keranjang.count');
-Route::patch('keranjang/{id}', [KeranjangController::class, 'updateQuantity'])->name('keranjang.update');
-Route::post('/keranjang/session/update', [KeranjangController::class, 'updateSession'])
-    ->name('keranjang.session.update');
 
 // API WILAYAH
 Route::get('/lokasi-form', [LokasiController::class, 'form'])->name('lokasi.form');
 Route::get('/get-kota', [LokasiController::class, 'getKota'])->name('lokasi.getKota');
 
 // CHATBOT
-Route::get('/chatbot', function () {
-    return view('chatbot'); // pastikan file-nya: resources/views/chatbot.blade.php
-})->name('chatbot.view');
-
 Route::post('/chatbot/query', [ChatbotController::class, 'query'])->name('chatbot.query');
 
 

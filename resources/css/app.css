@@ -26,17 +26,14 @@
   height: 0;
 }
 
-/* Track */
 *::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Thumb */
 *::-webkit-scrollbar-thumb {
   background: transparent;
 }
 
-/* Firefox */
 * {
   scrollbar-width: none;
 }

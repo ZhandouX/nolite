@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Order extends Model
 {
@@ -18,6 +19,22 @@ class Order extends Model
         'subtotal',
         'status'
     ];
+
+    // protected static function booted()
+    // {
+    //     // Saat Order
+    //     static::created(function ($order) {
+    //         if ($order->status === 'menunggu') {
+    //             Cache::put('new_order_' . $order->user_id, true, 300);
+    //         }
+    //     });
+
+    //     static::updated(function ($order) {
+    //         if ($order->wasChanged('status') && $order->status === 'menunggu') {
+    //             Cache::put('new_order' . $order->user_id, true, 300);
+    //         }
+    //     });
+    // }
 
     public function items()
     {

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Keranjang;
+use App\Services\NotificationService;
+use App\Events\NotificationUpdated;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Produk;
@@ -14,9 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Menampilkan halaman checkout
-     */
+    // INDEX
     public function index()
     {
         // Ambil data checkout dari session
@@ -37,9 +37,7 @@ class CheckoutController extends Controller
         return view('customer.checkout', compact('checkoutItems', 'total', 'provinsiList'));
     }
 
-    /**
-     * Simpan produk yang dipilih dari keranjang ke session
-     */
+    // STORE
     public function store(Request $request)
     {
         $selectedItems = json_decode($request->selected_items, true);
@@ -165,6 +163,10 @@ class CheckoutController extends Controller
             session()->forget('checkout_items');
 
             \DB::commit();
+
+            // Broadcast real-time ke admin
+            $data = app(NotificationService::class)->get();
+            broadcast(new NotificationUpdated($data));
 
             return redirect()->route('customer.order.success', ['id' => $order->id])
                 ->with('success', 'Pesanan berhasil dibuat, stok diperbarui, dan produk dihapus dari keranjang!');
@@ -299,6 +301,10 @@ class CheckoutController extends Controller
 
             // Bersihkan session
             session()->forget('checkout_dashboard');
+
+            // Broadcast real-time ke admin
+            $data = app(NotificationService::class)->get();
+            broadcast(new NotificationUpdated($data));
 
             return $order;
         });

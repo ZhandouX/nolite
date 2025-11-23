@@ -10,7 +10,7 @@ const ADD_WISHLIST_URL = window.ProductDetail.wishlistUrl;
 
 document.addEventListener('DOMContentLoaded', function () {
     window.isMobile = function () {
-        return window.innerWidth < 768;
+        return window.innerWidth < 1024;
     }
     window.detailAddToCart = function (PID) {
         // Cek stok

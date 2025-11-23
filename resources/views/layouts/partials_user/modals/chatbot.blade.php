@@ -1,7 +1,7 @@
 <div id="chat-container"
     class="hidden z-[10000] fixed bottom-0 right-0 lg:bottom-4 lg:right-4 w-full h-full lg:w-96 lg:h-[450px] bg-white lg:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate__animated animate__fadeInUp dark:bg-gray-800">
 
-    <!-- Header -->
+    {{-- HEADER --}}
     <div
         class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600 bg-black lg:rounded-t-2xl">
         <div class="flex items-center gap-3">
@@ -18,9 +18,8 @@
         </button>
     </div>
 
-    <!-- Chat area -->
+    {{-- CHAT AREA --}}
     <div id="chatbox" class="flex-1 overflow-y-auto p-4 text-sm space-y-3 bg-gray-50 dark:bg-gray-900 scroll-smooth">
-        <!-- Welcome Message -->
         <div class="text-center mt-8">
             <div class="w-16 h-16 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-3">
                 <i class="fa-solid fa-robot text-white text-2xl"></i>
@@ -32,7 +31,7 @@
         </div>
     </div>
 
-    <!-- Input area -->
+    {{-- INPUT AREA --}}
     <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <form id="chatForm" class="flex items-center gap-2">
             <div class="flex-1 relative">
@@ -47,140 +46,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const chatToggle = document.getElementById("chat-toggle");
-        const chatContainer = document.getElementById("chat-container");
-
-        chatToggle.addEventListener("click", () => {
-            chatContainer.classList.toggle("hidden");
-        });
-
-        const closeChat = document.getElementById("close-chat");
-        closeChat.addEventListener("click", () => {
-            chatContainer.classList.add("hidden");
-        });
-
-        // Chat form functionality for both mobile and desktop
-        const chatForm = document.getElementById("chatForm");
-        const chatbox = document.getElementById("chatbox");
-        const messageInput = document.getElementById("message");
-
-        chatForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const msg = messageInput.value.trim();
-            if (!msg) return;
-
-            // Add user message
-            chatbox.innerHTML += `
-                <div class="flex justify-end">
-                    <div class="max-w-[80%]">
-                        <div class="bg-primary-500 text-white px-4 py-2 rounded-2xl rounded-br-sm">
-                            ${msg}
-                        </div>
-                        <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 block text-right">Sekarang</span>
-                    </div>
-                </div>
-            `;
-            
-            messageInput.value = "";
-            chatbox.scrollTop = chatbox.scrollHeight;
-
-            // Show typing indicator
-            const typing = document.createElement("div");
-            typing.className = "flex justify-start";
-            typing.innerHTML = `
-                <div class="max-w-[80%]">
-                    <div class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-2xl rounded-bl-sm">
-                        <div class="flex space-x-1">
-                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            chatbox.appendChild(typing);
-            chatbox.scrollTop = chatbox.scrollHeight;
-
-            try {
-                const response = await fetch("{{ route('chatbot.query') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({ message: msg })
-                });
-
-                const data = await response.json();
-                typing.remove();
-
-                const replyText = data.reply || "Maaf, saya tidak menemukan informasi produk.";
-                const produkList = data.produk_list || [];
-
-                // Add bot reply
-                chatbox.innerHTML += `
-                    <div class="flex justify-start">
-                        <div class="max-w-[80%]">
-                            <div class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-2xl rounded-bl-sm">
-                                ${replyText}
-                            </div>
-                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 block">Nolite Bot</span>
-                        </div>
-                    </div>
-                `;
-
-                // Add product cards if available
-                if (produkList.length > 0) {
-                    const cardsHtml = produkList.map(p => `
-                        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-sm hover:shadow-md transition-shadow duration-200">
-                            <div class="flex gap-3">
-                                <img src="${p.foto}" class="w-12 h-12 object-cover rounded-lg" alt="${p.nama_produk}">
-                                <div class="flex-1 min-w-0">
-                                    <h5 class="font-semibold text-gray-800 dark:text-gray-200 text-sm truncate">${p.nama_produk}</h5>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <span class="text-xs text-gray-600 dark:text-gray-400">${p.ukuran}</span>
-                                        <span class="text-xs text-gray-600 dark:text-gray-400">•</span>
-                                        <span class="text-xs text-gray-600 dark:text-gray-400">${p.warna}</span>
-                                    </div>
-                                    <div class="text-primary-600 dark:text-primary-400 font-semibold text-sm mt-1">${p.harga}</div>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-400 text-xs mt-2 line-clamp-2">${p.deskripsi}</p>
-                            <a href="/produk/${p.id}" 
-                               class="block w-full mt-3 text-center bg-primary-500 hover:bg-primary-600 text-white text-xs py-2 rounded-lg transition-colors duration-200">
-                                Lihat Detail
-                            </a>
-                        </div>
-                    `).join('');
-
-                    chatbox.innerHTML += `<div class="space-y-3 mt-3">${cardsHtml}</div>`;
-                }
-
-                chatbox.scrollTop = chatbox.scrollHeight;
-
-            } catch (error) {
-                typing.remove();
-                chatbox.innerHTML += `
-                    <div class="flex justify-start">
-                        <div class="max-w-[80%]">
-                            <div class="bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-4 py-2 rounded-2xl rounded-bl-sm">
-                                Terjadi kesalahan koneksi ke server.
-                            </div>
-                        </div>
-                    </div>
-                `;
-                chatbox.scrollTop = chatbox.scrollHeight;
-            }
-        });
-
-        // Auto-focus input when chat opens
-        chatToggle.addEventListener("click", () => {
-            setTimeout(() => {
-                messageInput.focus();
-            }, 300);
-        });
-    });
-</script>

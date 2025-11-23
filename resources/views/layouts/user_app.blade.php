@@ -82,8 +82,10 @@
                         border border-gray-400/40 backdrop-blur-sm relative">
 
                 <!-- Ikon AI -->
-                <i data-lucide="sparkles"
-                    class="w-6 h-6 text-white group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300"></i>
+                <i data-lucide="message-circle-more"
+                    class="w-5 h-5 md:w-6 md:h-6 text-white transition-transform duration-300"
+                    style="transform: scaleX(-1)">
+                </i>
 
                 <!-- Titik notifikasi -->
                 <span
@@ -96,14 +98,10 @@
 
     </div>
     {{-- KERANJANG POPUP (MOBILE) --}}
-    <div id="cartPopupMobile" class="fixed bottom-20 right-4 flex items-center justify-center shadow-xl 
-    hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1">
-    </div>
+    <div id="cartPopupMobile" class="fixed bottom-20 right-4 flex items-center justify-center hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1"></div>
 
     {{-- KERANJANG POPUP (DESKTOP) --}}
-    <div id="cartPopupDesktop" class="fixed bottom-2 right-4 hidden lg:flex z-50 flex-col gap-1
-        sm:scale-100 scale-75 transition-all duration-300">
-    </div>
+    <div id="cartPopupDesktop" class="fixed bottom-2 right-4 hidden lg:flex flex-col gap-1 sm:scale-100 scale-75 transition-all duration-300"></div>
 
     {{-- MODALS --}}
     @foreach($produkTerbaru as $item)
@@ -112,118 +110,43 @@
     @endforeach
     @include('layouts.partials_user.modals.login')
     @include('layouts.partials_user.modals.register')
+    <div id="dynamicModalsContainer"></div>
 
-
-    
     {{-- ============================================= --}}
     {{-- ============= LIBARY JAVASCRIPT ============= --}}
     {{-- ============================================= --}}
-
-    {{-- ===== JS ====> MODALS PRODUCT (BELI & CART) SEARCH RESULT --}}
-    <div id="dynamicModalsContainer"></div>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tooltip = document.getElementById("chat-tooltip");
-            const arrow = document.getElementById("chat-arrow");
-            const fullText = "Halo @auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?";
-            let index = 0;
-
-            // Delay awal sebelum tooltip muncul
-            setTimeout(() => {
-                // Tampilkan tooltip dan arrow
-                tooltip.classList.remove("opacity-0", "translate-x-4");
-                arrow.classList.remove("opacity-0", "translate-x-4");
-
-                // Mulai animasi typing
-                const typing = setInterval(() => {
-                    if (index < fullText.length) {
-                        tooltip.querySelector(".typing-text").textContent += fullText.charAt(index);
-                        index++;
-                    } else {
-                        clearInterval(typing);
-
-                        // Setelah selesai mengetik, tunggu 6 detik lalu sembunyikan
-                        setTimeout(() => {
-                            tooltip.classList.add("opacity-0", "translate-x-4");
-                            arrow.classList.add("opacity-0", "translate-x-4");
-                        }, 6000);
-                    }
-                }, 50); // Kecepatan mengetik (50ms per huruf)
-            }, 800); // Delay 800ms sebelum mulai
-        });
-    </script>
-
-    {{-- ===== JS ====> MODAL FUNCTION --}}
-    <script>
-        // Fungsi modal dasar (fallback)
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
-        }
-    </script>
-
-    {{-- ===== JS ====> LOAD GLOBAL MODAL (BELI & KERANJANG) --}}
-    <script>
-        async function loadProductModals(productId) {
-            // Cek jika modal sudah ada
-            if (document.getElementById(`productModal-${productId}`)) return;
-
-            try {
-                const response = await fetch(`/get-product-modals/${productId}`);
-                const html = await response.text();
-                document.getElementById('dynamicModalsContainer').innerHTML += html;
-
-                // Render ulang icon Lucide (bundler)
-                createIcons({ icons });
-
-            } catch (error) {
-                console.error('Error loading modals:', error);
-            }
-        }
-
-        // Override openModal function untuk handle dynamic loading
-        const originalOpenModal = window.openModal;
-        window.openModal = async function (modalId) {
-            const productId = modalId.match(/\d+/)[0];
-
-            // Load modal jika belum ada
-            await loadProductModals(productId);
-
-            // Tunggu sebentar untuk memastikan modal sudah di-inject
-            setTimeout(() => {
-                if (originalOpenModal) {
-                    originalOpenModal(modalId);
-                } else {
-                    // Fallback jika function asli tidak ada
-                    const modal = document.getElementById(modalId);
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                        modal.addEventListener('click', function (e) {
-                            if (e.target === modal) closeModal(modalId);
-                        });
-                    }
-                }
-            }, 100);
+        window.Chatbot = {
+            csrf: "{{ csrf_token() }}",
+            routes: {
+                chatbotAsk: "{{ route('chatbot.query') }}",
+                productAct: "{{ url('/produk') }}",
+            },
+            tooltip: "@auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth",
         };
     </script>
+    <script src="/assets/js/user/chatbot.js"></script>
+    <script>
+        window.ModalGlobal = {
+            routes: {
+                modals: "{{ url('/get-product-modals') }}",
+            }
+        };
+    </script>
+    <script src="/assets/js/user/modals/_modals.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="/assets/js/user/landing-page.js"></script>
     <script src="/assets/js/user/auth-modal.js"></script>
-
-    {{-- ===== JS ====> CART POPUP --}}
+    <script>
+        window.RadioSwitch = {
+            routes: {
+                allProduk: "{{ route('customer.allProduk') }}",
+                unggulan: "{{ route('customer.unggulan') }}",
+                diskon: "{{ route('customer.diskon') }}",
+            }
+        };
+    </script>
+    <script src="/assets/js/user/radio-filter.js"></script>
     <script>
         window.Laravel = {
             csrfToken: "{{ csrf_token() }}",
@@ -240,40 +163,15 @@
         };
     </script>
     <script src="/assets/js/user/keranjang-popup.js"></script>
-
-    {{-- ===== JS ====> HIDDEN BRAND NAV --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const menuBtn = document.getElementById("menuBtn");
-            const closeSidebar = document.getElementById("closeSidebar");
-            const sidebar = document.getElementById("sidebar");
-            const headerLogo = document.getElementById("headerLogo");
-
-            // Saat tombol menu diklik → buka sidebar dan sembunyikan logo
-            if (menuBtn) {
-                menuBtn.addEventListener("click", function () {
-                    sidebar.classList.remove("-translate-x-full");
-                    sidebar.classList.add("translate-x-0");
-
-                    // Sembunyikan logo
-                    headerLogo.classList.add("opacity-0", "pointer-events-none");
-                });
+        window.Navbar = {
+            routes: {
+                searchProduk: "{{ url('/search-produk') }}",
             }
-
-            // Saat tombol closeSidebar diklik → tutup sidebar dan tampilkan logo
-            if (closeSidebar) {
-                closeSidebar.addEventListener("click", function () {
-                    sidebar.classList.add("-translate-x-full");
-                    sidebar.classList.remove("translate-x-0");
-
-                    // Tampilkan lagi logo
-                    headerLogo.classList.remove("opacity-0", "pointer-events-none");
-                });
-            }
-        });
+        };
     </script>
-
-    {{-- ===== JS ====> SESSION LOGIN --}}
+    <script src="/assets/js/user/header.js"></script>
+    {{-- SESSION LOGIN --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             @if(!empty($showLoginModal) && $showLoginModal)
@@ -281,7 +179,6 @@
             @endif
     });
     </script>
-
     @if (session('showLoginModal'))
         <script>
             document.addEventListener('DOMContentLoaded', function () {

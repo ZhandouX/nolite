@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CustomerService;
+use App\Services\NotificationService;
+use App\Events\NotificationUpdated;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerServiceController extends Controller
@@ -38,6 +40,10 @@ class CustomerServiceController extends Controller
             'message' => $request->message,
             'status' => 'pending', // bisa 'pending', 'read', 'replied'
         ]);
+
+        // Broadcast real-time ke admin
+        $data = app(NotificationService::class)->get();
+        broadcast(new NotificationUpdated($data));
 
         return back()->with('success', 'Pesan berhasil dikirim ke admin.');
     }

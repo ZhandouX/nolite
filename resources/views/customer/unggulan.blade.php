@@ -253,10 +253,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            {{-- Modal untuk Beli & Cart --}}
-                            @include('layouts.partials_user.modal-beli', ['item' => $item])
-                            @include('layouts.partials_user.modal-cart', ['item' => $item])
                         @endforeach
                     </div>
 
@@ -268,26 +264,3 @@
         </div>
     </div>
 @endsection
-
-@push('script')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const radios = document.querySelectorAll('#filterTipeForm input[name="tipe"]');
-            radios.forEach(radio => {
-                radio.addEventListener('change', () => {
-                    switch (radio.value) {
-                        case 'all':
-                            window.location.href = "{{ route('customer.allProduk') }}";
-                            break;
-                        case 'unggulan':
-                            window.location.href = "{{ route('customer.unggulan') }}";
-                            break;
-                        case 'diskon':
-                            window.location.href = "{{ route('customer.diskon') }}";
-                            break;
-                    }
-                });
-            });
-        });
-    </script>
-@endpush

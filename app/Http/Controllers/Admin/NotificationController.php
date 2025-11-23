@@ -3,44 +3,58 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use App\Events\NotificationUpdated;
 use App\Models\Order;
 use App\Models\CustomerService;
-use Illuminate\Http\JsonResponse;
 
 class NotificationController extends Controller
 {
     public function notifications(): JsonResponse
     {
-        // Hitung jumlah pesanan menunggu
-        $orderCount = Order::where('status', 'menunggu')->count();
+        $data = app(\App\Services\NotificationService::class)->get();
 
-        // Hitung jumlah user yang memiliki chat pending
-        $chatCount = CustomerService::where('status', 'pending')
-                    ->distinct('user_id')
-                    ->count('user_id');
+        return response()->json(['status' => 'success', 'notifications' => $data]);
+    }
+
+    public function all()
+    {
+        // Ambil semua order menunggu
+        $order = Order::where('status', 'menunggu')
+            ->with('user', 'items')
+            ->get()
+            ->map(function ($o) {
+                return [
+                    'id'       => $o->id,
+                    'customer' => $o->user->name ?? 'Pengguna',
+                    'items'    => $o->items->map(function ($i) {
+                        return [
+                            'name' => $i->nama_produk,
+                            'qty'  => $i->jumlah,
+                        ];
+                    }),
+                    'url' => route('admin.order.show', $o->id),
+                ];
+            });
+
+        // Ambil chat pending
+        $chat = CustomerService::where('status', 'pending')
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->limit(100)
+            ->get()
+            ->map(function ($c) {
+                return [
+                    'id'      => $c->id,
+                    'name'    => $c->user->name ?? 'Unknown',
+                    'message' => $c->message,
+                    'url'     => route('admin.customer-service.show', $c->id),
+                ];
+            });
 
         return response()->json([
-            'status' => 'success',
-            'notifications' => [
-                [
-                    'type' => 'order',
-                    'title' => 'Pesanan',
-                    'message' => "Ada {$orderCount} pesanan masuk",
-                    'icon' => 'shopping-bag',
-                    'color' => 'blue',
-                    'count' => $orderCount,
-                    'url' => route('admin.order.index')
-                ],
-                [
-                    'type' => 'chat',
-                    'title' => 'Chat',
-                    'message' => "Ada {$chatCount} pesan dari pelanggan",
-                    'icon' => 'message-circle',
-                    'color' => 'green',
-                    'count' => $chatCount,
-                    'url' => route('admin.customer-service.index')
-                ]
-            ]
+            'order' => $order,
+            'chat'  => $chat,
         ]);
     }
 }
