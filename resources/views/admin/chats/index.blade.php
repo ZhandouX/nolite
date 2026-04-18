@@ -3,7 +3,7 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-6">
     <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <!-- Header -->
         <div class="mb-8">
             <div class="flex items-center">
@@ -29,19 +29,19 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
                         </div>
-                        <input 
-                            type="text" 
-                            name="search" 
-                            value="{{ request('search') }}" 
-                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200" 
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
                             placeholder="Cari nama pengguna..."
                         >
                     </div>
                 </div>
                 <div class="md:col-span-5">
-                    <select 
-                        name="filter" 
-                        onchange="this.form.submit()" 
+                    <select
+                        name="filter"
+                        onchange="this.form.submit()"
                         class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
                     >
                         <option value="">Semua Pengguna</option>
@@ -50,8 +50,8 @@
                     </select>
                 </div>
                 <div class="md:col-span-2">
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         class="w-full h-full bg-black dark:bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-2xl transition-colors duration-200 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                     >
                         <i data-lucide="search" class="w-5 h-5 mr-2"></i>
@@ -75,8 +75,8 @@
                     <p class="text-gray-500 dark:text-gray-400 mb-6">
                         Tidak ada chat yang sesuai dengan pencarian atau filter yang dipilih.
                     </p>
-                    <a 
-                        href="{{ route('admin.chats.index') }}" 
+                    <a
+                        href="{{ route('admin.chats.index') }}"
                         class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200"
                     >
                         <i class="fa-solid fa-refresh mr-2"></i>
@@ -169,23 +169,23 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex items-center justify-center space-x-2">
-                                            <a 
-                                                href="{{ route('admin.chats.show', $chat->id) }}" 
+                                            <a
+                                                href="{{ route('admin.chats.show', $chat->id) }}"
                                                 class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-lg text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-gray-800 transition-colors duration-200 shadow-sm"
                                             >
                                                 <i class="fa-solid fa-eye mr-1.5"></i>
                                                 Lihat
                                             </a>
-                                            <form 
-                                                action="{{ route('admin.chats.delete', $chat->id) }}" 
-                                                method="POST" 
+                                            <form
+                                                action="{{ route('admin.chats.delete', $chat->id) }}"
+                                                method="POST"
                                                 class="inline"
                                                 onsubmit="return confirm('Yakin ingin menghapus semua chat dengan pengguna ini?')"
                                             >
                                                 @csrf
                                                 @method('DELETE')
-                                                <button 
-                                                    type="submit" 
+                                                <button
+                                                    type="submit"
                                                     class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800 transition-colors duration-200 shadow-sm"
                                                 >
                                                     <i class="fa-solid fa-trash mr-1.5"></i>
@@ -242,7 +242,7 @@
     .fade-in {
         animation: fadeIn 0.5s ease-in-out;
     }
-    
+
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -259,3 +259,4 @@
     });
 </script>
 @endsection
+

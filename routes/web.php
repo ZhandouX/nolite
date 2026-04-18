@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\AdminChatController;
+use App\Http\Controllers\Admin\AdminUlasanController;
 
 
 // DEFAULT LANDING PAGE
@@ -93,6 +94,23 @@ Route::middleware(['auth', 'role:admin'])
             Route::delete('/{id}', [AdminChatController::class, 'deleteChat'])->name('delete');
         });
 
+        // ==========================
+        // ⭐ MANAJEMEN ULASAN (ADMIN)
+        // ==========================
+        Route::prefix('ulasan')->name('ulasan.')->group(function () {
+
+            Route::get('/', [AdminUlasanController::class, 'index'])
+                ->name('index'); // admin.ulasan.index
+
+            Route::get('/{id}', [AdminUlasanController::class, 'show'])
+                ->name('show'); // admin.ulasan.show
+
+            Route::post('/{id}/reply', [AdminUlasanController::class, 'reply'])
+                ->name('reply'); // admin.ulasan.reply
+        });
+
+
+
 
         // ==========================
         // 👥 KELOLA PENGGUNA
@@ -101,13 +119,13 @@ Route::middleware(['auth', 'role:admin'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/{user}', 'show')->name('show');
-            Route::patch('/{user}/block', 'block')->name('block');
-            Route::patch('/{user}/activate', 'activate')->name('activate');
-            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
-            Route::delete('/{user}', 'destroy')->name('destroy');
-        });
+                Route::get('/', 'index')->name('index');
+                Route::get('/{user}', 'show')->name('show');
+                Route::patch('/{user}/block', 'block')->name('block');
+                Route::patch('/{user}/activate', 'activate')->name('activate');
+                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
+                Route::delete('/{user}', 'destroy')->name('destroy');
+            });
 
         // ==========================
         // 💬 CUSTOMER SERVICE (ADMIN)
@@ -148,7 +166,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     // ORDER
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
-    
+
     // SUCCESS PAGE
     Route::get('/checkout/success/{id}', function ($id) {
         $order = \App\Models\Order::with('items')->findOrFail($id);
@@ -163,7 +181,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         Route::get('/{ulasan}/edit', [UlasanController::class, 'edit'])->name('customer.ulasan.edit');
         Route::delete('/ulasan-foto/{foto}', [UlasanController::class, 'hapusFoto'])->name('customer.ulasan.ulasan-foto.delete');
     });
-    
+
     // WISHLIST
     Route::prefix('wishlist')->name('wishlist.')->group(function () {
         Route::get('/', [WishlistController::class, 'index'])->name('index');

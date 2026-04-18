@@ -36,11 +36,15 @@
                 <div class="flex justify-center border-b border-gray-200 mb-[50px] md:mb-5">
                     <div class="tab cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-black hover:border-gray-400 active-tab"
                         data-tab="orders">
-                        Orders
+                        Pesanan
                     </div>
                     <div class="tab cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-black hover:border-gray-400"
                         data-tab="wishlist">
                         Wishlist
+                    </div>
+                    <div class="tab cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-black hover:border-gray-400"
+                        data-tab="wishlist">
+                        Ulasan
                     </div>
                 </div>
 

@@ -20,22 +20,6 @@ class Order extends Model
         'status'
     ];
 
-    // protected static function booted()
-    // {
-    //     // Saat Order
-    //     static::created(function ($order) {
-    //         if ($order->status === 'menunggu') {
-    //             Cache::put('new_order_' . $order->user_id, true, 300);
-    //         }
-    //     });
-
-    //     static::updated(function ($order) {
-    //         if ($order->wasChanged('status') && $order->status === 'menunggu') {
-    //             Cache::put('new_order' . $order->user_id, true, 300);
-    //         }
-    //     });
-    // }
-
     public function items()
     {
         return $this->hasMany(OrderItem::class);
@@ -44,5 +28,15 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relasi ke ULASAN
+     * Setiap pesanan hanya memiliki SATU ulasan.
+     * Pastikan kolomnya: order_id di tabel ulasans
+     */
+    public function ulasan()
+    {
+        return $this->hasOne(Ulasan::class, 'order_id');
     }
 }

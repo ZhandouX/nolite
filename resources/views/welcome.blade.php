@@ -83,7 +83,7 @@
     <div class="fixed bottom-20 right-4 lg:bottom-2 md:right-6 flex flex-col items-end gap-4 z-50">
 
         <!-- BACK TO TOP BUTTON -->
-        <button id="backToTop" title="Kembali ke atas" class="group w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl 
+        <button id="backToTop" title="Kembali ke atas" class="group w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl
         hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
         border border-gray-600/30 backdrop-blur-sm">
             <i class="fa-solid fa-chevron-up text-lg group-hover:animate-bounce"></i>
@@ -102,7 +102,7 @@
                 </div>
 
                 <!-- Segitiga kecil -->
-                <div id="chat-arrow" class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0 
+                <div id="chat-arrow" class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0
             border-t-8 border-t-transparent border-l-8 border-l-gray-800 border-b-8 border-b-transparent
             opacity-0 translate-x-4 transition-all duration-500 ease-out">
                 </div>
@@ -127,7 +127,7 @@
         @include('layouts.partials_user.modals.chatbot')
 
         {{-- KERANJANG POPUP (MOBILE) --}}
-        <div id="cartPopupMobile" class="group flex items-center justify-center shadow-xl 
+        <div id="cartPopupMobile" class="group flex items-center justify-center shadow-xl
         hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1 relative">
         </div>
 

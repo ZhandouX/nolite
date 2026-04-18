@@ -105,7 +105,7 @@
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 const target = this.getAttribute('data-tab');
-                
+
                 tabs.forEach(t => t.classList.remove('border-black', 'text-black', 'active-tab'));
                 this.classList.add('border-black', 'text-black', 'active-tab');
 
@@ -196,46 +196,76 @@
     }
 
     function displayUlasanDetail(ulasan) {
-        const content = document.getElementById('ulasanDetailContent');
-        const title = document.getElementById('ulasanModalTitle');
+    const content = document.getElementById('ulasanDetailContent');
+    const title = document.getElementById('ulasanModalTitle');
 
-        if (!content || !title) return;
+    if (!content || !title) return;
 
-        title.textContent = 'Detail Ulasan';
+    title.textContent = 'Detail Ulasan';
 
-        let stars = '';
-        for (let i = 1; i <= 5; i++) {
-            stars += i <= ulasan.rating
-                ? '<i class="fas fa-star star-rating"></i>'
-                : '<i class="far fa-star star-rating"></i>';
-        }
+    // ⭐ Generate Rating Stars
+    let stars = '';
+    for (let i = 1; i <= 5; i++) {
+        stars += i <= ulasan.rating
+            ? '<i class="fas fa-star star-rating"></i>'
+            : '<i class="far fa-star star-rating"></i>';
+    }
 
-        let photosHTML = '';
-        if (ulasan.fotos && ulasan.fotos.length > 0) {
-            photosHTML = '<div class="mt-4"><p class="font-medium text-gray-700 mb-2">Foto Ulasan:</p><div class="grid grid-cols-3 gap-2">';
-            ulasan.fotos.forEach(foto => {
-                photosHTML += `<img src="${config.storageUrl}/${foto.foto}" class="w-full h-24 object-cover rounded-lg border">`;
-            });
-            photosHTML += '</div></div>';
-        }
+    // 🖼️ Foto Ulasan
+    let photosHTML = '';
+    if (ulasan.fotos && ulasan.fotos.length > 0) {
+        photosHTML = `
+            <div class="mt-4">
+                <p class="font-medium text-gray-700 mb-2">Foto Ulasan:</p>
+                <div class="grid grid-cols-3 gap-2">
+        `;
+        ulasan.fotos.forEach(foto => {
+            photosHTML += `
+                <img src="${config.storageUrl}/${foto.foto}"
+                     class="w-full h-24 object-cover rounded-lg border">
+            `;
+        });
+        photosHTML += `</div></div>`;
+    }
 
-        content.innerHTML = `
-            <div>
-                <div class="flex items-center mb-4">
-                    <div class="flex mr-2">${stars}</div>
-                    <span class="text-lg font-semibold">${ulasan.rating}.0</span>
-                </div>
-                <p class="text-gray-700 mb-4">${ulasan.komentar || '-'}</p>
-                ${photosHTML}
-                <div class="mt-6 flex justify-end">
-                    <button onclick="showEditUlasanForm(${ulasan.id})" class="bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition">Edit Ulasan</button>
-                </div>
+    // 💬 Balasan Admin
+    let adminReplyHTML = '';
+    if (ulasan.admin_reply) {
+        adminReplyHTML = `
+            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p class="font-semibold text-blue-900 mb-1">Balasan Admin:</p>
+                <p class="text-blue-800 leading-relaxed">${ulasan.admin_reply}</p>
             </div>
         `;
-
-        document.getElementById('ulasanDetailContent').classList.remove('hidden');
-        document.getElementById('ulasanEditContent').classList.add('hidden');
     }
+
+    // ✨ Final Render
+    content.innerHTML = `
+        <div>
+            <div class="flex items-center mb-4">
+                <div class="flex mr-2">${stars}</div>
+                <span class="text-lg font-semibold">${ulasan.rating}.0</span>
+            </div>
+
+            <p class="text-gray-700 mb-4">${ulasan.komentar || '-'}</p>
+
+            ${photosHTML}
+
+            ${adminReplyHTML}
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="showEditUlasanForm(${ulasan.id})"
+                        class="bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition">
+                    Edit Ulasan
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('ulasanDetailContent').classList.remove('hidden');
+    document.getElementById('ulasanEditContent').classList.add('hidden');
+}
+
 
     window.showEditUlasanForm = function(ulasanId) {
         if (!config.routes?.ulasanEdit) return;
@@ -259,7 +289,7 @@
 
         const ratingSelect = document.querySelector('#editUlasanForm select[name="rating"]');
         const komentarTextarea = document.querySelector('#editUlasanForm textarea[name="komentar"]');
-        
+
         if (ratingSelect) ratingSelect.value = ulasan.rating;
         if (komentarTextarea) komentarTextarea.value = ulasan.komentar || '';
 
@@ -293,7 +323,7 @@
 
     function handleEditUlasanSubmit(e) {
         e.preventDefault();
-        
+
         if (!currentUlasanId || !config.routes?.ulasanUpdate) return;
 
         const formData = new FormData(this);
@@ -413,7 +443,7 @@
         document.getElementById('modalOrderId').textContent = orderId;
         document.getElementById('modalOrderStatus').textContent = status;
         document.getElementById('modalOrderSubtotal').textContent = 'Rp ' + Number(subtotal).toLocaleString('id-ID');
-        
+
         const detailOrderLink = document.getElementById('detailOrderLink');
         if (detailOrderLink && config.routes?.orderShow) {
             detailOrderLink.href = config.routes.orderShow(orderId);
@@ -488,7 +518,7 @@
     window.openUlasanForm = function(order_item_id, produk_id, order_id) {
         const ulasanContainer = document.getElementById('ulasanContainer');
         const ulasanForm = document.getElementById('ulasanForm');
-        
+
         if (ulasanContainer) ulasanContainer.classList.remove('hidden');
         if (ulasanForm) ulasanForm.classList.remove('hidden');
 

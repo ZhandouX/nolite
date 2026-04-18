@@ -23,7 +23,7 @@
           </div>
           <div>
             <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-              NoliteAspiciens</h1>
+              Nolite Aspiciens</h1>
             <p class="text-xs text-gray-300 dark:text-gray-400 font-light">Admin Panel</p>
           </div>
         </div>
@@ -93,9 +93,9 @@
         </div>
       </div>
       <!-- MODAL NOTIFICATION CENTER -->
-      <div 
-  id="notificationsAll" 
-  x-data="notifCenter()" 
+      <div
+  id="notificationsAll"
+  x-data="notifCenter()"
   @open-notif-modal.window="openModal"
 >
 

@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// WAJIB: Import semua model relasi
+use App\Models\User;
+use App\Models\Produk;
+use App\Models\OrderItem;
+use App\Models\UlasanFoto;
+
 class Ulasan extends Model
 {
     use HasFactory;
@@ -18,6 +24,8 @@ class Ulasan extends Model
         'order_item_id',
         'rating',
         'komentar',
+        'admin_reply',
+        'status',
     ];
 
     public function fotos()

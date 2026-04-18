@@ -126,7 +126,7 @@
                         </div>
                         <div class="p-5">
                             <div class="space-y-4" id="productList">
-                                @foreach($order->items->take(3) as $item)
+                                @foreach ($order->items->take(3) as $item)
                                     @php
                                         $produk = $item->produk;
                                         $foto = $produk->fotos->isNotEmpty()
@@ -162,9 +162,10 @@
                                             </p>
 
                                             <div class="flex justify-between items-center mt-3">
-                                                @if($produk->diskon && $produk->diskon > 0)
+                                                @if ($produk->diskon && $produk->diskon > 0)
                                                     @php
-                                                        $hargaDiskon = $produk->harga - ($produk->harga * $produk->diskon / 100);
+                                                        $hargaDiskon =
+                                                            $produk->harga - ($produk->harga * $produk->diskon) / 100;
                                                     @endphp
                                                     <div class="flex flex-col">
                                                         <span class="text-gray-400 text-xs line-through">
@@ -185,7 +186,7 @@
                                 @endforeach
                             </div>
 
-                            @if($order->items->count() > 3)
+                            @if ($order->items->count() > 3)
                                 <div class="mt-5 text-center">
                                     <button id="showMoreBtn"
                                         class="text-gray-700 font-semibold hover:text-gray-900 transition-colors flex items-center justify-center gap-2 mx-auto">
@@ -196,14 +197,96 @@
                             @endif
                         </div>
                     </div>
+
+                    {{-- ===================================== --}}
+                    {{--       ULASAN & BALASAN ADMIN         --}}
+                    {{-- ===================================== --}}
+                    <div class="mt-6">
+                        <h4 class="text-lg font-bold mb-3">Ulasan Pesanan</h4>
+
+                        @if ($order->ulasan)
+                            <div class="p-4 rounded-lg border bg-gray-50">
+
+                                {{-- Rating --}}
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-sm font-semibold">Rating:</span>
+                                    <div>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $order->ulasan->rating)
+                                                <i class="fas fa-star text-yellow-500"></i>
+                                            @else
+                                                <i class="far fa-star text-gray-400"></i>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                </div>
+
+                                {{-- Komentar user --}}
+                                <p class="text-gray-800 mb-3">
+                                    <span class="font-semibold">Komentar:</span><br>
+                                    {{ $order->ulasan->komentar }}
+                                </p>
+
+                                {{-- Foto-foto ulasan --}}
+                                @if ($order->ulasan && $order->ulasan->fotos && $order->ulasan->fotos->count() > 0)
+                                    <div class="flex flex-wrap gap-3 mt-3">
+
+                                        @foreach ($order->ulasan->fotos as $foto)
+                                            @php
+                                                $src = $foto->foto
+                                                    ? asset('storage/' . $foto->foto)
+                                                    : asset('assets/images/no-image.png');
+                                            @endphp
+
+                                            <img src="{{ $src }}"
+                                                class="h-24 w-24 object-cover rounded border shadow-sm"
+                                                onerror="this.onerror=null; this.src='{{ asset('assets/images/no-image.png') }}'">
+                                        @endforeach
+
+                                    </div>
+                                @else
+                                    <p class="text-gray-500 mt-3">Tidak ada foto ulasan.</p>
+                                @endif
+
+
+                                <hr class="my-4">
+
+                                {{-- Balasan Admin --}}
+                                <div class="mt-2">
+                                    <span class="font-semibold text-indigo-700">Balasan Admin:</span>
+
+                                    @if ($order->ulasan->admin_reply)
+                                        <div class="mt-1 p-3 border rounded bg-white shadow-sm">
+                                            <p class="text-gray-700">{{ $order->ulasan->admin_reply }}</p>
+                                        </div>
+                                    @else
+                                        <p class="text-gray-500 mt-1">Belum ada balasan dari admin.</p>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            {{-- Jika user belum membuat ulasan --}}
+                            <div class="p-4 rounded-lg border bg-gray-50">
+                                <p class="text-gray-600">Belum ada ulasan untuk pesanan ini.</p>
+                            </div>
+                        @endif
+
+                    </div>
+
+
+
+
+
                 </div>
             </div>
         </div>
     </div>
 
-    @if($order->items->count() > 3)
+
+    @if ($order->items->count() > 3)
         <!-- Modal Lihat Lainnya -->
-        <div id="moreModal" class="fixed z-[9999] inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div id="moreModal"
+            class="fixed z-[9999] inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 backdrop-blur-sm">
             <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
                 <div class="bg-gradient-to-r from-gray-700 to-gray-600 px-6 py-4 flex justify-between items-center">
                     <h2 class="text-xl font-bold text-white">Semua Produk Dipesan</h2>
@@ -212,7 +295,7 @@
                 </div>
                 <div class="overflow-y-auto p-6">
                     <div class="space-y-4">
-                        @foreach($order->items as $item)
+                        @foreach ($order->items as $item)
                             @php
                                 $produk = $item->produk;
                                 $foto = $produk->fotos->isNotEmpty()
@@ -230,15 +313,18 @@
                                 <div class="flex-1 p-4">
                                     <a href="{{ route('produk.detail', $produk->id) }}"
                                         class="hover:text-gray-600 transition-colors">
-                                        <h3 class="font-semibold text-gray-800 text-sm sm:text-base line-clamp-1">{{ $produk->nama_produk }}</h3>
+                                        <h3 class="font-semibold text-gray-800 text-sm sm:text-base line-clamp-1">
+                                            {{ $produk->nama_produk }}</h3>
                                     </a>
 
-                                    <p class="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-1">{{ $produk->deskripsi }}</p>
+                                    <p class="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-1">{{ $produk->deskripsi }}
+                                    </p>
 
                                     <div class="flex justify-between items-center mt-3">
-                                        @if($produk->diskon && $produk->diskon > 0)
+                                        @if ($produk->diskon && $produk->diskon > 0)
                                             @php
-                                                $hargaDiskon = $produk->harga - ($produk->harga * $produk->diskon / 100);
+                                                $hargaDiskon =
+                                                    $produk->harga - ($produk->harga * $produk->diskon) / 100;
                                             @endphp
                                             <div class="flex flex-col">
                                                 <span class="text-gray-400 text-xs line-through">
@@ -266,6 +352,8 @@
             </div>
         </div>
 
+
+
         <script>
             const modal = document.getElementById('moreModal');
             const showMoreBtn = document.getElementById('showMoreBtn');
@@ -278,7 +366,7 @@
             }
 
             // Tutup modal dengan menekan ESC
-            document.addEventListener('keydown', function (event) {
+            document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     toggleModal(false);
                 }

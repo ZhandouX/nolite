@@ -7,7 +7,8 @@
         <div class="max-w-screen mx-auto">
             <!-- Header Section -->
             <div class="text-center mb-12">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg mb-4">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg mb-4">
                     <i class="fa-solid fa-user-gear text-white text-2xl"></i>
                 </div>
                 <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-3">Pengaturan Profil</h1>
@@ -20,70 +21,82 @@
                 <!-- Sidebar Navigation -->
                 <div class="xl:col-span-1 space-y-6">
                     <!-- Profile Card -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div class="relative bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 h-20">
                             <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2">
-                                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 border-4 border-white dark:border-gray-800 shadow-xl flex items-center justify-center text-white text-2xl font-bold">
+                                <div
+                                    class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 border-4 border-white dark:border-gray-800 shadow-xl flex items-center justify-center text-white text-2xl font-bold">
                                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="pt-14 pb-6 px-6 text-center">
                             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ Auth::user()->name }}</h2>
                             <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">{{ Auth::user()->email }}</p>
-                            <div class="inline-flex items-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-[10px] px-3 py-1.5 rounded-full font-medium">
+                            <div
+                                class="inline-flex items-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-[10px] px-3 py-1.5 rounded-full font-medium">
                                 <i class="fa-regular fa-calendar mr-1.5"></i>
-                                Bergabung {{ \Carbon\Carbon::parse(Auth::user()->created_at)->locale('id')->isoFormat('D MMM YYYY') }}
+                                Bergabung
+                                {{ \Carbon\Carbon::parse(Auth::user()->created_at)->locale('id')->isoFormat('D MMM YYYY') }}
                             </div>
                         </div>
                     </div>
 
                     <!-- Navigation Menu -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 px-1 py-4">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 px-1 py-4">
                         <nav class="space-y-2">
-                            <button onclick="openModals('updateProfileModal')" 
+                            <button onclick="openModals('updateProfileModal')"
                                 class="w-full flex items-center px-4 py-4 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-all duration-300 group border border-transparent hover:border-blue-200 dark:hover:border-blue-800">
-                                <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
                                     <i class="fa-solid fa-user-pen text-blue-600 dark:text-blue-400 text-lg"></i>
                                 </div>
                                 <div class="text-left flex-1">
                                     <div class="text-sm font-semibold text-gray-900 dark:text-white">Edit Profil</div>
                                     <div class="text-[10px] text-gray-500 dark:text-gray-400">Ubah informasi pribadi</div>
                                 </div>
-                                <i class="fa-solid fa-chevron-right text-gray-400 group-hover:text-blue-500 transition-colors"></i>
+                                <i
+                                    class="fa-solid fa-chevron-right text-gray-400 group-hover:text-blue-500 transition-colors"></i>
                             </button>
 
-                            <button onclick="openModals('updatePasswordModal')" 
+                            <button onclick="openModals('updatePasswordModal')"
                                 class="w-full flex items-center px-4 py-4 text-gray-700 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-xl transition-all duration-300 group border border-transparent hover:border-amber-200 dark:hover:border-amber-800">
-                                <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
                                     <i class="fa-solid fa-lock text-amber-600 dark:text-amber-400 text-lg"></i>
                                 </div>
                                 <div class="text-left flex-1">
                                     <div class="text-sm font-semibold text-gray-900 dark:text-white">Keamanan</div>
                                     <div class="text-[10px] text-gray-500 dark:text-gray-400">Perbarui kata sandi</div>
                                 </div>
-                                <i class="fa-solid fa-chevron-right text-gray-400 group-hover:text-amber-500 transition-colors"></i>
+                                <i
+                                    class="fa-solid fa-chevron-right text-gray-400 group-hover:text-amber-500 transition-colors"></i>
                             </button>
 
-                            <!-- <button onclick="openDeleteModal()" 
-                                class="w-full flex items-center px-4 py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-300 group border border-transparent hover:border-red-200 dark:hover:border-red-800">
-                                <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                                    <i class="fa-regular fa-trash-can text-red-600 dark:text-red-400 text-lg"></i>
-                                </div>
-                                <div class="text-left flex-1">
-                                    <div class="text-sm font-semibold">Hapus Akun</div>
-                                    <div class="text-[10px] text-red-500 dark:text-red-400">Hapus permanen akun</div>
-                                </div>
-                                <i class="fa-solid fa-chevron-right text-red-400 group-hover:text-red-500 transition-colors"></i>
-                            </button> -->
+                            <!-- <button onclick="openDeleteModal()"
+                                    class="w-full flex items-center px-4 py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-300 group border border-transparent hover:border-red-200 dark:hover:border-red-800">
+                                    <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                                        <i class="fa-regular fa-trash-can text-red-600 dark:text-red-400 text-lg"></i>
+                                    </div>
+                                    <div class="text-left flex-1">
+                                        <div class="text-sm font-semibold">Hapus Akun</div>
+                                        <div class="text-[10px] text-red-500 dark:text-red-400">Hapus permanen akun</div>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right text-red-400 group-hover:text-red-500 transition-colors"></i>
+                                </button> -->
 
-                            <form id="logoutForm" method="POST" action="{{ route('logout') }}" class="border-t border-gray-400 dark:border-white/20">
+                            <form id="logoutForm" method="POST" action="{{ route('logout') }}"
+                                class="border-t border-gray-400 dark:border-white/20">
                                 @csrf
-                                <button type="submit" 
+                                <button type="submit"
                                     class="w-full flex items-center px-4 py-4 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl transition-all duration-300 group border border-transparent hover:border-gray-200 dark:hover:border-gray-600 mt-4">
-                                    <div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                                        <i class="fa-solid fa-right-from-bracket text-gray-600 dark:text-gray-400 text-lg"></i>
+                                    <div
+                                        class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                                        <i
+                                            class="fa-solid fa-right-from-bracket text-gray-600 dark:text-gray-400 text-lg"></i>
                                     </div>
                                     <div class="text-left flex-1">
                                         <div class="text-sm font-semibold text-gray-900 dark:text-white">Keluar</div>
@@ -98,25 +111,28 @@
                 <!-- Main Content -->
                 <div class="xl:col-span-3 space-y-8">
                     <!-- Account Overview -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
                         <div class="flex items-center justify-between mb-8">
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Ringkasan Akun</h3>
                                 <p class="text-gray-600 dark:text-gray-400 mt-2">Tinjau status dan informasi akun Anda</p>
                             </div>
-                            <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
                                 <i class="fa-solid fa-chart-pie text-blue-600 dark:text-blue-400 text-xl"></i>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Status Card -->
-                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
+                            <div
+                                class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Status Akun</p>
                                         <p class="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                                            @if($user->status === 'aktif')
+                                            @if ($user->status === 'aktif')
                                                 <span class="flex items-center gap-2 text-green-600 dark:text-green-400">
                                                     <i class="fa-solid fa-circle-check"></i> Aktif
                                                 </span>
@@ -131,16 +147,19 @@
                                             @endif
                                         </p>
                                     </div>
-                                    @if($user->status === 'aktif')
-                                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                                    @if ($user->status === 'aktif')
+                                        <div
+                                            class="w-16 h-16 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
                                             <i class="fa-solid fa-check text-white text-2xl"></i>
                                         </div>
                                     @elseif($user->status === 'nonaktif')
-                                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-r from-red-500 to-rose-600 flex items-center justify-center shadow-lg">
+                                        <div
+                                            class="w-16 h-16 rounded-2xl bg-gradient-to-r from-red-500 to-rose-600 flex items-center justify-center shadow-lg">
                                             <i class="fa-solid fa-xmark text-white text-2xl"></i>
                                         </div>
                                     @else
-                                        <div class="w-16 h-16 rounded-2xl bg-gray-400 flex items-center justify-center shadow-lg">
+                                        <div
+                                            class="w-16 h-16 rounded-2xl bg-gray-400 flex items-center justify-center shadow-lg">
                                             <i class="fa-solid fa-question text-white text-2xl"></i>
                                         </div>
                                     @endif
@@ -148,7 +167,8 @@
                             </div>
 
                             <!-- Member Since Card -->
-                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
+                            <div
+                                class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Member Sejak</p>
@@ -156,7 +176,8 @@
                                             {{ \Carbon\Carbon::parse(Auth::user()->created_at)->locale('id')->isoFormat('D MMM YYYY') }}
                                         </p>
                                     </div>
-                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                                    <div
+                                        class="w-16 h-16 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg">
                                         <i class="fa-regular fa-clock text-white text-2xl"></i>
                                     </div>
                                 </div>
@@ -165,49 +186,61 @@
                     </div>
 
                     <!-- Security Status -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
                         <div class="flex items-center justify-between mb-8">
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Status Keamanan</h3>
-                                <p class="text-gray-600 dark:text-gray-400 mt-2">Tinjau dan tingkatkan keamanan akun Anda</p>
+                                <p class="text-gray-600 dark:text-gray-400 mt-2">Tinjau dan tingkatkan keamanan akun Anda
+                                </p>
                             </div>
-                            <div class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
                                 <i class="fa-solid fa-shield-halved text-green-600 dark:text-green-400 text-xl"></i>
                             </div>
                         </div>
 
                         <div class="space-y-6">
                             <!-- Email Verification -->
-                            <div class="flex items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900/20 rounded-2xl border border-gray-200 dark:border-gray-600">
+                            <div
+                                class="flex items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900/20 rounded-2xl border border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center">
-                                    <div class="w-14 h-14 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mr-4">
-                                        <i class="fa-solid fa-envelope-circle-check text-blue-600 dark:text-blue-400 text-xl"></i>
+                                    <div
+                                        class="w-14 h-14 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mr-4">
+                                        <i
+                                            class="fa-solid fa-envelope-circle-check text-blue-600 dark:text-blue-400 text-xl"></i>
                                     </div>
                                     <div>
                                         <p class="font-semibold text-gray-900 dark:text-white">Verifikasi Email</p>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Pastikan email Anda sudah terverifikasi</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Pastikan email Anda sudah
+                                            terverifikasi</p>
                                     </div>
                                 </div>
-                                @if($user->hasVerifiedEmail())
-                                    <span class="px-4 py-2 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-sm rounded-full font-semibold flex items-center gap-2">
+                                @if ($user->hasVerifiedEmail())
+                                    <span
+                                        class="px-4 py-2 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-sm rounded-full font-semibold flex items-center gap-2">
                                         <i class="fa-solid fa-check"></i> Terverifikasi
                                     </span>
                                 @else
-                                    <span class="px-4 py-2 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-sm rounded-full font-semibold flex items-center gap-2">
+                                    <span
+                                        class="px-4 py-2 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-sm rounded-full font-semibold flex items-center gap-2">
                                         <i class="fa-solid fa-exclamation"></i> Belum Verifikasi
                                     </span>
                                 @endif
                             </div>
 
                             <!-- Password Strength -->
-                            <div class="flex items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-amber-50 dark:from-gray-700 dark:to-amber-900/20 rounded-2xl border border-gray-200 dark:border-gray-600">
+                            <div
+                                class="flex items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-amber-50 dark:from-gray-700 dark:to-amber-900/20 rounded-2xl border border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center">
-                                    <div class="w-14 h-14 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mr-4">
+                                    <div
+                                        class="w-14 h-14 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mr-4">
                                         <i class="fa-solid fa-bolt text-amber-600 dark:text-amber-400 text-xl"></i>
                                     </div>
                                     <div>
                                         <p class="font-semibold text-gray-900 dark:text-white">Kekuatan Kata Sandi</p>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Perbarui kata sandi secara berkala</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Perbarui kata sandi secara
+                                            berkala</p>
                                     </div>
                                 </div>
                                 <button onclick="openModals('updatePasswordModal')"
@@ -223,8 +256,10 @@
     </div>
 
     <!-- MODAL UPDATE PROFILE -->
-    <div id="updateProfileModal" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto hide-scrollbar">
+    <div id="updateProfileModal"
+        class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto hide-scrollbar">
             <!-- Header -->
             <div class="bg-gradient-to-r from-gray-900 to-blue-900 p-8 rounded-t-2xl sticky top-0 z-10">
                 <div class="flex items-center justify-between">
@@ -237,7 +272,8 @@
                             <p class="text-blue-200 text-sm mt-1">Kelola informasi akun Anda</p>
                         </div>
                     </div>
-                    <button onclick="closeModals('updateProfileModal')" class="text-white/80 hover:text-white transition-colors p-2">
+                    <button onclick="closeModals('updateProfileModal')"
+                        class="text-white/80 hover:text-white transition-colors p-2">
                         <i class="fa-solid fa-xmark text-2xl"></i>
                     </button>
                 </div>
@@ -253,13 +289,59 @@
                     @csrf
                     @method('patch')
 
+                    <!-- Profile Photo Upload -->
+                    <div class="space-y-4">
+                        <label class="block text-lg font-semibold text-gray-900 dark:text-white">
+                            Foto Profil
+                        </label>
+
+                        <div class="relative inline-block">
+                            <!-- Input File -->
+                            <input id="photo" name="photo" type="file" accept="image/*"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                                onchange="previewPhoto(event)">
+
+                            <!-- Preview Box (Clickable Area) -->
+                            <div
+                                class="w-28 h-28 rounded-3xl overflow-hidden border-4 border-gray-300 dark:border-gray-600
+                    bg-gray-200 shadow-md transition-all duration-300 cursor-pointer hover:border-blue-500 hover:scale-105">
+                                <img id="photo-preview"
+                                    src="{{ $user->profile_photo_url ?? asset('default-profile.png') }}"
+                                    class="w-full h-full object-cover" alt="Profile Photo">
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Klik pada foto untuk mengganti foto profil
+                        </p>
+
+                        @error('photo')
+                            <div
+                                class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>{{ $message }}</span>
+                            </div>
+                        @enderror
+                    </div>
+
+                    <script>
+                        function previewPhoto(event) {
+                            const reader = new FileReader();
+                            reader.onload = function() {
+                                document.getElementById('photo-preview').src = reader.result;
+                            };
+                            reader.readAsDataURL(event.target.files[0]);
+                        }
+                    </script>
+
+
                     <!-- Name Field -->
                     <div class="space-y-4">
                         <label for="name" class="block text-lg font-semibold text-gray-900 dark:text-white">
                             Nama Lengkap
                         </label>
                         <div class="relative">
-                            <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}" required
+                            <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}"
+                                required
                                 class="w-full px-6 py-4 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all outline-none placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white text-lg"
                                 placeholder="Masukkan nama lengkap">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-4">
@@ -268,7 +350,8 @@
                             </div>
                         </div>
                         @error('name')
-                            <div class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
+                            <div
+                                class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -281,7 +364,8 @@
                             Alamat Email
                         </label>
                         <div class="relative">
-                            <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" required
+                            <input id="email" name="email" type="email"
+                                value="{{ old('email', $user->email) }}" required
                                 class="w-full px-6 py-4 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all outline-none placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white text-lg"
                                 placeholder="Masukkan alamat email">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-4">
@@ -290,14 +374,16 @@
                             </div>
                         </div>
                         @error('email')
-                            <div class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
+                            <div
+                                class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
                         @enderror
 
                         @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
-                            <div class="mt-6 p-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-2xl text-base text-amber-800 dark:text-amber-300">
+                            <div
+                                class="mt-6 p-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-2xl text-base text-amber-800 dark:text-amber-300">
                                 <div class="flex items-start gap-4">
                                     <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xl mt-1"></i>
                                     <div>
@@ -309,7 +395,8 @@
                                         </button>
 
                                         @if (session('status') === 'verification-link-sent')
-                                            <div class="mt-3 flex items-center gap-3 text-green-600 dark:text-green-400 font-semibold">
+                                            <div
+                                                class="mt-3 flex items-center gap-3 text-green-600 dark:text-green-400 font-semibold">
                                                 <i class="fa-solid fa-circle-check"></i>
                                                 Link verifikasi baru telah dikirim ke email Anda
                                             </div>
@@ -341,8 +428,10 @@
     </div>
 
     <!-- MODAL UPDATE PASSWORD -->
-    <div id="updatePasswordModal" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto hide-scrollbar">
+    <div id="updatePasswordModal"
+        class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto hide-scrollbar">
             <!-- Header -->
             <div class="bg-gradient-to-r from-blue-900 to-gray-900 p-8 rounded-t-2xl sticky top-0 z-10">
                 <div class="flex items-center justify-between">
@@ -355,7 +444,8 @@
                             <p class="text-amber-200 text-sm mt-1">Tingkatkan keamanan akun Anda</p>
                         </div>
                     </div>
-                    <button onclick="closeModals('updatePasswordModal')" class="text-white/80 hover:text-white transition-colors p-2">
+                    <button onclick="closeModals('updatePasswordModal')"
+                        class="text-white/80 hover:text-white transition-colors p-2">
                         <i class="fa-solid fa-xmark text-2xl"></i>
                     </button>
                 </div>
@@ -383,7 +473,8 @@
                             </button>
                         </div>
                         @error('current_password', 'updatePassword')
-                            <div class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
+                            <div
+                                class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -414,12 +505,14 @@
                             </div>
                             <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
                                 <div id="password-strength-bar"
-                                    class="h-3 rounded-full bg-red-500 transition-all duration-500" style="width:0%"></div>
+                                    class="h-3 rounded-full bg-red-500 transition-all duration-500" style="width:0%">
+                                </div>
                             </div>
                         </div>
 
                         @error('password', 'updatePassword')
-                            <div class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
+                            <div
+                                class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -428,7 +521,8 @@
 
                     <!-- Confirm Password -->
                     <div class="space-y-4">
-                        <label for="password_confirmation" class="block text-lg font-semibold text-gray-900 dark:text-white">
+                        <label for="password_confirmation"
+                            class="block text-lg font-semibold text-gray-900 dark:text-white">
                             Konfirmasi Kata Sandi Baru
                         </label>
                         <div class="relative">
@@ -450,7 +544,8 @@
                         </div>
 
                         @error('password_confirmation', 'updatePassword')
-                            <div class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
+                            <div
+                                class="flex items-center gap-3 text-base text-red-600 dark:text-red-400 mt-3 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -500,7 +595,8 @@
     </div>
 
     <!-- DELETE ACCOUNT MODAL -->
-    <div id="deleteAccountModal" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+    <div id="deleteAccountModal"
+        class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all">
             <!-- Header -->
             <div class="p-8 border-b border-gray-200 dark:border-gray-700">
@@ -510,7 +606,8 @@
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Hapus Akun</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mt-2">Tindakan ini permanen dan tidak dapat dibatalkan</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">Tindakan ini permanen dan tidak dapat dibatalkan
+                        </p>
                     </div>
                 </div>
             </div>
@@ -522,7 +619,8 @@
                         <i class="fa-solid fa-circle-exclamation text-red-500 text-xl mt-1"></i>
                         <div class="text-base text-red-800 dark:text-red-300">
                             <p class="font-semibold">Perhatian!</p>
-                            <p class="mt-2">Semua data Anda akan dihapus secara permanen. Data yang sudah dihapus tidak dapat dikembalikan.</p>
+                            <p class="mt-2">Semua data Anda akan dihapus secara permanen. Data yang sudah dihapus tidak
+                                dapat dikembalikan.</p>
                         </div>
                     </div>
                 </div>
@@ -533,7 +631,8 @@
                     @method('delete')
 
                     <div>
-                        <label for="delete_password" class="block text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                        <label for="delete_password"
+                            class="block text-lg font-semibold text-gray-900 dark:text-white mb-3">
                             Konfirmasi Password
                         </label>
                         <input id="delete_password" name="password" type="password" required
@@ -599,25 +698,25 @@
         }
 
         // Profile Form Validation
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const nameInput = document.getElementById('name');
             const emailInput = document.getElementById('email');
             const nameCheck = document.getElementById('name-check');
             const emailCheck = document.getElementById('email-check');
 
-            nameInput.addEventListener('input', function () {
+            nameInput.addEventListener('input', function() {
                 nameCheck.classList.toggle('opacity-100', nameInput.value.length > 0);
                 nameCheck.classList.toggle('opacity-0', nameInput.value.length === 0);
             });
 
-            emailInput.addEventListener('input', function () {
+            emailInput.addEventListener('input', function() {
                 emailCheck.classList.toggle('opacity-100', emailInput.value.length > 0);
                 emailCheck.classList.toggle('opacity-0', emailInput.value.length === 0);
             });
         });
 
         // Password Strength Checker
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const passwordInput = document.getElementById('password');
             const confirmInput = document.getElementById('password_confirmation');
             const strengthBar = document.getElementById('password-strength-bar');
@@ -709,7 +808,7 @@
                 }
             }
 
-            passwordInput.addEventListener('input', function () {
+            passwordInput.addEventListener('input', function() {
                 checkPasswordStrength(this.value);
                 checkPasswordMatch();
             });
@@ -721,7 +820,7 @@
         });
 
         // Close modals on outside click
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             if (e.target.classList.contains('modal')) {
                 e.target.classList.add('hidden');
                 document.body.style.overflow = '';
@@ -729,7 +828,7 @@
         });
 
         // Close modals on ESC key
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 document.querySelectorAll('.modal').forEach(modal => {
                     modal.classList.add('hidden');
@@ -750,7 +849,7 @@
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
-        
+
         /* Smooth transitions for dark mode */
         * {
             transition: background-color 0.3s ease, border-color 0.3s ease;

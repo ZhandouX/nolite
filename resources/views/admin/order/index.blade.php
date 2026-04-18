@@ -8,7 +8,8 @@
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex items-center">
-                    <div class="shrink-0 h-12 w-12 rounded-tl-xl rounded-br-xl bg-primary-500 flex items-center justify-center shadow-sm">
+                    <div
+                        class="shrink-0 h-12 w-12 rounded-tl-xl rounded-br-xl bg-primary-500 flex items-center justify-center shadow-sm">
                         <i class="fa-solid fa-shopping-cart text-white text-lg"></i>
                     </div>
                     <div class="ml-4">
@@ -23,7 +24,7 @@
             </div>
 
             <!-- Alert Success -->
-            @if(session('success'))
+            @if (session('success'))
                 <div
                     class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl transition-all duration-300">
                     <div class="flex items-center">
@@ -89,7 +90,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($orders as $order)
+                            @foreach ($orders as $order)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
                                     <!-- ID Order -->
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -132,8 +133,9 @@
                                     <!-- Pesanan -->
                                     <td class="px-6 py-4">
                                         <div class="space-y-3">
-                                            @foreach($order->items as $item)
-                                                <div class="border-l-4 border-primary-200 dark:border-primary-800 pl-3 py-1">
+                                            @foreach ($order->items as $item)
+                                                <div
+                                                    class="border-l-4 border-primary-200 dark:border-primary-800 pl-3 py-1">
                                                     <div class="flex items-start justify-between">
                                                         <div class="flex-1">
                                                             <p class="text-sm font-medium text-gray-900 dark:text-white">
@@ -141,22 +143,25 @@
                                                             </p>
                                                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                                 Jumlah: {{ $item->jumlah }} ×
-                                                                @if($item->produk->diskon && $item->produk->diskon > 0)
+                                                                @if ($item->produk->diskon && $item->produk->diskon > 0)
                                                                     <span class="line-through text-gray-400 mr-1">
                                                                         Rp{{ number_format($item->produk->harga, 0, ',', '.') }}
                                                                     </span>
-                                                                    <span class="text-red-600 dark:text-red-400 font-semibold">
-                                                                        Rp{{ number_format($item->produk->harga - ($item->produk->harga * $item->produk->diskon / 100), 0, ',', '.') }}
+                                                                    <span
+                                                                        class="text-red-600 dark:text-red-400 font-semibold">
+                                                                        Rp{{ number_format($item->produk->harga - ($item->produk->harga * $item->produk->diskon) / 100, 0, ',', '.') }}
                                                                     </span>
                                                                 @else
-                                                                    <span class="text-gray-700 dark:text-gray-300 font-semibold">
+                                                                    <span
+                                                                        class="text-gray-700 dark:text-gray-300 font-semibold">
                                                                         Rp{{ number_format($item->produk->harga, 0, ',', '.') }}
                                                                     </span>
                                                                 @endif
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <div class="mt-1 text-xs font-semibold text-primary-600 dark:text-primary-400">
+                                                    <div
+                                                        class="mt-1 text-xs font-semibold text-primary-600 dark:text-primary-400">
                                                         Subtotal: Rp{{ number_format($item->subtotal, 0, ',', '.') }}
                                                     </div>
                                                 </div>
@@ -183,9 +188,12 @@
                                                 'menunggu' => ['color' => 'yellow', 'icon' => 'fa-clock'],
                                                 'diproses' => ['color' => 'blue', 'icon' => 'fa-cog'],
                                                 'dikirim' => ['color' => 'purple', 'icon' => 'fa-truck'],
-                                                'selesai' => ['color' => 'green', 'icon' => 'fa-check-circle']
+                                                'selesai' => ['color' => 'green', 'icon' => 'fa-check-circle'],
                                             ];
-                                            $config = $statusConfig[$order->status] ?? ['color' => 'gray', 'icon' => 'fa-question'];
+                                            $config = $statusConfig[$order->status] ?? [
+                                                'color' => 'gray',
+                                                'icon' => 'fa-question',
+                                            ];
                                         @endphp
                                         <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-{{ $config['color'] }}-100 dark:bg-{{ $config['color'] }}-900 text-{{ $config['color'] }}-800 dark:text-{{ $config['color'] }}-200 capitalize">
@@ -240,7 +248,8 @@
                                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-95"
                                         @click.away="closeModal('modal-{{ $order->id }}')">
                                         <div class="flex items-center justify-between mb-4">
-                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                                            <h3
+                                                class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                                                 <i class="fa-solid fa-edit text-primary-500 mr-2"></i>
                                                 Ubah Status Order
                                             </h3>
@@ -251,10 +260,12 @@
                                         </div>
 
                                         <div class="mb-4">
-                                            <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div
+                                                class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                                 <div
                                                     class="shrink-0 h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-                                                    <i class="fa-solid fa-receipt text-primary-600 dark:text-primary-400"></i>
+                                                    <i
+                                                        class="fa-solid fa-receipt text-primary-600 dark:text-primary-400"></i>
                                                 </div>
                                                 <div>
                                                     <div class="text-sm font-medium text-gray-900 dark:text-white">
@@ -270,37 +281,49 @@
                                         <form action="{{ route('admin.order.updateStatus', $order->id) }}" method="POST"
                                             class="space-y-4">
                                             @csrf
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+
+                                            <div class="relative">
+                                                <label
+                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                     Status Pesanan
                                                 </label>
-                                                <select name="status"
+
+                                                <select id="statusSelect" name="status"
                                                     class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 appearance-none">
-                                                    <option value="menunggu" {{ $order->status == 'menunggu' ? 'selected' : '' }}>
-                                                        🕐 Menunggu
+                                                    <option value="menunggu"
+                                                        {{ $order->status == 'menunggu' ? 'selected' : '' }}>🕐 Menunggu
                                                     </option>
-                                                    <option value="diproses" {{ $order->status == 'diproses' ? 'selected' : '' }}>
-                                                        ⚙️ Diproses
+                                                    <option value="diproses"
+                                                        {{ $order->status == 'diproses' ? 'selected' : '' }}>⚙️ Diproses
                                                     </option>
-                                                    <option value="dikirim" {{ $order->status == 'dikirim' ? 'selected' : '' }}>
-                                                        🚚 Dikirim
+                                                    <option value="dikirim"
+                                                        {{ $order->status == 'dikirim' ? 'selected' : '' }}>🚚 Dikirim
                                                     </option>
-                                                    <option value="selesai" {{ $order->status == 'selesai' ? 'selected' : '' }}>
-                                                        ✅ Selesai
+                                                    <option value="selesai"
+                                                        {{ $order->status == 'selesai' ? 'selected' : '' }}>✅ Selesai
                                                     </option>
                                                 </select>
+
+                                                <!-- Icon panah -->
+                                                <div id="dropdownIcon"
+                                                    class="pointer-events-none absolute right-3 bottom-3 text-gray-500 dark:text-gray-300 transition-all duration-200">
+                                                    <i class="fa-solid fa-chevron-down text-sm"></i>
+                                                </div>
                                             </div>
+
                                             <div class="flex justify-end space-x-3 pt-4">
                                                 <button type="button" onclick="closeModal('modal-{{ $order->id }}')"
                                                     class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                                                     Batal
                                                 </button>
+
                                                 <button type="submit"
                                                     class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                                                     Simpan Perubahan
                                                 </button>
                                             </div>
                                         </form>
+
                                     </div>
                                 </div>
                             @endforeach
@@ -309,14 +332,14 @@
                 </div>
 
                 <!-- Footer Tabel (Pagination) -->
-                @if($orders->hasPages())
+                @if ($orders->hasPages())
                     <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                         <div class="flex items-center justify-between">
                             <div class="text-sm text-gray-500 dark:text-gray-400">
                                 Menampilkan {{ $orders->count() }} dari {{ $orders->total() }} pesanan
                             </div>
                             <div class="flex space-x-2">
-                                @if($orders->onFirstPage())
+                                @if ($orders->onFirstPage())
                                     <span
                                         class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-700 cursor-not-allowed">
                                         Sebelumnya
@@ -328,7 +351,7 @@
                                     </a>
                                 @endif
 
-                                @if($orders->hasMorePages())
+                                @if ($orders->hasMorePages())
                                     <a href="{{ $orders->nextPageUrl() }}"
                                         class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-500 hover:bg-primary-600 transition-colors duration-200">
                                         Selanjutnya
@@ -371,7 +394,7 @@
         }
 
         // Close modal with Escape key
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const modals = document.querySelectorAll('[id^="modal-"]');
                 modals.forEach(modal => {
@@ -383,7 +406,7 @@
         });
 
         // Auto-hide success message after 5 seconds
-        @if(session('success'))
+        @if (session('success'))
             setTimeout(() => {
                 const successAlert = document.querySelector('.bg-green-50');
                 if (successAlert) {
@@ -434,7 +457,7 @@
 
     <script>
         // Add fade-in animation to elements
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
             elements.forEach((el, index) => {
                 el.classList.add('fade-in');
@@ -445,6 +468,20 @@
             if (tableContainer) {
                 tableContainer.classList.add('table-scrollbar');
             }
+        });
+    </script>
+    <script>
+        const select = document.getElementById('statusSelect');
+        const icon = document.getElementById('dropdownIcon').querySelector('i');
+
+        select.addEventListener('focus', () => {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        });
+
+        select.addEventListener('blur', () => {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
         });
     </script>
 @endsection

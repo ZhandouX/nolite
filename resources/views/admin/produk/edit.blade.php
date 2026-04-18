@@ -180,19 +180,6 @@
                                         <i class="fa-solid fa-circle-exclamation mr-1"></i> {{ $message }}
                                     </p>
                                 @enderror
-                                <div class="flex gap-3">
-                                    <button type="button" id="btnTambahKategori"
-                                        class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
-                                        <i class="fa-solid fa-plus text-sm"></i>
-                                        <span class="text-sm font-semibold">Tambah Kategori</span>
-                                    </button>
-
-                                    <button type="button" id="btnDaftarKategori"
-                                        class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-500 hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
-                                        <i class="fa-solid fa-list text-sm"></i>
-                                        <span class="text-sm font-semibold">Daftar Kategori</span>
-                                    </button>
-                                </div>
                             </div>
                         </div>
 
@@ -417,121 +404,7 @@
                         </div>
                     </div>
                 </form>
-                <!-- MODAL TAMBAH & EDIT -->
-                <div id="modalKategori"
-                    class="modal-kategori fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex justify-center items-center z-50 transition-all duration-300">
-                    <div
-                        class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 transform transition-all duration-300 scale-95">
-                        <div
-                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                            <h3 id="modalKategoriTitle" class="text-xl font-bold text-gray-800 dark:text-white">Tambah
-                                Kategori</h3>
-                            <button id="closeModalKategori"
-                                class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xl transition-colors duration-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
 
-                        <form id="formKategori" enctype="multipart/form-data"
-                            class="p-6 space-y-4 overflow-y-auto custom-scrollbar">
-                            @csrf
-                            <input type="hidden" id="kategori_id" name="kategori_id">
-
-                            <div>
-                                <label class="font-semibold text-gray-700 dark:text-gray-300 block mb-2">Nama
-                                    Kategori</label>
-                                <input type="text" id="nama_kategori" name="nama_kategori"
-                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                    placeholder="Masukkan nama kategori" required>
-                            </div>
-
-                            <div>
-                                <label class="font-semibold text-gray-700 dark:text-gray-300 block mb-2">Foto Sampul</label>
-                                <div class="flex items-center justify-center w-full">
-                                    <label for="foto_sampul"
-                                        class="flex flex-col items-center justify-center w-full h-38 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
-                                        <img id="previewImage" class="hidden w-48 h-full object-cover rounded-lg" />
-                                        <div id="uploadPlaceholder"
-                                            class="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                            </svg>
-                                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                    class="font-semibold">Klik untuk upload</span></p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, JPEG (MAX. 5MB)
-                                            </p>
-                                        </div>
-                                        <input id="foto_sampul" name="foto_sampul" type="file" class="hidden" />
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-3 pt-2">
-                                <button type="button" id="cancelKategori"
-                                    class="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg py-3 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">Batal</button>
-                                <button type="submit"
-                                    class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg py-3 font-medium hover:from-blue-600 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-200">Simpan</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- MODAL DAFTAR KATEGORI -->
-                <div id="modalDaftarKategori"
-                    class="modal-daftar fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[9999] backdrop-blur-sm transition-all duration-300">
-                    <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-11/12 max-w-4xl relative transform transition-all duration-300 scale-95">
-                        <button id="closeModalDaftarKategori"
-                            class="absolute top-4 right-4 text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white text-2xl transition-colors duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-
-                        <div class="mb-6">
-                            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">Daftar Kategori</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Kelola kategori yang tersedia di sistem</p>
-                        </div>
-
-                        <div id="kategoriList"
-                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                            @foreach(\App\Models\Kategori::all() as $kategori)
-                                <div class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group"
-                                    data-id="{{ $kategori->id }}" data-nama="{{ $kategori->nama_kategori }}">
-
-                                    <div class="relative overflow-hidden">
-                                        <img src="{{ $kategori->foto_sampul ? asset('storage/' . $kategori->foto_sampul) : 'https://via.placeholder.com/400x200?text=' . $kategori->nama_kategori }}"
-                                            class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
-                                        <div
-                                            class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        </div>
-                                    </div>
-
-                                    <div class="p-4 flex justify-between items-center">
-                                        <h3 class="font-semibold text-gray-800 dark:text-white">{{ $kategori->nama_kategori }}
-                                        </h3>
-
-                                        <div class="flex gap-2 transition-opacity duration-300">
-                                            <button
-                                                class="editKategoriBtn bg-blue-500 text-white text-sm px-3 py-2 rounded-lg hover:bg-gray-500 shadow-sm hover:shadow-md transition-all duration-200">Edit</button>
-                                            <button
-                                                class="hapusKategoriBtn bg-red-600 text-white text-sm px-3 py-2 rounded-lg hover:bg-gray-500 shadow-sm hover:shadow-md transition-all duration-200">Hapus</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -685,13 +558,13 @@
                         wrapper.className = "relative group animate-fade-in";
                         wrapper.innerHTML = `
                                                                 <div class="relative aspect-square rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md transition-all duration-300 bg-white dark:bg-gray-700">
-                                                                    <img src="${e.target.result}" 
-                                                                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                                                                    <img src="${e.target.result}"
+                                                                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                                          alt="Preview ${index + 1}"
                                                                          loading="lazy">
                                                                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
-                                                                        <button type="button" 
-                                                                                data-index="${index}" 
+                                                                        <button type="button"
+                                                                                data-index="${index}"
                                                                                 class="delete-btn opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all duration-300 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg">
                                                                             <i class="fa-solid fa-trash text-sm"></i>
                                                                         </button>
@@ -835,181 +708,6 @@
         });
     </script>
 
-    <!-- SCRIPT MODAL -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const modalKategori = document.getElementById('modalKategori');
-            const modalDaftar = document.getElementById('modalDaftarKategori');
-
-            const btnTambah = document.getElementById('btnTambahKategori');
-            const btnDaftar = document.getElementById('btnDaftarKategori');
-            const closeModalKategori = document.getElementById('closeModalKategori');
-            const closeModalDaftar = document.getElementById('closeModalDaftarKategori');
-            const cancelKategori = document.getElementById('cancelKategori');
-
-            const formKategori = document.getElementById('formKategori');
-            const modalTitle = document.getElementById('modalKategoriTitle');
-
-            const kategoriIdInput = document.getElementById('kategori_id');
-            const namaInput = document.getElementById('nama_kategori');
-            const kategoriList = document.getElementById('kategoriList');
-
-            const storeUrl = "{{ route('admin.kategori.store-ajax') }}";
-            const baseKategoriUrl = "{{ url('admin/kategori') }}";
-
-            // =========================
-            // OPEN ADD MODAL
-            // =========================
-            btnTambah.addEventListener('click', () => {
-                modalTitle.textContent = "Tambah Kategori";
-                formKategori.reset();
-                kategoriIdInput.value = "";
-                modalKategori.classList.remove('hidden');
-            });
-
-            // =========================
-            // OPEN LIST MODAL
-            // =========================
-            btnDaftar.addEventListener('click', () => {
-                modalDaftar.classList.remove('hidden');
-            });
-
-            // =========================
-            // CLOSE MODALS
-            // =========================
-            closeModalKategori.addEventListener('click', () => modalKategori.classList.add('hidden'));
-            cancelKategori.addEventListener('click', () => modalKategori.classList.add('hidden'));
-            closeModalDaftar.addEventListener('click', () => modalDaftar.classList.add('hidden'));
-
-            // =========================
-            // EDIT / DELETE BUTTONS
-            // =========================
-            kategoriList.addEventListener('click', e => {
-
-                // EDIT
-                if (e.target.classList.contains('editKategoriBtn')) {
-                    const card = e.target.closest('[data-id]');
-                    modalTitle.textContent = "Edit Kategori";
-
-                    kategoriIdInput.value = card.dataset.id;
-                    namaInput.value = card.dataset.nama;
-
-                    modalDaftar.classList.add('hidden');
-                    modalKategori.classList.remove('hidden');
-                }
-
-                // DELETE
-                if (e.target.classList.contains('hapusKategoriBtn')) {
-                    const card = e.target.closest('[data-id]');
-                    const id = card.dataset.id;
-
-                    if (!confirm("Yakin ingin menghapus kategori?")) return;
-
-                    fetch(`${baseKategoriUrl}/${id}`, {
-                        method: "DELETE",
-                        headers: {
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                        }
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === "success") {
-                                card.remove();
-                            }
-                        });
-                }
-            });
-
-            // =========================
-            // SUBMIT FORM (ADD / EDIT)
-            // =========================
-            formKategori.addEventListener('submit', e => {
-                e.preventDefault();
-
-                const id = kategoriIdInput.value;
-                const url = id ? `${baseKategoriUrl}/${id}/update-ajax` : storeUrl;
-
-                const formData = new FormData(formKategori);
-
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    },
-                    body: formData
-                })
-                    .then(res => res.json())
-                    .then(data => {
-
-                        if (data.status !== "success") return alert("Gagal menyimpan!");
-
-                        const k = data.kategori;
-
-                        // UPDATE UI kalau edit
-                        if (id) {
-                            const card = kategoriList.querySelector(`[data-id="${id}"]`);
-                            card.dataset.nama = k.nama_kategori;
-                            card.querySelector("h3").textContent = k.nama_kategori;
-
-                            if (k.foto_sampul) {
-                                card.querySelector("img").src = "/storage/" + k.foto_sampul;
-                            }
-
-                        } else {
-                            // Tambah baru ke DOM
-                            const item = document.createElement('div');
-                            item.className = "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group";
-                            item.dataset.id = k.id;
-                            item.dataset.nama = k.nama_kategori;
-
-                            item.innerHTML = `
-                                                <div class="relative overflow-hidden">
-                                                    <img src="${k.foto_sampul ? '/storage/' + k.foto_sampul : 'https://via.placeholder.com/400x200?text=' + k.nama_kategori}"
-                                                        class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300">
-                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                                </div>
-                                                <div class="p-4 flex justify-between items-center">
-                                                    <h3 class="font-semibold text-gray-800 dark:text-white">${k.nama_kategori}</h3>
-                                                    <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                        <button class="editKategoriBtn bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm px-3 py-2 rounded-lg hover:from-blue-600 hover:to-indigo-600 shadow-sm hover:shadow-md transition-all duration-200">Edit</button>
-                                                        <button class="hapusKategoriBtn bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm px-3 py-2 rounded-lg hover:from-red-600 hover:to-pink-600 shadow-sm hover:shadow-md transition-all duration-200">Hapus</button>
-                                                    </div>
-                                                </div>
-                                                    `;
-
-                            kategoriList.prepend(item);
-                        }
-
-                        modalKategori.classList.add('hidden');
-                        formKategori.reset();
-                        kategoriIdInput.value = "";
-                    });
-            });
-
-            const fileInput = document.getElementById('foto_sampul');
-            const previewImage = document.getElementById('previewImage');
-            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-
-            fileInput.addEventListener('change', function () {
-                const file = this.files[0];
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        previewImage.src = e.target.result;
-                        previewImage.classList.remove('hidden');
-                        uploadPlaceholder.classList.add('hidden');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    previewImage.src = "";
-                    previewImage.classList.add('hidden');
-                    uploadPlaceholder.classList.remove('hidden');
-                }
-            });
-        });
-    </script>
 
     {{-- Alpine component script (masukkan di bawah body atau di file JS yang dieksekusi) --}}
     <script>

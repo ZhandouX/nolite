@@ -51,7 +51,7 @@
                     @endphp
 
                     <ul class="hidden group-hover:block mt-1 ml-0 space-y-1 bg-transparent rounded-lg p-1">
-                        @foreach($kategoris as $k)
+                        @foreach ($kategoris as $k)
                             <li>
                                 <a href="{{ route('customer.kategori-produk', $k->id) }}"
                                     class="flex items-center px-2 py-1.5 pl-10 text-[12px] md:px-4 md:py-2.5 md:pl-12 md:text-sm text-gray-600 rounded-md hover:bg-gray-600 hover:text-white transition">
@@ -69,22 +69,29 @@
             @auth
                 <!-- Foto profil inisial -->
                 <div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}{{-- Ambil inisial pertama --}}
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
-                <div class="flex flex-col">
-                    <span class="font-semibold text-gray-800">{{ Auth::user()->name }}</span>
-                    <span class="text-sm text-gray-500">{{ Auth::user()->email }}</span>
+
+                <div class="flex flex-col leading-tight">
+                    <span class="font-semibold text-gray-800 text-[10px]">
+                        {{ Auth::user()->name }}
+                    </span>
+                    <span class="text-[8px] text-gray-500 break-all">
+                        {{ Auth::user()->email }}
+                    </span>
                 </div>
             @else
                 <!-- Guest -->
                 <div class="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center text-white font-semibold">
                     G
                 </div>
-                <div class="flex flex-col">
-                    <span class="font-semibold text-gray-800">Guest</span>
-                    <span class="text-sm text-gray-500">Belum login</span>
+
+                <div class="flex flex-col leading-tight">
+                    <span class="font-semibold text-gray-800 text-[10px]">Guest</span>
+                    <span class="text-[8px] text-gray-500">Belum login</span>
                 </div>
             @endauth
         </div>
+
     </div>
 </div>
