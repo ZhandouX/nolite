@@ -13,6 +13,7 @@ use App\Models\OrderItem;
 use App\Models\Produk;
 use App\Http\Controllers\Customer\LokasiController;
 use Illuminate\Support\Facades\DB;
+use App\Services\MidtransService;
 
 class CheckoutController extends Controller
 {
@@ -80,6 +81,9 @@ class CheckoutController extends Controller
     /**
      * Proses checkout, simpan pesanan
      */
+    // =========================
+    // 🔥 PROSES (SNAP POPUP)
+    // =========================
     public function proses(Request $request)
     {
         $request->validate([
@@ -88,26 +92,22 @@ class CheckoutController extends Controller
             'provinsi' => 'required|string',
             'kota' => 'required|string',
             'alamat_detail' => 'required|string',
-            'metode_pembayaran' => 'required|string',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
         ]);
 
-        // Ambil item dari session checkout
         $checkoutItems = session('checkout_items', []);
 
         if (empty($checkoutItems)) {
-            return back()->with('error', 'Tidak ada produk di keranjang.');
+            return response()->json([
+                'error' => 'Tidak ada produk di keranjang.'
+            ], 400);
         }
 
-        // Gunakan transaksi biar aman
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
-            // Hitung total subtotal
             $total = collect($checkoutItems)->sum(fn($item) => $item['subtotal']);
 
-            // Simpan order utama
+            // ✅ CREATE ORDER (TANPA midtrans_order_id)
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'nama_penerima' => $request->nama_penerima,
@@ -116,24 +116,24 @@ class CheckoutController extends Controller
                 'kota' => $request->kota,
                 'alamat_detail' => $request->alamat_detail,
                 'email' => $request->email ?? Auth::user()->email,
-                'metode_pembayaran' => $request->metode_pembayaran,
+                'metode_pembayaran' => 'pending',
                 'subtotal' => $total,
                 'status' => 'menunggu',
             ]);
 
-            // Loop semua item checkout
+            // ✅ SAVE ITEMS
             foreach ($checkoutItems as $item) {
+
                 $produk = Produk::find($item['produk_id']);
 
                 if (!$produk) {
-                    throw new \Exception('Produk dengan ID ' . $item['produk_id'] . ' tidak ditemukan.');
+                    throw new \Exception('Produk tidak ditemukan.');
                 }
 
                 if ($produk->jumlah < $item['jumlah']) {
-                    throw new \Exception('Stok produk "' . $produk->nama_produk . '" tidak mencukupi.');
+                    throw new \Exception('Stok tidak mencukupi.');
                 }
 
-                // Simpan detail order
                 OrderItem::create([
                     'order_id' => $order->id,
                     'produk_id' => $item['produk_id'],
@@ -144,52 +144,55 @@ class CheckoutController extends Controller
                     'subtotal' => $item['subtotal'],
                 ]);
 
-                // Kurangi stok
                 $produk->jumlah -= $item['jumlah'];
                 $produk->save();
 
                 Keranjang::where('user_id', Auth::id())
                     ->where('produk_id', $item['produk_id'])
-                    ->when(isset($item['ukuran']), function ($q) use ($item) {
-                        $q->where('ukuran', $item['ukuran']);
-                    })
-                    ->when(isset($item['warna']), function ($q) use ($item) {
-                        $q->where('warna', $item['warna']);
-                    })
                     ->delete();
             }
 
-            // Hapus session checkout
             session()->forget('checkout_items');
 
-            \DB::commit();
+            DB::commit();
 
-            // Broadcast real-time ke admin
+            // ✅ MIDTRANS (INI YANG HANDLE order_id)
+            $midtrans = new MidtransService();
+            $snapData = $midtrans->createSnapToken($order);
+
+            // ✅ NOTIF
             $data = app(NotificationService::class)->get();
             broadcast(new NotificationUpdated($data));
 
-            return redirect()->route('customer.order.success', ['id' => $order->id])
-                ->with('success', 'Pesanan berhasil dibuat, stok diperbarui, dan produk dihapus dari keranjang!');
+            return response()->json([
+                'snap_token' => $snapData['snap_token'],
+                'order_id' => $order->id
+            ]);
+
         } catch (\Exception $e) {
-            \DB::rollBack();
-            return back()->with('error', $e->getMessage());
+            DB::rollBack();
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
     /**
      * Menampilkan halaman checkout langsung(beli langsung tanpa keranjang)
      */
+    // =========================
+    // DASHBOARD CHECKOUT (optional)
+    // =========================
     public function indexDashboard(Request $request)
     {
         $user = auth()->user();
 
-        // Cek apakah akun nonaktif
         if ($user->status === 'nonaktif') {
-            return redirect()->route('services.customer-service') // atau halaman lain
-                ->with('error', 'Akun Anda dinonaktifkan, tidak bisa melakukan checkout.');
+            return redirect()->route('services.customer-service')
+                ->with('error', 'Akun dinonaktifkan.');
         }
 
-        // Validasi data input
         $validated = $request->validate([
             'produk_id' => 'required|exists:produks,id',
             'jumlah' => 'nullable|integer|min:1',
@@ -197,22 +200,19 @@ class CheckoutController extends Controller
             'ukuran' => 'nullable|string|max:50',
         ]);
 
-        // Ambil produk
         $produk = Produk::findOrFail($validated['produk_id']);
 
-        // Ambil daftar provinsi
         $lokasi = new LokasiController();
         $provinsiList = array_keys($lokasi->provinsiKota);
 
-        // Hitung harga final
         $diskon = $produk->diskon ?? 0;
+
         $hargaFinal = $diskon > 0
             ? $produk->harga - ($produk->harga * $diskon / 100)
             : $produk->harga;
 
         $jumlah = $validated['jumlah'] ?? 1;
 
-        // Siapkan data checkout tunggal
         $checkoutItem = [
             'produk_id' => $produk->id,
             'nama_produk' => $produk->nama_produk,
@@ -223,7 +223,6 @@ class CheckoutController extends Controller
             'subtotal' => $hargaFinal * $jumlah,
         ];
 
-        // Simpan sementara ke session
         session(['checkout_dashboard' => $checkoutItem]);
 
         return view('customer.checkout_dashboard', [
@@ -242,49 +241,51 @@ class CheckoutController extends Controller
         $checkoutItem = session('checkout_dashboard', null);
 
         if (!$checkoutItem) {
-            return redirect()->route('customer.dashboard')
-                ->with('error', 'Tidak ada produk yang diproses untuk checkout.');
+            return response()->json([
+                'error' => 'Tidak ada produk untuk checkout.'
+            ], 400);
         }
 
-        // Validasi input pengiriman
+        // VALIDASI
         $request->validate([
             'nama_penerima' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'provinsi' => 'required|string',
             'kota' => 'required|string|max:100',
             'alamat_detail' => 'required|string',
-            'metode_pembayaran' => 'required|string',
         ]);
 
-        $order = DB::transaction(function () use ($request, $checkoutItem) {
+        try {
+            DB::beginTransaction();
 
-            // Ambil data produk dari database
             $produk = Produk::find($checkoutItem['produk_id']);
 
             if (!$produk) {
                 throw new \Exception('Produk tidak ditemukan');
             }
 
-            // Cek stok cukup atau tidak
             if ($produk->jumlah < $checkoutItem['jumlah']) {
                 throw new \Exception('Stok produk tidak mencukupi.');
             }
 
-            // Simpan ke tabel orders
+            $midtransOrderId = 'ORDER-' . time();
+
+            // 🔥 CREATE ORDER
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'nama_penerima' => $request->nama_penerima,
                 'no_hp' => $request->no_hp,
                 'email' => $request->email ?? Auth::user()->email,
-                'provinsi' => $request->provinsi ?? 'Sulawesi Selatan',
+                'provinsi' => $request->provinsi,
                 'kota' => $request->kota,
                 'alamat_detail' => $request->alamat_detail,
-                'metode_pembayaran' => $request->metode_pembayaran,
+                'metode_pembayaran' => 'pending',
                 'subtotal' => $checkoutItem['subtotal'],
                 'status' => 'menunggu',
+                'midtrans_order_id' => $midtransOrderId,
             ]);
 
-            // Simpan detail produk ke tabel order_items
+            // 🔥 ORDER ITEM
             OrderItem::create([
                 'order_id' => $order->id,
                 'produk_id' => $checkoutItem['produk_id'],
@@ -295,21 +296,35 @@ class CheckoutController extends Controller
                 'subtotal' => $checkoutItem['subtotal'],
             ]);
 
-            // Kurangi stok produk
+            // 🔥 KURANGI STOK
             $produk->jumlah -= $checkoutItem['jumlah'];
             $produk->save();
 
-            // Bersihkan session
+            // 🔥 HAPUS SESSION
             session()->forget('checkout_dashboard');
 
-            // Broadcast real-time ke admin
+            DB::commit();
+
+            // 🔥 MIDTRANS SNAP
+            $midtrans = new MidtransService();
+            $snapData = $midtrans->createSnapToken($order);
+
+            // 🔥 NOTIF ADMIN
             $data = app(NotificationService::class)->get();
             broadcast(new NotificationUpdated($data));
 
-            return $order;
-        });
+            // 🔥 RETURN JSON (WAJIB)
+            return response()->json([
+                'snap_token' => $snapData['snap_token'],
+                'order_id' => $order->id
+            ]);
 
-        return redirect()->route('customer.order.success', ['id' => $order->id])
-            ->with('success', 'Pesanan berhasil dibuat dan menunggu pembayaran!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

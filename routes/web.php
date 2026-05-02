@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\MidtransController;
 use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\LandingController;
@@ -164,6 +165,14 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
 
+    Route::get('/checkout/payment/{id}',
+        [MidtransController::class, 'paymentPage']
+    )->name('customer.checkout.payment');
+
+    // AJAX update metode pembayaran
+    Route::post('/checkout/payment/{id}/update-method',
+        [MidtransController::class, 'updatePaymentMethod'])->name('customer.checkout.update-payment-method');
+
     // ORDER
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
 
@@ -190,6 +199,10 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     });
 });
 
+// Webhook (HARUS di luar auth)
+Route::post('/midtrans/webhook',
+    [MidtransController::class, 'webhook']
+)->name('midtrans.webhook');
 
 // SEMUA PRODUK
 Route::prefix('produk')->group(function () {

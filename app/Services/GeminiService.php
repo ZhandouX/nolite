@@ -63,7 +63,8 @@ class GeminiService
             $produkForCards = [];
             $context = "Kamu adalah chatbot produk e-commerce Nolite Aspicience.\n";
             $context .= "Jawablah pertanyaan pengguna dengan bahasa Indonesia natural. ";
-            $context .= "Sebutkan produk dalam bullet point jika tersedia, nama, warna, ukuran, dan harga.\n\n";
+            $context .= "Jawablah pertanyaan pengguna untuk pertanyaan yang kominikatif, seperti pertanyaan tentang apakah hoodie ini nyaman dipakai.";
+            // $context .= "Sebutkan produk dalam bullet point jika tersedia, nama, warna, ukuran, dan harga.\n\n";
 
             if ($produkList->isNotEmpty()) {
                 foreach ($produkList as $produk) {

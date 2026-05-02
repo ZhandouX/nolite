@@ -8,6 +8,15 @@
     @endphp
 
     <div class="pt-[40px] pb-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        @if ($errors->any())
+            <div class="mb-4 bg-red-100 text-red-700 p-3 rounded">
+                <ul class="text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>- {{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form action="{{ route('customer.checkout.proses') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @csrf
 
@@ -84,35 +93,10 @@
                             required>{{ old('alamat_detail') }}</textarea>
                     </div>
 
-                    {{-- METODE PEMBAYARAN --}}
-                    <div class="mt-5 relative md:relative">
-                        <h3 class="text-sm font-semibold mb-2">Metode Pembayaran</h3>
-
-                        <input type="hidden" name="metode_pembayaran" id="metode-pembayaran-input"
-                            value="{{ old('metode_pembayaran') }}">
-                        <button type="button" id="payment-toggle"
-                            class="w-full flex items-center justify-between border border-gray-300 rounded-md px-4 py-2 text-sm bg-white">
-                            <span id="selected-method">{{ old('metode_pembayaran', 'Pilih Metode Pembayaran') }}</span>
-                            <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        {{-- Dropdown Options --}}
-                        <div id="payment-options"
-                            class="hidden mt-2 w-full md:absolute left-0 right-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                            <ul class="text-sm divide-y divide-gray-100 flex flex-col md:block">
-                                <li class="px-4 py-2 hover:bg-gray-700 cursor-pointer text-gray-700 hover:text-white"
-                                    onclick="selectMethod('QRIS')">QRIS</li>
-                                <li class="px-4 py-2 hover:bg-gray-700 cursor-pointer text-gray-700 hover:text-white"
-                                    onclick="selectMethod('Virtual Account')">Virtual Account</li>
-                                <li class="px-4 py-2 hover:bg-gray-700 cursor-pointer text-gray-700 hover:text-white"
-                                    onclick="selectMethod('E-Wallet')">E-Wallet (Gopay, Dana, dll)</li>
-                                <li class="px-4 py-2 hover:bg-gray-700 cursor-pointer text-gray-700 hover:text-white"
-                                    onclick="selectMethod('Kartu Kredit')">Kartu Kredit</li>
-                            </ul>
-                        </div>
+                    {{-- Metode pembayaran diisi otomatis dari Midtrans --}}
+                    <input type="hidden" name="metode_pembayaran" value="pending">
+                    <div class="mt-5 bg-blue-50 border border-blue-200 rounded-md px-4 py-3 text-sm text-blue-700">
+                        💡 Metode pembayaran akan dipilih saat proses pembayaran berlangsung.
                     </div>
 
                 </div>
@@ -145,7 +129,8 @@
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-black truncate">{{ $item['nama_produk'] }}</p>
                                 <p class="text-xs text-gray-500 truncate">Warna: {{ $item['warna'] }} • Ukuran:
-                                    {{ $item['ukuran'] }}</p>
+                                    {{ $item['ukuran'] }}
+                                </p>
                                 <p class="text-xs text-gray-500 mt-1">Jumlah: {{ $item['jumlah'] }}</p>
                             </div>
 
@@ -176,7 +161,7 @@
 
                 <p class="text-xs text-center text-gray-400 mt-2">🔒 Pembayaran Aman | Transaksi kamu dienkripsi.</p>
 
-                <button type="submit"
+                <button type="button" id="pay-button"
                     class="w-full bg-gray-700 hover:bg-gray-500 text-white py-2.5 rounded-md text-sm font-semibold mt-4">
                     Bayar Sekarang
                 </button>
@@ -186,6 +171,8 @@
 @endsection
 
 @push('script')
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('midtrans.client_key') }}"></script>
     {{-- CHECKOUT FORM --}}
     <script>
         window.CheckoutForm = {
@@ -195,4 +182,106 @@
         };
     </script>
     <script src="/assets/js/user/transactions/_checkout-form.js"></script>
+    <script>
+        document.getElementById('pay-button').addEventListener('click', function (e) {
+
+            let button = this;
+            button.disabled = true;
+            button.innerText = "Memproses...";
+
+            let form = e.target.closest('form');
+            let formData = new FormData(form);
+
+            // 🔥 FIX WAJIB: paksa HTTPS
+            let url = form.action.replace("http://", "https://");
+
+            fetch(url, {
+                method: "POST",
+                credentials: "same-origin", // 🔥 WAJIB (bawa session/login)
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                body: formData
+            })
+                .then(async res => {
+                    if (!res.ok) {
+                        let text = await res.text();
+                        console.error("SERVER ERROR:", text);
+                        throw new Error("Server error " + res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+
+                    console.log("RESPONSE:", data);
+
+                    if (!data.snap_token) {
+                        alert(data.error || "Gagal mendapatkan Snap Token");
+                        button.disabled = false;
+                        button.innerText = "Bayar Sekarang";
+                        return;
+                    }
+
+                    snap.pay(data.snap_token, {
+
+                        onSuccess: function (result) {
+                            updatePayment(result, data.order_id);
+                            alert("Pembayaran berhasil!");
+                            window.location.href = `/checkout/success/${data.order_id}`;
+                        },
+
+                        onPending: function (result) {
+                            updatePayment(result, data.order_id);
+                            alert("Mohon selesaikan pembayaran Anda!");
+                            button.disabled = false;
+                            button.innerText = "Bayar Sekarang";
+                        },
+
+                        onError: function (result) {
+                            console.error("MIDTRANS ERROR:", result);
+                            alert("Pembayaran gagal!");
+                            button.disabled = false;
+                            button.innerText = "Bayar Sekarang";
+                        },
+
+                        onClose: function () {
+                            alert("Mohon selesaikan pembayaran Anda!");
+                            button.disabled = false;
+                            button.innerText = "Bayar Sekarang";
+                        }
+                    });
+
+                })
+                .catch(err => {
+                    console.error("FETCH ERROR:", err);
+                    alert("Terjadi kesalahan! Cek console (F12)");
+                    button.disabled = false;
+                    button.innerText = "Bayar Sekarang";
+                });
+
+        });
+
+
+        // 🔥 UPDATE METODE PEMBAYARAN
+        function updatePayment(result, orderId) {
+
+            let url = `/checkout/payment/${orderId}/update-method`.replace("http://", "https://");
+
+            fetch(url, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    payment_type: result.payment_type,
+                    va_numbers: result.va_numbers || null
+                })
+            })
+                .then(res => res.json())
+                .then(data => console.log("Update payment:", data))
+                .catch(err => console.error("Update error:", err));
+        }
+    </script>
 @endpush
