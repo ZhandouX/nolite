@@ -51,7 +51,8 @@
     <div class="fixed bottom-[130px] right-4 lg:bottom-[75px] flex flex-col items-end gap-2 z-50">
 
         <!-- BACK TO TOP BUTTON -->
-        <button id="backToTop" title="Kembali ke atas" class="group w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl 
+        <button id="backToTop" title="Kembali ke atas"
+            class="group w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl
                     hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
                     border border-gray-600/30 backdrop-blur-sm">
             <i class="fa-solid fa-chevron-up text-lg md:text-lg group-hover:animate-bounce"></i>
@@ -70,14 +71,16 @@
                 </div>
 
                 <!-- Segitiga kecil -->
-                <div id="chat-arrow" class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0 
+                <div id="chat-arrow"
+                    class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0
                             border-t-8 border-t-transparent border-l-8 border-l-gray-800 border-b-8 border-b-transparent
                             opacity-0 translate-x-4 transition-all duration-500 ease-out">
                 </div>
             </div>
 
             <!-- CHATBOT BUTTON -->
-            <button id="chat-toggle" title="Chat AI Nolite" class="group w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center shadow-xl
+            <button id="chat-toggle" title="Chat AI Nolite"
+                class="group w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center shadow-xl
                         hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
                         border border-gray-400/40 backdrop-blur-sm relative">
 
@@ -98,13 +101,17 @@
 
     </div>
     {{-- KERANJANG POPUP (MOBILE) --}}
-    <div id="cartPopupMobile" class="fixed bottom-20 right-4 flex items-center justify-center hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1"></div>
+    <div id="cartPopupMobile"
+        class="fixed bottom-20 right-4 flex items-center justify-center hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1">
+    </div>
 
     {{-- KERANJANG POPUP (DESKTOP) --}}
-    <div id="cartPopupDesktop" class="fixed bottom-2 right-4 hidden lg:flex flex-col gap-1 sm:scale-100 scale-75 transition-all duration-300"></div>
+    <div id="cartPopupDesktop"
+        class="fixed bottom-2 right-4 hidden lg:flex flex-col gap-1 sm:scale-100 scale-75 transition-all duration-300">
+    </div>
 
     {{-- MODALS --}}
-    @foreach($produkTerbaru as $item)
+    @foreach ($produkTerbaru as $item)
         @include('layouts.partials_user.modal-beli', ['item' => $item])
         @include('layouts.partials_user.modal-cart', ['item' => $item])
     @endforeach
@@ -173,15 +180,15 @@
     <script src="/assets/js/user/header.js"></script>
     {{-- SESSION LOGIN --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            @if(!empty($showLoginModal) && $showLoginModal)
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (!empty($showLoginModal) && $showLoginModal)
                 openLoginModal();
             @endif
-    });
+        });
     </script>
     @if (session('showLoginModal'))
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 const modal = document.getElementById('loginModal');
                 if (modal) {
                     modal.classList.remove('hidden');
@@ -191,6 +198,42 @@
             });
         </script>
     @endif
+
+    <script>
+        // ===============================
+        // GLOBAL MODAL HANDLER (WAJIB)
+        // ===============================
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // ===============================
+        // CLICK OUTSIDE TO CLOSE
+        // ===============================
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('aboutModal');
+            if (!modal) return;
+
+            if (e.target === modal) {
+                closeModal('aboutModal');
+            }
+        });
+    </script>
 
     @stack('script')
 </body>

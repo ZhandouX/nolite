@@ -64,7 +64,7 @@
 
     {{-- BUTTON BOXS ==> LIHAT SEMUA PRODUK | TENTANG KAMI | SEMUA PRODUK --}}
     <div class="extra-icons">
-        <div class="icon-box">
+        <div class="icon-box" onclick="openModal('aboutModal')">
             <i data-lucide="info"></i>
             <span>Tentang Kami</span>
         </div>
@@ -83,7 +83,8 @@
     <div class="fixed bottom-20 right-4 lg:bottom-2 md:right-6 flex flex-col items-end gap-4 z-50">
 
         <!-- BACK TO TOP BUTTON -->
-        <button id="backToTop" title="Kembali ke atas" class="group w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl
+        <button id="backToTop" title="Kembali ke atas"
+            class="group w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-400 text-white rounded-2xl flex items-center justify-center shadow-xl
         hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
         border border-gray-600/30 backdrop-blur-sm">
             <i class="fa-solid fa-chevron-up text-lg group-hover:animate-bounce"></i>
@@ -102,14 +103,16 @@
                 </div>
 
                 <!-- Segitiga kecil -->
-                <div id="chat-arrow" class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0
+                <div id="chat-arrow"
+                    class="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0
             border-t-8 border-t-transparent border-l-8 border-l-gray-800 border-b-8 border-b-transparent
             opacity-0 translate-x-4 transition-all duration-500 ease-out">
                 </div>
             </div>
 
             <!-- CHATBOT BUTTON -->
-            <button id="chat-toggle" title="Chat AI Nolite" class="group w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center shadow-xl
+            <button id="chat-toggle" title="Chat AI Nolite"
+                class="group w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center shadow-xl
         hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1
         border border-gray-400/40 backdrop-blur-sm relative">
 
@@ -127,18 +130,21 @@
         @include('layouts.partials_user.modals.chatbot')
 
         {{-- KERANJANG POPUP (MOBILE) --}}
-        <div id="cartPopupMobile" class="group flex items-center justify-center shadow-xl
+        <div id="cartPopupMobile"
+            class="group flex items-center justify-center shadow-xl
         hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-out transform hover:-translate-y-1 relative">
         </div>
 
         {{-- KERANJANG POPUP (DESKTOP) --}}
-        <div id="cartPopupDesktop" class="group hidden lg:flex z-50 flex-col gap-1
+        <div id="cartPopupDesktop"
+            class="group hidden lg:flex z-50 flex-col gap-1
             sm:scale-100 scale-75 transition-all duration-300">
         </div>
     </div>
 
     {{-- MODAL --}}
-    @foreach($produkTerbaru as $item)
+    @include('layouts.partials_user.modals.tentangkami')
+    @foreach ($produkTerbaru as $item)
         @include('layouts.partials_user.modal-beli', ['item' => $item])
         @include('layouts.partials_user.modal-cart', ['item' => $item])
     @endforeach
@@ -155,7 +161,8 @@
         document.addEventListener("DOMContentLoaded", () => {
             const tooltip = document.getElementById("chat-tooltip");
             const arrow = document.getElementById("chat-arrow");
-            const fullText = "Halo @auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?";
+            const fullText =
+                "Halo @auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth! Selamat datang di Nolite Aspiciens. Ada produk yang ingin kamu lihat atau tanyakan?";
             let index = 0;
 
             // Delay awal sebelum tooltip muncul
@@ -226,25 +233,22 @@
 
         // Override openModal function untuk handle dynamic loading
         const originalOpenModal = window.openModal;
-        window.openModal = async function (modalId) {
+
+        window.openModal = async function(modalId) {
+
+            // ✅ TAMBAHAN INI (WAJIB)
+            if (!modalId.match(/\d+/)) {
+                return originalOpenModal(modalId);
+            }
+
+            // khusus modal produk
             const productId = modalId.match(/\d+/)[0];
 
-            // Load modal jika belum ada
             await loadProductModals(productId);
 
-            // Tunggu sebentar untuk memastikan modal sudah di-inject
             setTimeout(() => {
                 if (originalOpenModal) {
                     originalOpenModal(modalId);
-                } else {
-                    // Fallback jika function asli tidak ada
-                    const modal = document.getElementById(modalId);
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                        modal.addEventListener('click', function (e) {
-                            if (e.target === modal) closeModal(modalId);
-                        });
-                    }
                 }
             }, 100);
         };
@@ -273,7 +277,7 @@
 
     {{-- ===== JS ====> HIDDEN BRAND NAV --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const menuBtn = document.getElementById("menuBtn");
             const closeSidebar = document.getElementById("closeSidebar");
             const sidebar = document.getElementById("sidebar");
@@ -281,7 +285,7 @@
 
             // Saat tombol menu diklik → buka sidebar dan sembunyikan logo
             if (menuBtn) {
-                menuBtn.addEventListener("click", function () {
+                menuBtn.addEventListener("click", function() {
                     sidebar.classList.remove("-translate-x-full");
                     sidebar.classList.add("translate-x-0");
 
@@ -292,7 +296,7 @@
 
             // Saat tombol closeSidebar diklik → tutup sidebar dan tampilkan logo
             if (closeSidebar) {
-                closeSidebar.addEventListener("click", function () {
+                closeSidebar.addEventListener("click", function() {
                     sidebar.classList.add("-translate-x-full");
                     sidebar.classList.remove("translate-x-0");
 
@@ -335,6 +339,7 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
+
         function closeLoginModal() {
             const modal = document.getElementById('loginModal');
             modal.classList.add('hidden');
@@ -351,6 +356,7 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
+
         function closeRegisterModal() {
             const modal = document.getElementById('registerModal');
             modal.classList.add('hidden');
@@ -365,6 +371,7 @@
             closeLoginModal();
             setTimeout(() => openRegisterModal(), 200);
         }
+
         function switchToLoginModal() {
             closeRegisterModal();
             setTimeout(() => openLoginModal(), 200);
@@ -425,11 +432,11 @@
 
     {{-- ===== JS ====> SESSION LOGIN --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            @if(!empty($showLoginModal) && $showLoginModal)
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (!empty($showLoginModal) && $showLoginModal)
                 openLoginModal();
             @endif
-    });
+        });
     </script>
 
     @stack('script')
