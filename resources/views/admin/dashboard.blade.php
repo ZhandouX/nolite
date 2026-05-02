@@ -1,21 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-transparent dark:bg-gray-900 py-8">
-        <div class="max-w-screen mx-auto px-4 sm:px-6 md:px-8">
+    <div class="w-full space-y-6">
 
-            @include('layouts.partials_admin.statistik_charts.statistik')
+        {{-- STATISTIK --}}
+        @include('layouts.partials_admin.statistik_charts.statistik')
 
-            {{-- CHART PENDAPATAN --}}
-            @include('layouts.partials_admin.statistik_charts.chart')
+        {{-- CHART PENDAPATAN --}}
+        @include('layouts.partials_admin.statistik_charts.chart')
 
-            {{-- PESANAN TERBARU --}}
-            @include('layouts.partials_admin.tables.pesanan')
+        {{-- PESANAN TERBARU --}}
+        @include('layouts.partials_admin.tables.pesanan')
 
-            {{-- PRODUK TERLARIS --}}
-            @include('layouts.partials_admin.tables.produk-terlaris_user')
+        {{-- PRODUK TERLARIS --}}
+        @include('layouts.partials_admin.tables.produk-terlaris_user')
 
-        </div>
     </div>
 @endsection
 

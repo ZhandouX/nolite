@@ -66,13 +66,25 @@
                         <div class="input-container">
                             <input id="registerPasswordConfirmation" type="password" name="password_confirmation"
                                 required placeholder=" " class="form-input" />
-                            <label for="registerPasswordConfirmation" class="floating-label">Konfirmasi
-                                Password*</label>
+                            <label for="registerPasswordConfirmation" class="floating-label">Konfirmasi Password*</label>
                         </div>
                         @error('password_confirmation')
                             <div class="input-error">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    {{-- ===== hCAPTCHA ===== --}}
+                    <div class="form-group">
+                        <div id="hcaptcha-register" class="h-captcha"
+                             data-sitekey="{{ env('HCAPTCHA_SITEKEY') }}"
+                             data-theme="light"
+                             data-size="normal">
+                        </div>
+                        @error('h-captcha-response')
+                            <div class="input-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    {{-- ===== END hCAPTCHA ===== --}}
 
                     <!-- Tombol Register -->
                     <button type="submit" class="submit-btn">Buat Akun Baru</button>
@@ -98,3 +110,35 @@
         </div>
     </div>
 </div>
+
+{{-- hCaptcha CDN --}}
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
+<script>
+    // ===== RENDER hCaptcha saat modal dibuka =====
+    let hcaptchaRendered = false;
+
+    function openRegisterModal() {
+        const modal = document.getElementById('registerModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Render hCaptcha hanya sekali
+        if (!hcaptchaRendered) {
+            setTimeout(() => {
+                if (typeof hcaptcha !== 'undefined') {
+                    hcaptcha.render('hcaptcha-register', {
+                        sitekey: '{{ env("HCAPTCHA_SITEKEY") }}'
+                    });
+                    hcaptchaRendered = true;
+                }
+            }, 500);
+        }
+    }
+
+    function closeRegisterModal() {
+        const modal = document.getElementById('registerModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+</script>

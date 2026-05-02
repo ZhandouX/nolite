@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\CustomerServiceController;
@@ -34,9 +35,31 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::post('/add-to-cart', [LandingController::class, 'addToCart'])->name('landing.addToCart');
 
 // ==========================
+// 🔐 2FA ROUTES
+// ==========================
+Route::middleware(['auth'])->group(function () {
+
+    // Verifikasi OTP saat login (semua admin yang punya 2FA aktif)
+    Route::get('/2fa/verify', [TwoFactorController::class, 'verify'])
+        ->name('2fa.verify');
+    Route::post('/2fa/verify', [TwoFactorController::class, 'validateOtp'])
+        ->name('2fa.validate');
+
+    // Setup & manage 2FA — khusus admin
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/2fa/setup', [TwoFactorController::class, 'setup'])
+            ->name('2fa.setup');
+        Route::post('/2fa/enable', [TwoFactorController::class, 'enable'])
+            ->name('2fa.enable');
+        Route::post('/2fa/disable', [TwoFactorController::class, 'disable'])
+            ->name('2fa.disable');
+    });
+});
+
+// ==========================
 // 🔐 MIDDLEWARE: ADMIN
 // ==========================
-Route::middleware(['auth', 'role:admin'])
+Route::middleware(['auth', 'role:admin', 'two_factor'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -77,8 +100,6 @@ Route::middleware(['auth', 'role:admin'])
         Route::prefix('laporan')->name('laporan.')->group(function () {
             Route::get('/', [LaporanController::class, 'index'])->name('index');
             Route::post('/get-data', [LaporanController::class, 'getData'])->name('getData');
-
-            // Export PDF & Excel
             Route::get('/export-pdf/{jenis}', [LaporanController::class, 'exportPDF'])->name('exportPDF');
             Route::get('/export-excel/{jenis}', [LaporanController::class, 'exportExcel'])->name('exportExcel');
         });
@@ -98,19 +119,10 @@ Route::middleware(['auth', 'role:admin'])
         // ⭐ MANAJEMEN ULASAN (ADMIN)
         // ==========================
         Route::prefix('ulasan')->name('ulasan.')->group(function () {
-
-            Route::get('/', [AdminUlasanController::class, 'index'])
-                ->name('index'); // admin.ulasan.index
-
-            Route::get('/{id}', [AdminUlasanController::class, 'show'])
-                ->name('show'); // admin.ulasan.show
-
-            Route::post('/{id}/reply', [AdminUlasanController::class, 'reply'])
-                ->name('reply'); // admin.ulasan.reply
+            Route::get('/', [AdminUlasanController::class, 'index'])->name('index');
+            Route::get('/{id}', [AdminUlasanController::class, 'show'])->name('show');
+            Route::post('/{id}/reply', [AdminUlasanController::class, 'reply'])->name('reply');
         });
-
-
-
 
         // ==========================
         // 👥 KELOLA PENGGUNA
@@ -207,7 +219,7 @@ Route::get('/search-produk', [ProdukCustomerController::class, 'search'])->name(
 Route::get('/search-produk-pagination', [ProdukCustomerController::class, 'searchWithPagination'])->name('produk.search.pagination');
 
 // ============================================
-// OPTIONAL: AUTOCOMPLETE ROUTES (fix)
+// AUTOCOMPLETE
 // ============================================
 Route::get('/autocomplete-produk', function (Request $request) {
     $query = $request->input('q');
@@ -242,8 +254,6 @@ Route::get('/get-kota', [LokasiController::class, 'getKota'])->name('lokasi.getK
 
 // CHATBOT
 Route::post('/chatbot/query', [ChatbotController::class, 'query'])->name('chatbot.query');
-
-
 
 // AUTH SETTINGS
 Route::middleware('auth')->group(function () {

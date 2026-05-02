@@ -16,19 +16,29 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
+        'two_factor_secret',
+        'two_factor_enabled',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
     ];
 
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at'  => 'datetime',
+            'password'           => 'hashed',
+            'two_factor_enabled' => 'boolean',
         ];
+    }
+
+    // ✅ Helper cek apakah user adalah admin
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
@@ -12,16 +11,24 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        // Roles
+        // Buat roles
         $roleAdmin = Role::create(['name' => 'admin']);
         $roleCustomer = Role::create(['name' => 'customer']);
 
-        // Admin Account
+        // Buat akun Admin
         $userAdmin = User::create([
             'name' => 'Admin Toko',
-            'email' => 'admin@gmail.com',
+            'email' => 'winboydev25@gmail.com',
             'password' => Hash::make('password'),
         ]);
         $userAdmin->assignRole($roleAdmin);
+
+        // Buat akun Customer
+        $userCustomer = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => Hash::make('password'),
+        ]);
+        $userCustomer->assignRole($roleCustomer);
     }
 }

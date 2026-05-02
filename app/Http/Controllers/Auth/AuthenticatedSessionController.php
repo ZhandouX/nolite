@@ -22,43 +22,42 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        // Proses autentikasi user
-        $request->authenticate();
+   public function store(LoginRequest $request): RedirectResponse
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        // Regenerasi session setelah login untuk keamanan
-        $request->session()->regenerate();
+    $user = Auth::user();
 
-        // Ambil user yang baru login
-        $user = Auth::user();
+    if ($user->hasRole('admin')) {
 
-        // Redirect berdasarkan role
-        if ($user->hasRole('admin')) {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->hasRole('customer')) {
-            return redirect()->route('customer.dashboard');
+        // Belum setup 2FA → setup QR dulu (hanya pertama kali)
+        if (!$user->two_factor_secret || !$user->two_factor_enabled) {
+            return redirect()->route('2fa.setup');
         }
 
-        // Jika role tidak dikenali
-        Auth::logout();
-        return redirect('/')
-            ->with('showLoginModal', true);
+        // Sudah setup → langsung minta OTP setiap login
+        return redirect()->route('2fa.verify');
     }
 
-    /**
-     * Destroy an authenticated session (logout).
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        // Logout user
-        Auth::guard('web')->logout();
-
-        // Hapus session
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        // Redirect ke halaman awal
-        return redirect('/');
+    if ($user->hasRole('customer')) {
+        return redirect()->route('customer.dashboard');
     }
+
+    Auth::logout();
+    return redirect('/')->with('showLoginModal', true);
+}
+
+public function destroy(Request $request): RedirectResponse
+{
+    Auth::guard('web')->logout();
+
+    // Hapus session 2FA saat logout agar login berikutnya minta OTP lagi
+    $request->session()->forget('2fa_verified');
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/');
+}
 }
