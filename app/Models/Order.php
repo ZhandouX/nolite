@@ -19,7 +19,7 @@ class Order extends Model
         'subtotal',
         'status',
         'snap_token',
-        'payment_url',
+        // 'payment_url',
         'midtrans_order_id',
         'payment_type'
     ];

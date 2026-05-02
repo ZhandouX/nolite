@@ -18,7 +18,7 @@ class PaymentTransaction extends Model
         'amount',
         'fee',
         'status',
-        'payment_url',
+        // 'payment_url',
         'callback_data',
         'expired_time'
     ];

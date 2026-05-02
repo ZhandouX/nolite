@@ -14,7 +14,7 @@ class Payment extends Model
         'invoice_number',
         'payment_channel',
         'payment_code',
-        'payment_url',
+        // 'payment_url',
         'amount',
         'status',
         'doku_order_id',
