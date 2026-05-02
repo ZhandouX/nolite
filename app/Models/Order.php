@@ -17,7 +17,11 @@ class Order extends Model
         'email',
         'metode_pembayaran',
         'subtotal',
-        'status'
+        'status',
+        'snap_token',
+        'payment_url',
+        'midtrans_order_id',
+        'payment_type'
     ];
 
     public function items()

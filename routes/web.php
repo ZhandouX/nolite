@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\MidtransController;
 use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\LandingController;
@@ -131,13 +132,13 @@ Route::middleware(['auth', 'role:admin', 'two_factor'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/{user}', 'show')->name('show');
-                Route::patch('/{user}/block', 'block')->name('block');
-                Route::patch('/{user}/activate', 'activate')->name('activate');
-                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
-                Route::delete('/{user}', 'destroy')->name('destroy');
-            });
+            Route::get('/', 'index')->name('index');
+            Route::get('/{user}', 'show')->name('show');
+            Route::patch('/{user}/block', 'block')->name('block');
+            Route::patch('/{user}/activate', 'activate')->name('activate');
+            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
+            Route::delete('/{user}', 'destroy')->name('destroy');
+        });
 
         // ==========================
         // 💬 CUSTOMER SERVICE (ADMIN)
@@ -176,6 +177,17 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
 
+    Route::get(
+        '/checkout/payment/{id}',
+        [MidtransController::class, 'paymentPage']
+    )->name('customer.checkout.payment');
+
+    // AJAX update metode pembayaran
+    Route::post(
+        '/checkout/payment/{id}/update-method',
+        [MidtransController::class, 'updatePaymentMethod']
+    )->name('customer.checkout.update-payment-method');
+
     // ORDER
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
 
@@ -201,6 +213,12 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('remove');
     });
 });
+
+// Webhook (HARUS di luar auth)
+Route::post(
+    '/midtrans/webhook',
+    [MidtransController::class, 'webhook']
+)->name('midtrans.webhook');
 
 
 // SEMUA PRODUK

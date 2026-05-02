@@ -22,6 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'two_factor'       => \App\Http\Middleware\TwoFactorMiddleware::class,
         ]);
     })
+    ->withMiddleware(function(Middleware $middleware) {
+        $middleware->validateCsrfTokens(except: [
+            'midtrans/webhook',
+        ]);
+    })
     ->withSchedule(function (Schedule $schedule) {
         // Jalankan pembersihan chat lama setiap jam
         $schedule->command('chat:clean')->hourly();
