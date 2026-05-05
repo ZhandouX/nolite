@@ -39,8 +39,8 @@ class LandingController extends Controller
             ->take(6)
             ->get();
 
-        // 🔹 Tambahkan logika untuk menampilkan modal login otomatis
-        $showLoginModal = $request->query('showLogin', false);
+        // ✅ Cek dari query string ATAU session (untuk redirect setelah register)
+        $showLoginModal = $request->query('showLogin', false) || session('showLoginModal', false);
 
         // 🔹 Kirim ke view
         return view('welcome', compact('produk', 'produkDiskon', 'showLoginModal'));

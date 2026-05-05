@@ -67,10 +67,6 @@
                         <div class="shrink-0 p-3 rounded-lg bg-red-100 dark:bg-red-900">
                             <i class="fa-solid fa-user-lock text-red-600 dark:text-red-400 text-xl"></i>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Diblokir</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['diblokir'] }}</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -180,11 +176,6 @@
                                                 Nonaktif
                                             </span>
                                         @else
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
-                                                <i class="fa-solid fa-ban mr-1"></i>
-                                                Diblokir
-                                            </span>
                                         @endif
                                     </td>
 
@@ -229,12 +220,6 @@
                                                                 class="block" role="menuitem">
                                                                 @csrf
                                                                 @method('PATCH')
-                                                                <button type="submit"
-                                                                    class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
-                                                                    <i
-                                                                        class="fa-solid fa-ban mr-2 w-4 h-4 text-yellow-500"></i>Blokir
-                                                                    Pengguna
-                                                                </button>
                                                             </form>
                                                             <form action="{{ route('admin.users.nonaktif', $user->id) }}"
                                                                 method="POST" class="block" role="menuitem">
@@ -322,11 +307,11 @@
                                                     class="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
                                                     <span
                                                         class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</span>
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                                                             @if($user->status == 'aktif') bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200
                                                                             @elseif($user->status == 'nonaktif') bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300
-                                                                            @else 
-                                                                                bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 
+                                                                            @else
+                                                                                bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200
                                                                             @endif
                                                                             ">
                                                         {{ ucfirst($user->status) }}

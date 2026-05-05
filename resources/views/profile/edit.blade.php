@@ -14,7 +14,7 @@
                 <a href="{{ route('profile.settings') }}"
                     class="border border-red-900 text-red-900 px-4 py-2 rounded-lg hover:bg-gray-600 hover:text-white transition">
                     <i class="fa-solid fa-gear mr-2"></i>
-                    Settings
+                    Pengaturan
                 </a>
             </div>
 
@@ -41,10 +41,6 @@
                     <div class="tab cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-black hover:border-gray-400"
                         data-tab="wishlist">
                         Wishlist
-                    </div>
-                    <div class="tab cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-black hover:border-gray-400"
-                        data-tab="wishlist">
-                        Ulasan
                     </div>
                 </div>
 

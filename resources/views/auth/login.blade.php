@@ -98,7 +98,7 @@
     const passwordToggle = document.getElementById('passwordToggle');
     const passwordInput = document.getElementById('password');
     const passwordIcon = passwordToggle.querySelector('i');
-    
+
     passwordToggle.addEventListener('click', function() {
       if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
@@ -110,11 +110,11 @@
         passwordIcon.classList.add('fa-eye');
       }
     });
-    
+
     // Form submission
     const loginForm = document.getElementById('loginForm');
     const successMessage = document.getElementById('successMessage');
-    
+
     loginForm.addEventListener('submit', function(e) {
       // Form akan dikirim secara normal, tidak perlu simulasi
       // Hanya menampilkan loading state
@@ -122,21 +122,21 @@
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
       submitBtn.disabled = true;
     });
-    
+
     // Add ripple effect to button
     const buttons = document.querySelectorAll('.submit-btn');
     buttons.forEach(button => {
       button.addEventListener('click', function(e) {
         const x = e.clientX - e.target.getBoundingClientRect().left;
         const y = e.clientY - e.target.getBoundingClientRect().top;
-        
+
         const ripple = document.createElement('span');
         ripple.classList.add('ripple');
         ripple.style.left = `${x}px`;
         ripple.style.top = `${y}px`;
-        
+
         this.appendChild(ripple);
-        
+
         setTimeout(() => {
           ripple.remove();
         }, 600);

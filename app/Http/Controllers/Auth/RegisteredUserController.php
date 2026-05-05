@@ -58,10 +58,9 @@ class RegisteredUserController extends Controller
         // Event Pendaftaran
         event(new Registered($user));
 
-        // Login otomatis setelah register
-        Auth::login($user);
-
-        // Redirect ke dashboard customer
-        return redirect()->route('customer.dashboard');
+        return redirect('/')->with([
+            'showLoginModal' => true,
+            'success' => 'Akun berhasil dibuat, silakan login.'
+        ]);
     }
 }

@@ -66,7 +66,7 @@
                 </a>
             </li>
 
-            <li class="text-bold text-gray-500 text-xs dark:text-white/50 mt-4"><span>MANAJEMEN USER</span></li>
+            <li class="text-bold text-gray-500 text-xs dark:text-white/50 mt-4"><span>MANAJEMEN PENGGUNA</span></li>
 
             {{-- PENGGUNA --}}
             <li>
@@ -100,7 +100,7 @@
                     ? 'bg-primary-50 dark:bg-gray-700 text-primary-700 dark:text-white font-semibold'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-700' }}">
                     <i data-lucide="headphones" class="w-5 h-5"></i>
-                    <span class="ml-3">Customer Service</span>
+                    <span class="ml-3">Moderasi Akun</span>
                 </a>
             </li>
 

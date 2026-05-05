@@ -24,6 +24,9 @@
     {{-- PANEL: DISKON --}}
     @include('layouts.partials_user.panels.diskon')
 
+    {{-- MODAL: TENTANG KAMI --}}
+    @include('layouts.partials_user.modals.tentangkami')
+
     {{-- PANEL: ALL PRODUCT --}}
     @include('layouts.partials_user.panels.all-produk')
 
@@ -34,7 +37,7 @@
     </div>
 
     <div class="extra-icons">
-        <div class="icon-box">
+         <div class="icon-box" onclick="openModal('aboutModal')">
             <i data-lucide="info"></i>
             <span>Tentang Kami</span>
         </div>

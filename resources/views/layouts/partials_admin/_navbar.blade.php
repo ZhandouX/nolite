@@ -218,13 +218,7 @@
               class="flex items-center px-4 py-2.5 text-sm text-gray-300 dark:text-gray-300 hover:bg-cyan-400/10 hover:text-cyan-400 dark:hover:text-cyan-400 transition-all duration-300 group">
               <i data-lucide="circle-user-round"
                 class="mr-3 h-4 w-4 text-cyan-400 group-hover:scale-110 transition-transform duration-300"></i>
-              Profile
-            </a>
-            <a href="#"
-              class="flex items-center px-4 py-2.5 text-sm text-gray-300 dark:text-gray-300 hover:bg-purple-400/10 hover:text-purple-400 dark:hover:text-purple-400 transition-all duration-300 group">
-              <i data-lucide="settings"
-                class="mr-3 h-4 w-4 text-purple-400 group-hover:scale-110 transition-transform duration-300"></i>
-              Settings
+              Profil
             </a>
           </div>
           <div class="py-2 border-t border-gray-700/20 dark:border-gray-700/20">
