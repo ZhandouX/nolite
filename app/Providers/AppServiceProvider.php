@@ -4,15 +4,15 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+
 use App\Listeners\SyncCartAfterLogin;
 use App\Models\Order;
 use App\Models\Produk;
-use Illuminate\Support\Facades\View;
-use App\Models\Chat;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 use App\Http\View\Composers\WishlistComposer;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,10 +30,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Dengarkan event login, lalu jalankan sinkronisasi keranjang
+        /**
+         * 🔐 FORCE HTTPS (untuk ngrok / production)
+         */
+        if (!app()->environment('local')) {
+            URL::forceScheme('https');
+        }
+
+        /**
+         * 🔐 HANDLE PROXY (ngrok supaya Laravel baca HTTPS dengan benar)
+         */
+        if (request()->server->has('HTTP_X_FORWARDED_PROTO')) {
+            request()->server->set('HTTPS', 'on');
+        }
+
+        /**
+         * 🔁 Event login → sync cart
+         */
         Event::listen(Login::class, [SyncCartAfterLogin::class, 'handle']);
 
-        // Share jumlah pesanan menunggu ke semua view admin
+        /**
+         * 📦 Share data pesanan admin
+         */
         View::composer('layouts.admin_app', function ($view) {
             $jumlahMenunggu = Order::where('status', 'menunggu')->count();
             $pesananMenunggu = Order::where('status', 'menunggu')->latest()->get();
@@ -41,7 +59,9 @@ class AppServiceProvider extends ServiceProvider
             $view->with(compact('jumlahMenunggu', 'pesananMenunggu'));
         });
 
-        // === Share produk terbaru & produk diskon ke semua view (pakai cache) ===
+        /**
+         * 🛒 Share produk global (pakai cache)
+         */
         View::composer('*', function ($view) {
             $produkTerbaru = cache()->remember('produk_terbaru', 60, function () {
                 return Produk::with('fotos')
@@ -60,9 +80,14 @@ class AppServiceProvider extends ServiceProvider
             $view->with(compact('produkTerbaru', 'produkDiskon'));
         });
 
+        /**
+         * ❤️ Wishlist composer
+         */
         View::composer('*', WishlistComposer::class);
 
-        // Multi bahasa
+        /**
+         * 🌐 Multi bahasa
+         */
         App::setLocale(Session::get('locale', 'id'));
     }
 }

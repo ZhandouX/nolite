@@ -529,229 +529,412 @@
         ulasanContainer?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Review Form Initialization
-    function initializeReviewForm() {
-        const starButtons = document.querySelectorAll('.star-btn');
-        const selectedRating = document.getElementById('selectedRating');
-        const ratingText = document.getElementById('ratingText');
-        const submitBtn = document.getElementById('submitBtn');
-        const textarea = document.querySelector('textarea[name="komentar"]');
-        const charCount = document.getElementById('charCount');
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const imagePreviews = document.getElementById('imagePreviews');
-        const uploadInfo = document.getElementById('uploadInfo');
-        const cancelBtn = document.getElementById('cancelBtn');
+   // Review Form Initialization
+function initializeReviewForm() {
+    const starButtons = document.querySelectorAll('.star-btn');
+    const selectedRating = document.getElementById('selectedRating');
+    const ratingText = document.getElementById('ratingText');
+    const submitBtn = document.getElementById('submitBtn');
+    const textarea = document.querySelector('textarea[name="komentar"]');
+    const charCount = document.getElementById('charCount');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const imagePreviews = document.getElementById('imagePreviews');
+    const uploadInfo = document.getElementById('uploadInfo');
+    const cancelBtn = document.getElementById('cancelBtn');
 
-        if (!starButtons.length) return;
+    if (!starButtons.length) return;
 
-        // Star Rating Logic
-        starButtons.forEach(star => {
-            star.addEventListener('click', function() {
-                const rating = parseInt(this.getAttribute('data-rating'));
-                if (selectedRating) selectedRating.value = rating;
+    // ⭐ STAR RATING
+    starButtons.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.dataset.rating);
+            if (selectedRating) selectedRating.value = rating;
 
-                starButtons.forEach((s, index) => {
-                    const starSpan = s.querySelector('span');
-                    if (starSpan) {
-                        starSpan.className = index < rating ? 'text-yellow-400' : 'text-gray-300';
-                    }
-                });
-
-                if (ratingText) {
-                    const ratingTexts = {
-                        1: 'Tidak Puas - Produk tidak sesuai ekspektasi',
-                        2: 'Kurang Puas - Ada beberapa kekurangan',
-                        3: 'Cukup - Produk standar, biasa saja',
-                        4: 'Puas - Produk bagus dan memuaskan',
-                        5: 'Sangat Puas - Produk luar biasa, melebihi ekspektasi'
-                    };
-                    ratingText.textContent = ratingTexts[rating];
-                    ratingText.className = 'text-sm font-medium text-green-600 mt-2';
-                }
-
-                validateForm();
+            starButtons.forEach((s, index) => {
+                const span = s.querySelector('span');
+                if (span) span.className = index < rating ? 'text-yellow-400' : 'text-gray-300';
             });
 
-            star.addEventListener('mouseenter', function() {
-                const rating = parseInt(this.getAttribute('data-rating'));
-                starButtons.forEach((s, index) => {
-                    const starSpan = s.querySelector('span');
-                    if (starSpan && index < rating && !starSpan.classList.contains('text-yellow-400')) {
-                        starSpan.className = 'text-yellow-200';
-                    }
-                });
-            });
-
-            star.addEventListener('mouseleave', function() {
-                const currentRating = parseInt(selectedRating?.value) || 0;
-                starButtons.forEach((s, index) => {
-                    const starSpan = s.querySelector('span');
-                    if (starSpan && index >= currentRating && !starSpan.classList.contains('text-yellow-400')) {
-                        starSpan.className = 'text-gray-300';
-                    }
-                });
-            });
-        });
-
-        // Character Count for Textarea
-        if (textarea && charCount) {
-            textarea.addEventListener('input', function() {
-                const count = this.value.length;
-                charCount.textContent = count;
-
-                if (count > 500) {
-                    charCount.className = 'text-xs text-red-500';
-                } else if (count > 400) {
-                    charCount.className = 'text-xs text-orange-500';
-                } else {
-                    charCount.className = 'text-xs text-gray-400';
-                }
-
-                validateForm();
-            });
-        }
-
-        // File Upload Handling
-        if (uploadArea && fileInput) {
-            uploadArea.addEventListener('click', () => fileInput.click());
-
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('border-red-400', 'bg-red-50');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('border-red-400', 'bg-red-50');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('border-red-400', 'bg-red-50');
-                fileInput.files = e.dataTransfer.files;
-                previewImages(fileInput);
-            });
-
-            fileInput.addEventListener('change', function() {
-                previewImages(this);
-            });
-        }
-
-        // Cancel Button
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
-                resetForm();
-                document.getElementById('ulasanContainer').classList.add('hidden');
-            });
-        }
-
-        function validateForm() {
-            if (!selectedRating || !textarea || !submitBtn) return;
-
-            const hasRating = selectedRating.value !== '';
-            const hasComment = textarea.value.trim().length >= 10;
-            const withinLimit = textarea.value.length <= 500;
-
-            submitBtn.disabled = !(hasRating && hasComment && withinLimit);
-        }
-
-        function resetForm() {
-            if (selectedRating) selectedRating.value = '';
-            if (textarea) textarea.value = '';
-            if (charCount) {
-                charCount.textContent = '0';
-                charCount.className = 'text-xs text-gray-400';
-            }
             if (ratingText) {
-                ratingText.textContent = 'Pilih rating dengan mengklik bintang';
-                ratingText.className = 'text-sm text-gray-500 mt-2';
+                const texts = {
+                    1: 'Tidak Puas',
+                    2: 'Kurang Puas',
+                    3: 'Cukup',
+                    4: 'Puas',
+                    5: 'Sangat Puas'
+                };
+                ratingText.textContent = texts[rating];
             }
-            if (imagePreviews) {
-                imagePreviews.innerHTML = '';
-                imagePreviews.classList.add('hidden');
-            }
-            if (uploadInfo) uploadInfo.classList.add('hidden');
-            if (fileInput) fileInput.value = '';
-
-            starButtons.forEach(star => {
-                const starSpan = star.querySelector('span');
-                if (starSpan) starSpan.className = 'text-gray-300';
-            });
 
             validateForm();
-        }
+        });
+    });
+
+    // ✍️ TEXTAREA
+    if (textarea && charCount) {
+        textarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+            validateForm();
+        });
     }
 
-    // Image Preview Functions
-    window.previewImages = function(input) {
-        const previews = document.getElementById('imagePreviews');
-        const uploadInfo = document.getElementById('uploadInfo');
+    // 📂 UPLOAD
+    if (uploadArea && fileInput) {
+        uploadArea.addEventListener('click', () => fileInput.click());
 
-        if (!previews) return;
-
-        previews.innerHTML = '';
-
-        if (input.files && input.files.length > 0) {
-            previews.classList.remove('hidden');
-            if (uploadInfo) uploadInfo.classList.remove('hidden');
-
-            Array.from(input.files).slice(0, 5).forEach((file, index) => {
-                if (validateImage(file)) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const preview = document.createElement('div');
-                        preview.className = 'relative group';
-                        preview.innerHTML = `
-                            <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg" alt="Preview">
-                            <button type="button" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" onclick="removeImage(${index})">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        `;
-                        previews.appendChild(preview);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        } else {
-            previews.classList.add('hidden');
-            if (uploadInfo) uploadInfo.classList.add('hidden');
-        }
-    };
-
-    window.removeImage = function(index) {
-        const fileInput = document.getElementById('fileInput');
-        if (!fileInput) return;
-
-        const dt = new DataTransfer();
-        const files = Array.from(fileInput.files);
-
-        files.forEach((file, i) => {
-            if (i !== index) {
-                dt.items.add(file);
-            }
+        uploadArea.addEventListener('dragover', e => {
+            e.preventDefault();
+            uploadArea.classList.add('border-red-400');
         });
 
-        fileInput.files = dt.files;
-        previewImages(fileInput);
-    };
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('border-red-400');
+        });
 
-    function validateImage(file) {
-        const maxSize = 5 * 1024 * 1024;
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        uploadArea.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadArea.classList.remove('border-red-400');
 
-        if (!validTypes.includes(file.type)) {
-            alert('Format file tidak didukung. Harap upload gambar JPG, JPEG, atau PNG.');
-            return false;
-        }
+            const dt = new DataTransfer();
 
-        if (file.size > maxSize) {
-            alert('Ukuran file terlalu besar. Maksimal 5MB per gambar.');
-            return false;
-        }
+            // gabung file lama + baru
+            [...fileInput.files, ...e.dataTransfer.files].forEach(file => {
+                if (!validateImage(file)) return;
 
-        return true;
+                // cegah duplikat
+                if ([...dt.files].some(f =>
+                    f.name === file.name &&
+                    f.size === file.size &&
+                    f.lastModified === file.lastModified
+                )) return;
+
+                dt.items.add(file);
+            });
+
+            fileInput.files = dt.files;
+            previewImages(fileInput);
+        });
+
+        fileInput.addEventListener('change', function(e) {
+    const dt = new DataTransfer();
+
+    // ambil file lama
+    const oldFiles = Array.from(this._files || []);
+
+    // ambil file baru
+    const newFiles = Array.from(e.target.files);
+
+    [...oldFiles, ...newFiles].forEach(file => {
+        if (!validateImage(file)) return;
+
+        // cegah duplikat
+        if ([...dt.files].some(f =>
+            f.name === file.name &&
+            f.size === file.size &&
+            f.lastModified === file.lastModified
+        )) return;
+
+        dt.items.add(file);
+    });
+
+    // simpan ke custom property
+    this._files = Array.from(dt.files);
+
+    // set ke input
+    this.files = dt.files;
+
+    previewImages(this);
+});
     }
 
-    // Expose functions to global scope
-    window.validateImages = validateImages;
+    // ❌ CANCEL
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+            resetForm();
+            document.getElementById('ulasanContainer').classList.add('hidden');
+        });
+    }
+
+    function validateForm() {
+        if (!selectedRating || !textarea || !submitBtn) return;
+
+        submitBtn.disabled = !(
+            selectedRating.value &&
+            textarea.value.trim().length >= 10 &&
+            textarea.value.length <= 500
+        );
+    }
+
+    function resetForm() {
+        if (selectedRating) selectedRating.value = '';
+        if (textarea) textarea.value = '';
+        if (charCount) charCount.textContent = '0';
+
+        if (imagePreviews) {
+            imagePreviews.innerHTML = '';
+            imagePreviews.classList.add('hidden');
+        }
+
+        if (uploadInfo) uploadInfo.classList.add('hidden');
+        if (fileInput) fileInput.value = '';
+    }
+
+    const uploadAreaEdit = document.getElementById('uploadAreaEdit');
+const fileInputEdit = document.getElementById('fileInputEdit');
+
+if (uploadAreaEdit && fileInputEdit) {
+    uploadAreaEdit.addEventListener('click', () => fileInputEdit.click());
+
+    uploadAreaEdit.addEventListener('dragover', e => {
+        e.preventDefault();
+        uploadAreaEdit.classList.add('border-red-400');
+    });
+
+    uploadAreaEdit.addEventListener('dragleave', () => {
+        uploadAreaEdit.classList.remove('border-red-400');
+    });
+
+    uploadAreaEdit.addEventListener('drop', e => {
+        e.preventDefault();
+        uploadAreaEdit.classList.remove('border-red-400');
+
+        const dt = new DataTransfer();
+
+        const oldFiles = Array.from(fileInputEdit._files || []);
+        const newFiles = Array.from(e.dataTransfer.files);
+
+        [...oldFiles, ...newFiles].forEach(file => {
+            if (!validateImage(file)) return;
+
+            if ([...dt.files].some(f =>
+                f.name === file.name &&
+                f.size === file.size &&
+                f.lastModified === file.lastModified
+            )) return;
+
+            dt.items.add(file);
+        });
+
+        fileInputEdit._files = Array.from(dt.files);
+        fileInputEdit.files = dt.files;
+
+        previewImagesEdit(fileInputEdit);
+    });
+
+    fileInputEdit.addEventListener('change', function (e) {
+        const dt = new DataTransfer();
+
+        const oldFiles = Array.from(this._files || []);
+        const newFiles = Array.from(e.target.files);
+
+        [...oldFiles, ...newFiles].forEach(file => {
+            if (!validateImage(file)) return;
+
+            if ([...dt.files].some(f =>
+                f.name === file.name &&
+                f.size === file.size &&
+                f.lastModified === file.lastModified
+            )) return;
+
+            dt.items.add(file);
+        });
+
+        this._files = Array.from(dt.files);
+        this.files = dt.files;
+
+        previewImagesEdit(this);
+    });
+}
+
+function previewImagesEdit(input) {
+    const previews = document.getElementById('imagePreviewsEdit');
+    const uploadInfo = document.getElementById('uploadInfoEdit');
+
+    if (!previews) return;
+
+    previews.innerHTML = '';
+
+    let files = Array.from(input.files);
+
+    // dedup + validasi
+    let unique = [];
+
+    files.forEach(file => {
+        if (!validateImage(file)) return;
+
+        if (unique.some(f =>
+            f.name === file.name &&
+            f.size === file.size &&
+            f.lastModified === file.lastModified
+        )) return;
+
+        unique.push(file);
+    });
+
+    // ⭐ BATASI 5
+    unique = unique.slice(0, 5);
+
+    const dt = new DataTransfer();
+    unique.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+
+    if (unique.length > 0) {
+        previews.classList.remove('hidden');
+        uploadInfo?.classList.remove('hidden');
+    } else {
+        previews.classList.add('hidden');
+        uploadInfo?.classList.add('hidden');
+    }
+
+    unique.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const div = document.createElement('div');
+
+            div.innerHTML = `
+                <div class="relative">
+                    <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg">
+                    <button type="button"
+                        class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full"
+                        onclick="removeImageEdit(${index})">×</button>
+                </div>
+            `;
+
+            previews.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+window.removeImageEdit = function(index) {
+    const input = document.getElementById('fileInputEdit');
+    if (!input) return;
+
+    const files = Array.from(input.files);
+    files.splice(index, 1);
+
+    const dt = new DataTransfer();
+    files.forEach(f => dt.items.add(f));
+
+    input.files = dt.files;
+    input._files = files;
+
+    previewImagesEdit(input);
+};
+
+}
+
+//////////////////////////////////////////////////////
+// 🖼️ PREVIEW IMAGES (FIX TOTAL)
+//////////////////////////////////////////////////////
+
+window.previewImages = function(input) {
+    const previews = document.getElementById('imagePreviews');
+    const uploadInfo = document.getElementById('uploadInfo');
+
+    if (!previews) return;
+
+    previews.innerHTML = '';
+
+    let files = Array.from(input.files);
+
+    // validasi + dedup
+    let unique = [];
+
+    files.forEach(file => {
+        if (!validateImage(file)) return;
+
+        if (unique.some(f =>
+            f.name === file.name &&
+            f.size === file.size &&
+            f.lastModified === file.lastModified
+        )) return;
+
+        unique.push(file);
+    });
+
+    // max 5
+    unique = unique.slice(0, 5);
+
+    // set ulang input
+    const dt = new DataTransfer();
+    unique.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+
+    if (unique.length > 0) {
+        previews.classList.remove('hidden');
+        uploadInfo?.classList.remove('hidden');
+    } else {
+        previews.classList.add('hidden');
+        uploadInfo?.classList.add('hidden');
+    }
+
+    // render
+    unique.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const div = document.createElement('div');
+            div.className = 'relative group';
+
+            div.innerHTML = `
+                <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg">
+                <button type="button"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full"
+                    onclick="removeImage(${index})">×</button>
+            `;
+
+            previews.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+};
+
+//////////////////////////////////////////////////////
+// ❌ REMOVE IMAGE
+//////////////////////////////////////////////////////
+
+window.removeImage = function(index) {
+    const input = document.getElementById('fileInput');
+    if (!input) return;
+
+    const files = Array.from(input.files);
+    files.splice(index, 1);
+
+    const dt = new DataTransfer();
+    files.forEach(f => dt.items.add(f));
+
+    input.files = dt.files;
+
+    previewImages(input);
+};
+
+//////////////////////////////////////////////////////
+// ✅ VALIDATION
+//////////////////////////////////////////////////////
+
+function validateImage(file) {
+    const valid = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!valid.includes(file.type)) {
+        alert('Format harus JPG/PNG');
+        return false;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Max 5MB');
+        return false;
+    }
+
+    return true;
+}
+
+// FIX: Swal selalu di paling depan
+const style = document.createElement('style');
+style.innerHTML = `
+    .swal2-container {
+        z-index: 10000 !important;
+    }
+`;
+document.head.appendChild(style);
+
 })();

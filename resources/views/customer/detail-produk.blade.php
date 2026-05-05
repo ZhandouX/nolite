@@ -27,12 +27,11 @@
                 {{-- MAIN IMAGE --}}
                 <div class="fade-in mt-1">
                     <div class="main-image overflow-hidden bg-black">
-                        @if($produk->fotos->isNotEmpty())
+                        @if ($produk->fotos->isNotEmpty())
                             <img src="{{ asset('storage/' . $produk->fotos->first()->foto) }}" id="mainImage"
                                 alt="{{ $produk->nama_produk }}"
                                 class="w-full h-80 object-contain cursor-zoom-in transition-transform duration-300 hover:scale-105"
                                 onclick="openProductModal(0)" />
-
                         @else
                             <img src="{{ asset('assets/images/no-image.png') }}" alt="No Image" id="mainImage"
                                 class="w-full h-80 object-contain" />
@@ -43,20 +42,21 @@
                 {{-- THUMBNAILS --}}
                 <div class="bg-white lg:rounded-b-lg p-4 fade-in">
                     <div class="thumbnail-list flex gap-3 overflow-x-auto">
-                        @foreach($produk->fotos as $key => $foto)
+                        @foreach ($produk->fotos as $key => $foto)
                             <img src="{{ asset('storage/' . $foto->foto) }}"
                                 class="thumb w-16 h-16 object-cover rounded cursor-pointer border-2 transition-all duration-200 {{ $key === 0 ? 'border-gray-700' : 'border-gray-200 hover:border-gray-400' }}"
-                                data-index="{{ $key }}" onclick="changeMainImage('{{ asset('storage/' . $foto->foto) }}', this, {{ $key }})" />
+                                data-index="{{ $key }}"
+                                onclick="changeMainImage('{{ asset('storage/' . $foto->foto) }}', this, {{ $key }})" />
                         @endforeach
                     </div>
                 </div>
                 {{-- PRODUCT DESCRIPTION --}}
-               <div class="flex flex-col bg-white rounded-lg p-4 fade-in mt-4">
+                <div class="flex flex-col bg-white rounded-lg p-4 fade-in mt-4">
                     <div class="border-b border-gray-300 pb-2">
                         <h3 class="text-center lg:text-left text-lg font-semibold text-gray-900">Deskripsi Produk</h3>
                     </div>
                     <div class="text-gray-700 text-sm leading-relaxed space-y-3">
-                        @if($produk->deskripsi)
+                        @if ($produk->deskripsi)
                             <div class="relative">
                                 <div id="descriptionContent"
                                     class="whitespace-pre-line prose prose-sm max-w-none text-gray-700 overflow-hidden transition-all duration-300 max-h-32">
@@ -89,7 +89,8 @@
                 {{-- HEADER & STATUS --}}
                 <div class="bg-white lg:rounded-lg px-2 py-3">
                     <div class="space-y-3 px-2 fade-in">
-                        <h1 class="montserrat text-2xl font-bold text-gray-900 leading-tight">{{ $produk->nama_produk }}</h1>
+                        <h1 class="montserrat text-2xl font-bold text-gray-900 leading-tight">{{ $produk->nama_produk }}
+                        </h1>
 
                         <div class="flex items-center space-x-4">
                             @php
@@ -99,8 +100,8 @@
                             @endphp
 
                             <span class="flex items-center text-sm">
-                                @for($s = 1; $s <= 5; $s++)
-                                    @if($s <= floor($avgRating))
+                                @for ($s = 1; $s <= 5; $s++)
+                                    @if ($s <= floor($avgRating))
                                         <svg class="w-4 h-4 mr-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                                             <path
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -160,7 +161,9 @@
                 <div class="bg-white px-4 py-4 space-y-6 fade-in variation-section lg:rounded-lg">
                     {{-- VARIATION SELECTOR (MOBILE) --}}
                     <div class="lg:hidden">
-                        <button type="button" class="w-full py-3 px-4 border border-gray-300 text-left rounded-xl cursor-pointer mt-2" onclick="openVariationModal()">
+                        <button type="button"
+                            class="w-full py-3 px-4 border border-gray-300 text-left rounded-xl cursor-pointer mt-2"
+                            onclick="openVariationModal()">
                             <div class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm text-gray-500">Pilih Varian</p>
@@ -172,7 +175,7 @@
                     </div>
 
                     {{-- OPTIONS SELECTION --}}
-                    @if(!empty($produk->warna))
+                    @if (!empty($produk->warna))
                         @php
                             $warnaList = is_array($produk->warna) ? $produk->warna : json_decode($produk->warna, true);
                             $colorMap = [
@@ -192,34 +195,37 @@
                                 'teal' => '#008080',
                                 'olive' => '#808000',
                                 'silver' => '#C0C0C0',
-                                'gold' => '#FFD700'
+                                'gold' => '#FFD700',
                             ];
                         @endphp
 
                         <div>
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-medium text-gray-700">Warna</label>
-                                <span class="text-sm text-gray-500" id="selectedColorText-{{ $produk->id }}">Pilih warna</span>
+                                <span class="text-sm text-gray-500" id="selectedColorText-{{ $produk->id }}">Pilih
+                                    warna</span>
                             </div>
                             <div class="flex flex-wrap gap-2">
-                                @foreach($warnaList as $w)
+                                @foreach ($warnaList as $w)
                                     @php
                                         $warnaLower = strtolower($w);
                                         $colorCode = $colorMap[$warnaLower] ?? null;
                                     @endphp
 
-                                    @if($colorCode)
+                                    @if ($colorCode)
                                         <button type="button"
                                             class="color-option px-4 py-2 rounded-xl border border-gray-300 bg-transparent hover:scale-110 transition-all duration-200"
                                             style="--color-hover: {{ $colorCode }}; --color-selected: {{ $colorCode }}"
-                                            data-color="{{ $w }}" data-item="{{ $produk->id }}" data-color-lower="{{ $warnaLower }}"
+                                            data-color="{{ $w }}" data-item="{{ $produk->id }}"
+                                            data-color-lower="{{ $warnaLower }}"
                                             onclick="selectColor(this, '{{ $w }}', '{{ $produk->id }}')">
                                             {{ ucfirst($w) }}
                                         </button>
                                     @else
                                         <button type="button"
                                             class="option-chip px-4 py-2 rounded-lg border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all duration-200"
-                                            data-color="{{ $w }}" data-item="{{ $produk->id }}" data-color-lower="{{ $warnaLower }}"
+                                            data-color="{{ $w }}" data-item="{{ $produk->id }}"
+                                            data-color-lower="{{ $warnaLower }}"
                                             onclick="selectColor(this, '{{ $w }}', '{{ $produk->id }}')">
                                             {{ ucfirst($w) }}
                                         </button>
@@ -231,15 +237,17 @@
                     @endif
 
                     {{-- SIZE SELECTION --}}
-                    @if(!empty($produk->ukuran))
+                    @if (!empty($produk->ukuran))
                         <div>
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-medium text-gray-700">Ukuran</label>
-                                <span class="text-sm text-gray-500" id="selectedSizeText-{{ $produk->id }}">Pilih ukuran</span>
+                                <span class="text-sm text-gray-500" id="selectedSizeText-{{ $produk->id }}">Pilih
+                                    ukuran</span>
                             </div>
                             <div class="flex flex-wrap gap-2">
-                                @foreach($produk->ukuran as $u)
-                                    <button type="button" class="option-chip" data-size="{{ $u }}" data-item="{{ $produk->id }}"
+                                @foreach ($produk->ukuran as $u)
+                                    <button type="button" class="option-chip" data-size="{{ $u }}"
+                                        data-item="{{ $produk->id }}"
                                         onclick="selectSize(this, '{{ $u }}', '{{ $produk->id }}')">
                                         {{ $u }}
                                     </button>
@@ -261,8 +269,9 @@
                                 </svg>
                             </button>
 
-                            <input type="number" id="desktopQty-{{ $produk->id }}" min="1" max="{{ $produk->jumlah }}"
-                                value="1" class="w-12 h-8 text-center rounded-full text-sm font-medium text-gray-900"
+                            <input type="number" id="desktopQty-{{ $produk->id }}" min="1"
+                                max="{{ $produk->jumlah }}" value="1"
+                                class="w-12 h-8 text-center rounded-full text-sm font-medium text-gray-900"
                                 onchange="detailValidateQty({{ $produk->id }})">
                             <button type="button" onclick="detailIncrementQty({{ $produk->id }})"
                                 class="qty-btn flex w-10 h-10 items-center justify-center border text-white border-gray-400 bg-gray-400 hover:text-gray-400 hover:border-gray-400 rounded-full cursor-pointer transition-all duration-200"
@@ -289,7 +298,8 @@
                             </svg>
                         </button>
 
-                        <button type="button" onclick="detailAddToCart('{{ $produk->id }}')" id="cartBtn-{{ $produk->id }}"
+                        <button type="button" onclick="detailAddToCart('{{ $produk->id }}')"
+                            id="cartBtn-{{ $produk->id }}"
                             class="flex-1 flex items-center justify-center border border-gray-600 text-gray-700 hover:bg-gray-600 hover:text-white gap-2 font-medium py-3 px-4 rounded-xl transition-all duration-200"
                             {{ $produk->jumlah <= 0 ? 'disabled' : '' }}>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -345,15 +355,17 @@
                             </div>
 
                             <div class="flex items-center justify-start gap-0.5 mb-1">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= floor($avgRating))
-                                        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= floor($avgRating))
+                                        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400" fill="currentColor"
+                                            viewBox="0 0 20 20">
                                             <path
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
                                             </path>
                                         </svg>
                                     @else
-                                        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-300" fill="currentColor"
+                                            viewBox="0 0 20 20">
                                             <path
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
                                             </path>
@@ -376,12 +388,12 @@
                     data-star="all">
                     <span class="flex items-center text-xs lg:text-sm">Semua Ulasan</span>
                 </button>
-                @for($i = 5; $i >= 1; $i--)
+                @for ($i = 5; $i >= 1; $i--)
                     <button
                         class="filter-star rounded-lg px-2 py-1 md:px-4 md:py-3 bg-white text-gray-700 text-sm font-semibold transition-all duration-300 hover:bg-gray-300 hover:scale-105 active:scale-95 border border-gray-300"
                         data-star="{{ $i }}">
                         <span class="flex items-center gap-1">
-                            @for($s = 1; $s <= $i; $s++)
+                            @for ($s = 1; $s <= $i; $s++)
                                 <span class="text-amber-400 text-sm drop-shadow-sm">★</span>
                             @endfor
                         </span>
@@ -389,9 +401,9 @@
                 @endfor
             </div>
             {{-- REVIEWS LIST --}}
-            @if($produk->ulasan->isNotEmpty())
+            @if ($produk->ulasan->isNotEmpty())
                 <div id="ulasanContainer" class="space-y-2">
-                    @foreach($produk->ulasan as $u)
+                    @foreach ($produk->ulasan as $u)
                         <div class="fade-in bg-white p-6 border-b border-gray-200 transition-all duration-500 shadow-sm backdrop-blur-sm"
                             data-rating="{{ $u->rating }}">
                             <div class="flex items-start gap-4">
@@ -404,17 +416,19 @@
                                     {{-- HEADER: Nama, varian, dan tanggal --}}
                                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2">
                                         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                                            <p class="font-semibold text-gray-900 text-sm">{{ $u->user->name ?? 'Anonymous' }}</p>
+                                            <p class="font-semibold text-gray-900 text-sm">
+                                                {{ $u->user->name ?? 'Anonymous' }}</p>
 
                                             {{-- VARIAN (seperti di Shopee) --}}
-                                            @if($u->orderItem)
+                                            @if ($u->orderItem)
                                                 <div class="flex items-center text-xs text-gray-500">
-                                                    @if($u->orderItem->warna)
+                                                    @if ($u->orderItem->warna)
                                                         <span>Variasi:<strong
                                                                 class="ml-1 mr-1 text-bold uppercase">{{ $u->orderItem->warna }},</strong></span>
                                                     @endif
-                                                    @if($u->orderItem->ukuran)
-                                                        <strong class="text-bold uppercase">{{ $u->orderItem->ukuran }}</strong>
+                                                    @if ($u->orderItem->ukuran)
+                                                        <strong
+                                                            class="text-bold uppercase">{{ $u->orderItem->ukuran }}</strong>
                                                     @endif
                                                 </div>
                                             @endif
@@ -427,7 +441,7 @@
                                     {{-- RATING --}}
                                     <div class="flex items-center mb-1">
                                         <div class="flex mr-2">
-                                            @for($i = 1; $i <= 5; $i++)
+                                            @for ($i = 1; $i <= 5; $i++)
                                                 <svg class="w-4 h-4 {{ $i <= $u->rating ? 'text-yellow-400' : 'text-gray-300' }}"
                                                     fill="currentColor" viewBox="0 0 20 20">
                                                     <path
@@ -440,17 +454,26 @@
                                     {{-- KOMENTAR --}}
                                     <p class="text-gray-700 text-sm leading-relaxed mb-3">{{ $u->komentar }}</p>
 
-
                                     {{-- FOTO ULASAN --}}
-                                    @if($u->fotos->isNotEmpty())
+                                    @if ($u->fotos->isNotEmpty())
                                         <div class="flex gap-2 overflow-x-auto pb-1">
-                                            @foreach($u->fotos as $index => $f)
+                                            @foreach ($u->fotos as $index => $f)
                                                 <div class="flex-shrink-0">
                                                     <img src="{{ asset('storage/' . $f->foto) }}"
                                                         class="w-20 h-20 object-cover rounded-md cursor-pointer transition-transform duration-300 hover:scale-105"
-                                                        onclick="openReviewModal('{{ $u->id }}', {{ $index }})" alt="Foto ulasan">
+                                                        onclick="openReviewModal('{{ $u->id }}', {{ $index }})"
+                                                        alt="Foto ulasan">
                                                 </div>
                                             @endforeach
+                                        </div>
+                                    @endif
+                                    {{-- BALASAN ADMIN --}}
+                                    @if ($u->admin_reply)
+                                        <div class="mt-3 ml-2 sm:ml-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                            <p class="text-xs font-semibold text-blue-900 mb-1">Balasan Admin</p>
+                                            <p class="text-sm text-blue-800 leading-relaxed">
+                                                {{ $u->admin_reply }}
+                                            </p>
                                         </div>
                                     @endif
                                 </div>
@@ -468,7 +491,8 @@
                         </svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 mb-2">Belum ada ulasan</h3>
-                    <p class="text-gray-600 text-sm max-w-sm mx-auto leading-relaxed">Jadilah yang pertama membagikan pengalaman
+                    <p class="text-gray-600 text-sm max-w-sm mx-auto leading-relaxed">Jadilah yang pertama membagikan
+                        pengalaman
                         menggunakan produk ini dan bantu pembeli lainnya</p>
                 </div>
             @endif
@@ -525,10 +549,10 @@
 @push('script')
     <script>
         window.productImages = [
-            @foreach($produk->fotos as $foto)
+            @foreach ($produk->fotos as $foto)
                 "{{ asset('storage/' . $foto->foto) }}",
             @endforeach
-                    ];
+        ];
     </script>
     <script src="/assets/js/detail-product/product-modal.js"></script>
 
@@ -553,28 +577,22 @@
     <script src="/assets/js/detail-product/checkout.js"></script>
     <script>
         window.reviewData = {
-            @foreach($produk->ulasan as $u)
-                                                                                                                                                                                                                                                                    "{{ $u->id }}": {
-                    userName: @json(optional($u->user)->name ?? 'Anonymous'),
-                    userInitial: @json(substr(optional($u->user)->name ?? 'A', 0, 1)),
-                    variant: @json(
-                        $u->orderItem
-                        ? ($u->orderItem->warna
-                            . ($u->orderItem->ukuran ? ' • Size: ' . $u->orderItem->ukuran : '')
-                        )
-                        : ''
-                    ),
+                @foreach ($produk->ulasan as $u)
+                    "{{ $u->id }}": {
+                        userName: @json(optional($u->user)->name ?? 'Anonymous'),
+                        userInitial: @json(substr(optional($u->user)->name ?? 'A', 0, 1)),
+                        variant: @json($u->orderItem ? $u->orderItem->warna . ($u->orderItem->ukuran ? ' • Size: ' . $u->orderItem->ukuran : '') : ''),
 
-                    date: @json($u->created_at->format('d M Y')),
-                    comment: @json($u->komentar),
-                    rating: {{ $u->rating }},
-                    photos: [
-                        @foreach($u->fotos as $f)
-                            @json(asset('storage/' . $f->foto)),
-                        @endforeach
-                                                                                                                                                                                                                                                                        ]
-                },
-            @endforeach
+                        date: @json($u->created_at->format('d M Y')),
+                        comment: @json($u->komentar),
+                        rating: {{ $u->rating }},
+                        photos: [
+                            @foreach ($u->fotos as $f)
+                                @json(asset('storage/' . $f->foto)),
+                            @endforeach
+                        ]
+                    },
+                @endforeach
     </script>
     <script src="/assets/js/detail-product/ulasan-modal.js"></script>
 @endpush

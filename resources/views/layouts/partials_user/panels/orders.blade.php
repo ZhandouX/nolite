@@ -217,8 +217,7 @@
                                     <p class="text-sm font-medium text-gray-700 mb-1">Klik atau drag & drop foto di sini
                                     </p>
                                     <p class="text-xs text-gray-500">Format: JPG, PNG, JPEG (Maks. 5MB per gambar)</p>
-                                    <input type="file" name="fotos[]" multiple accept="image/*" class="hidden"
-                                        id="fileInput" onchange="previewImages(this)">
+                                   <input type="file" name="fotos[]" multiple accept="image/*" class="hidden" id="fileInput">
                                 </div>
 
                                 {{-- Image Previews --}}
