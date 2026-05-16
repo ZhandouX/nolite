@@ -129,6 +129,18 @@
                     <span class="ml-3">Laporan</span>
                 </a>
             </li>
+
+            {{-- MONITOR TRANSAKSI --}}
+            <li>
+                <a href="{{ route('admin.transaksi.index') }}"
+                    class="flex text-sm items-center p-3 rounded-lg transition-all duration-150
+                {{ request()->routeIs('admin.transaksi.*')
+                    ? 'bg-primary-50 dark:bg-gray-700 text-primary-700 dark:text-white font-semibold'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-700' }}">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span class="ml-3">Monitor Transaksi</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </div>

@@ -18,7 +18,7 @@
                 </a>
             </div>
 
-            <!-- Orders & Wishlist -->
+            <!-- Pesanan & Wishlist -->
             <div class="bg-white rounded-lg shadow-sm p-3 md:p-6 relative hover:shadow-md transition">
 
                 <!-- Dropdown -->
@@ -42,6 +42,10 @@
                         data-tab="wishlist">
                         Wishlist
                     </div>
+                    <div class="tab cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-black hover:border-gray-400"
+                        data-tab="riwayat-transaksi">
+                        Riwayat Transaksi
+                    </div>
                 </div>
 
                 <!-- Orders Content -->
@@ -49,6 +53,9 @@
 
                 <!-- Wishlist Content -->
                 @include('layouts.partials_user.panels._wishlist-section')
+
+                <!-- Riwayat Transaksi -->
+                @include('layouts.partials_user.panels._transaction')
             </div>
         </div>
     </div>

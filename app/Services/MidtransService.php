@@ -21,7 +21,7 @@ class MidtransService
      */
     public function createSnapToken(Order $order): array
     {
-        // ✅ WAJIB: ambil dari DB, JANGAN generate ulang
+        // ambil dari DB
         $orderId = $order->midtrans_order_id;
 
         if (!$orderId) {
@@ -33,10 +33,12 @@ class MidtransService
                 'order_id' => $orderId,
                 'gross_amount' => (int) $order->subtotal,
             ],
+
             'customer_details' => [
                 'first_name' => $order->nama_penerima,
                 'email' => $order->email,
                 'phone' => $order->no_hp,
+
                 'billing_address' => [
                     'address' => $order->alamat_detail,
                     'city' => $order->kota,
@@ -44,18 +46,26 @@ class MidtransService
                     'country_code' => 'IDN',
                 ],
             ],
+
             'item_details' => $this->buildItemDetails($order),
         ];
 
-        $snapToken = Snap::getSnapToken($params);
+        // 🔥 CREATE TRANSACTION
+        $transaction = Snap::createTransaction($params);
 
-        // ✅ Simpan ke DB
+        // ambil data
+        $snapToken = $transaction->token;
+        $paymentUrl = $transaction->redirect_url;
+
+        // simpan ke DB
         $order->update([
             'snap_token' => $snapToken,
+            'payment_url' => $paymentUrl,
         ]);
 
         return [
             'snap_token' => $snapToken,
+            'payment_url' => $paymentUrl,
             'order_id' => $orderId,
         ];
     }

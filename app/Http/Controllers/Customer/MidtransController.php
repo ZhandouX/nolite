@@ -43,7 +43,7 @@ class MidtransController extends Controller
     {
         $data = $request->all();
 
-        // 🔐 VALIDASI SIGNATURE
+        // VALIDASI SIGNATURE
         $isValid = $this->midtrans->verifySignature(
             $data['order_id'],
             $data['status_code'],
@@ -52,46 +52,79 @@ class MidtransController extends Controller
         );
 
         if (!$isValid) {
-            return response()->json(['message' => 'Invalid signature'], 403);
+            return response()->json([
+                'message' => 'Invalid signature'
+            ], 403);
         }
 
-        // 🔥 AMBIL ORDER
-        $order = Order::where('midtrans_order_id', $data['order_id'])->first();
+        // CARI ORDER
+        $order = Order::where(
+            'midtrans_order_id',
+            $data['order_id']
+        )->first();
 
         if (!$order) {
-            return response()->json(['message' => 'Order not found'], 404);
+            return response()->json([
+                'message' => 'Order not found'
+            ], 404);
         }
 
         $transactionStatus = $data['transaction_status'];
         $paymentType = $data['payment_type'] ?? null;
         $vaNumbers = $data['va_numbers'] ?? null;
 
-        // 🔥 MAP PAYMENT METHOD
-        $paymentLabel = $this->midtrans->mapPaymentType($paymentType, $vaNumbers);
+        // LABEL PEMBAYARAN
+        $paymentLabel = $this->midtrans
+            ->mapPaymentType($paymentType, $vaNumbers);
 
-        $order->metode_pembayaran = $paymentLabel;
+        // SIMPAN METODE
         $order->payment_type = $paymentType;
+        $order->metode_pembayaran = $paymentLabel;
 
-        // 🔥 UPDATE STATUS
+        // STATUS PEMBAYARAN
         switch ($transactionStatus) {
+
             case 'capture':
             case 'settlement':
-                $order->status = 'dibayar';
+
+                $order->payment_status = 'paid';
+
+                // order mulai diproses admin
+                if ($order->status === 'menunggu') {
+                    $order->status = 'diproses';
+                }
+
                 break;
 
             case 'pending':
-                $order->status = 'menunggu';
+
+                $order->payment_status = 'pending';
+
                 break;
 
             case 'deny':
+
+                $order->payment_status = 'failed';
+
+                break;
+
             case 'expire':
+
+                $order->payment_status = 'expired';
+
+                break;
+
             case 'cancel':
-                $order->status = 'dibatalkan';
+
+                $order->payment_status = 'cancel';
+
                 break;
         }
 
         $order->save();
 
-        return response()->json(['message' => 'OK'], 200);
+        return response()->json([
+            'message' => 'OK'
+        ], 200);
     }
 }

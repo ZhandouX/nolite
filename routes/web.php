@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\Customer\CheckoutController;
@@ -104,6 +105,11 @@ Route::middleware(['auth', 'role:admin', 'two_factor'])
             Route::get('/export-pdf/{jenis}', [LaporanController::class, 'exportPDF'])->name('exportPDF');
             Route::get('/export-excel/{jenis}', [LaporanController::class, 'exportExcel'])->name('exportExcel');
         });
+
+        // ==========================
+        // MONITOR TRANSAKSI
+        // ==========================
+        Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi.index');
 
         // ==========================
         // 🧩 CHAT MANAGEMENT (ADMIN)

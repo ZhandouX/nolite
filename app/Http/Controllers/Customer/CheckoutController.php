@@ -116,9 +116,15 @@ class CheckoutController extends Controller
                 'kota' => $request->kota,
                 'alamat_detail' => $request->alamat_detail,
                 'email' => $request->email ?? Auth::user()->email,
+
+                // pembayaran
                 'metode_pembayaran' => 'pending',
-                'subtotal' => $total,
+                'payment_status' => 'pending',
+
+                // order
                 'status' => 'menunggu',
+
+                'subtotal' => $total,
             ]);
 
             // ✅ SAVE ITEMS
@@ -279,9 +285,15 @@ class CheckoutController extends Controller
                 'provinsi' => $request->provinsi,
                 'kota' => $request->kota,
                 'alamat_detail' => $request->alamat_detail,
+
+                // pembayaran
                 'metode_pembayaran' => 'pending',
-                'subtotal' => $checkoutItem['subtotal'],
+                'payment_status' => 'pending',
+
+                // order
                 'status' => 'menunggu',
+
+                'subtotal' => $checkoutItem['subtotal'],
                 'midtrans_order_id' => $midtransOrderId,
             ]);
 
