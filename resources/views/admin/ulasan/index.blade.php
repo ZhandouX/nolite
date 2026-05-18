@@ -115,13 +115,49 @@
                                 @endif
                             </td>
 
-                            <td class="p-3">
-                                <a href="{{ route('admin.ulasan.show', $ulasan->id) }}"
-                                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700 transition duration-200">
-                                    <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
-                                    Detail
-                                </a>
-                            </td>
+                            <td class="p-3 relative">
+    <div class="relative inline-block text-left">
+
+        {{-- Button Dropdown --}}
+        <button onclick="toggleDropdown({{ $ulasan->id }})"
+            class="inline-flex items-center px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition">
+            Aksi
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" d="M19 9l-7 7-7-7">
+                </path>
+            </svg>
+        </button>
+
+        {{-- Dropdown Menu --}}
+        <div id="dropdown-{{ $ulasan->id }}"
+            class="hidden absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
+
+            {{-- Detail --}}
+            <a href="{{ route('admin.ulasan.show', $ulasan->id) }}"
+                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
+                Lihat Detail
+            </a>
+
+            {{-- Hapus --}}
+            <form action="{{ route('admin.ulasan.destroy', $ulasan->id) }}"
+                method="POST"
+                onsubmit="return confirm('Yakin ingin menghapus ulasan ini?')">
+
+                @csrf
+                @method('DELETE')
+
+                <button type="submit"
+                    class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                    <i data-lucide="trash-2" class="w-4 h-4 mr-2"></i>
+                    Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+</td>
 
 
                         </tr>
@@ -159,5 +195,29 @@
             modal.onclick = () => modal.classList.add('hidden');
         }
     </script>
+
+    <script>
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(`dropdown-${id}`);
+
+        // tutup semua dropdown lain
+        document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
+            if (el.id !== `dropdown-${id}`) {
+                el.classList.add('hidden');
+            }
+        });
+
+        dropdown.classList.toggle('hidden');
+    }
+
+    // klik luar dropdown = tutup
+    window.addEventListener('click', function(e) {
+        if (!e.target.closest('.relative')) {
+            document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+        }
+    });
+</script>
 
 @endsection

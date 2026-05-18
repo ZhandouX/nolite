@@ -393,19 +393,20 @@ header .nav-links a {
 #sidebar {
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #sidebar nav {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding-bottom: 70px;
-  /* beri ruang untuk menu chatbot bawah */
+  padding-bottom: 0; /* ❌ HAPUS 70px */
 }
 
-/* Bagian Chatbot tetap nempel di bawah */
+/* FIX: jangan sticky */
 .sidebar-bottom {
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
   background: white;
   border-top: 1px solid #e5e7eb;
   padding: 0.75rem;
@@ -619,7 +620,7 @@ header .nav-links a {
     text-align: center;
   }
 
-  
+
 
   .nav-links {
     display: none;

@@ -181,4 +181,77 @@ class ChatController extends Controller
                 ->delete();
         }
     }
+
+    /**
+     * ==========================
+     * HISTORY CHAT USER
+     * ==========================
+     */
+    public function history()
+    {
+        $chat = Chat::where('user_id', Auth::id())->first();
+
+        if (!$chat) {
+            return response()->json([]);
+        }
+
+        $messages = $chat->messages()
+            ->with('sender')
+            ->orderBy('created_at')
+            ->get();
+
+        return response()->json($messages);
+    }
+
+    /**
+     * ==========================
+     * UNREAD MESSAGE COUNT
+     * ==========================
+     */
+    public function unreadCount()
+    {
+        $chat = Chat::where('user_id', Auth::id())->first();
+
+        if (!$chat) {
+
+            return response()->json([
+                'count' => 0
+            ]);
+        }
+
+        $count = $chat->messages()
+            ->whereNotNull('sender_id')
+            ->where('sender_id', '!=', Auth::id())
+            ->where('is_read', false)
+            ->count();
+
+        return response()->json([
+            'count' => $count
+        ]);
+    }
+
+    /**
+     * ==========================
+     * MARK MESSAGE AS READ
+     * ==========================
+     */
+    public function markAsRead()
+    {
+        $chat = Chat::where('user_id', Auth::id())->first();
+
+        if ($chat) {
+
+            $chat->messages()
+                ->whereNotNull('sender_id')
+                ->where('sender_id', '!=', Auth::id())
+                ->where('is_read', false)
+                ->update([
+                    'is_read' => true
+                ]);
+        }
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
 }

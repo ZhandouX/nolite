@@ -32,20 +32,20 @@
 
     <div class="flex items-center space-x-3">
       <!-- Search Button for Mobile -->
-      <button id="mobile-search-toggle"
+      {{-- <button id="mobile-search-toggle"
         class="md:hidden p-2 rounded-full hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-300 dark:text-gray-400">
         <i data-lucide="search" class="w-[13px] h-[13px]"></i>
-      </button>
+      </button> --}}
 
       <!-- Search Bar -->
-      <div class="relative hidden md:block">
+      {{-- <div class="relative hidden md:block">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <i data-lucide="search" class="h-5 w-5 text-gray-400 stroke-[3]"></i>
         </div>
         <input type="text"
           class="pl-10 pr-4 py-2 w-64 lg:w-80 border border-gray-600 dark:border-gray-600 rounded-tl-xl rounded-br-xl bg-gray-800 dark:bg-gray-700 text-white dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
           placeholder="Cari sesuatu...">
-      </div>
+      </div> --}}
 
       <!-- Toggle Dark/Light Mode -->
       <button id="theme-toggle"

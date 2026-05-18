@@ -47,4 +47,12 @@ class AdminOrderController extends Controller
 
         return redirect()->back()->with('success', 'Status order berhasil diperbarui.');
     }
+   public function destroy(Order $order)
+{
+    $order->delete();
+
+    return redirect()
+        ->route('admin.order.index')
+        ->with('success', 'Pesanan berhasil dihapus.');
+}
 }

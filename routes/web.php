@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\AdminChatController;
 use App\Http\Controllers\Admin\AdminUlasanController;
+use App\Http\Controllers\ChatController;
 
 
 // DEFAULT LANDING PAGE
@@ -40,6 +41,16 @@ Route::post('/add-to-cart', [LandingController::class, 'addToCart'])->name('land
 // 🔐 2FA ROUTES
 // ==========================
 Route::middleware(['auth'])->group(function () {
+
+    // CHAT HISTORY USER
+    Route::get('/chat/history', [ChatController::class, 'history'])
+        ->name('chat.history');
+
+    Route::get('/chat/unread-count', [ChatController::class, 'unreadCount'])
+        ->name('chat.unread.count');
+
+    Route::post('/chat/mark-read', [ChatController::class, 'markAsRead'])
+        ->name('chat.mark.read');
 
     // Verifikasi OTP saat login (semua admin yang punya 2FA aktif)
     Route::get('/2fa/verify', [TwoFactorController::class, 'verify'])
@@ -129,6 +140,7 @@ Route::middleware(['auth', 'role:admin', 'two_factor'])
             Route::get('/', [AdminUlasanController::class, 'index'])->name('index');
             Route::get('/{id}', [AdminUlasanController::class, 'show'])->name('show');
             Route::post('/{id}/reply', [AdminUlasanController::class, 'reply'])->name('reply');
+            Route::delete('/{ulasan}', [AdminUlasanController::class, 'destroy'])->name('destroy');
         });
 
         // ==========================
@@ -138,13 +150,13 @@ Route::middleware(['auth', 'role:admin', 'two_factor'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/{user}', 'show')->name('show');
-            Route::patch('/{user}/block', 'block')->name('block');
-            Route::patch('/{user}/activate', 'activate')->name('activate');
-            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
-            Route::delete('/{user}', 'destroy')->name('destroy');
-        });
+                Route::get('/', 'index')->name('index');
+                Route::get('/{user}', 'show')->name('show');
+                Route::patch('/{user}/block', 'block')->name('block');
+                Route::patch('/{user}/activate', 'activate')->name('activate');
+                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
+                Route::delete('/{user}', 'destroy')->name('destroy');
+            });
 
         // ==========================
         // 💬 CUSTOMER SERVICE (ADMIN)
@@ -196,6 +208,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     // ORDER
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
+    Route::delete('/{id}', [OrderController::class, 'destroy'])->name('remove');
 
     // SUCCESS PAGE
     Route::get('/checkout/success/{id}', function ($id) {

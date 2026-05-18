@@ -84,4 +84,35 @@ class AdminUlasanController extends Controller
 
         return back()->with('success', 'Balasan berhasil dikirim.');
     }
+ /**
+     * Hapus ulasan
+     */
+    public function destroy(Ulasan $ulasan)
+    {
+        // hapus foto ulasan jika ada
+        if ($ulasan->fotos && $ulasan->fotos->count()) {
+
+            foreach ($ulasan->fotos as $foto) {
+
+                // path file storage
+                $path = storage_path('app/public/' . $foto->foto);
+
+                // hapus file fisik
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+
+                // hapus data foto
+                $foto->delete();
+            }
+        }
+
+        // hapus ulasan
+        $ulasan->delete();
+
+        return redirect()
+            ->route('admin.ulasan.index')
+            ->with('success', 'Ulasan berhasil dihapus.');
+    }
 }
+

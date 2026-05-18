@@ -91,8 +91,14 @@
                 </i>
 
                 <!-- Titik notifikasi -->
-                <span
-                    class="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full border-2 border-white animate-pulse"></span>
+                <!-- Badge Notifikasi -->
+                <span id="chat-notification"
+                    class="hidden absolute -top-2 -right-2 min-w-[18px] h-[18px]
+           px-1 bg-red-500 text-white text-[10px]
+           rounded-full border-2 border-white
+           flex items-center justify-center
+           font-bold animate-pulse">
+                </span>
             </button>
         </div>
 
@@ -124,12 +130,20 @@
     {{-- ============================================= --}}
     <script>
         window.Chatbot = {
-            csrf: "{{ csrf_token() }}",
+                csrf: "{{ csrf_token() }}",
+
+                userId: @auth {{ auth()->id() }}
+            @else
+                null
+            @endauth ,
+
             routes: {
                 chatbotAsk: "{{ route('chatbot.query') }}",
                 productAct: "{{ url('/produk') }}",
             },
-            tooltip: "@auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth",
+
+            tooltip:
+            "@auth{{ explode(' ', auth()->user()->name)[0] ?? 'Pelanggan Nolite' }}@else Nolite Aspiciens @endauth",
         };
     </script>
     <script src="/assets/js/user/chatbot.js"></script>
