@@ -109,7 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             typing.remove();
 
-            const replyText = data.reply || "Maaf, saya tidak menemukan informasi produk.";
+            const replyText =
+                data.reply || "Maaf, saya tidak menemukan informasi produk.";
             const produkList = data.produk_list || [];
 
             // Append balasan bot
@@ -157,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 chatbox.appendChild(cardsWrapper);
                 scrollToBottom();
             }
-
         } catch (error) {
             typing.remove();
             appendToChat(`
@@ -215,7 +215,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             messages.forEach((msg) => {
                 let position = "justify-start";
-                let bubble = "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200";
+                let bubble =
+                    "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200";
                 let sender = "Nolite Bot";
 
                 if (msg.sender_id === window.Chatbot.userId) {
@@ -224,7 +225,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     sender = "Anda";
                 } else if (msg.sender_id !== null) {
                     sender = "Admin Nolite";
-                    bubble = "bg-blue-100 text-blue-900 dark:bg-blue-900/30 dark:text-blue-200";
+                    bubble =
+                        "bg-blue-100 text-blue-900 dark:bg-blue-900/30 dark:text-blue-200";
                 }
 
                 const el = createEl(`
@@ -275,7 +277,21 @@ document.addEventListener("DOMContentLoaded", function () {
      * ==========================
      */
 
+    let isChecking = false;
+    let lastRequestTime = 0;
+    const MIN_INTERVAL = 20000; // 20 detik
+
     async function checkUnreadMessages() {
+        if (isChecking) return;
+
+        const now = Date.now();
+
+        // 🔴 TAMBAHAN: anti spam request
+        if (now - lastRequestTime < MIN_INTERVAL) return;
+
+        isChecking = true;
+        lastRequestTime = now;
+
         try {
             const response = await fetch("/chat/unread-count");
             const data = await response.json();
@@ -288,11 +304,21 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            isChecking = false;
         }
     }
 
-    checkUnreadMessages();
-    setInterval(checkUnreadMessages, 5000);
+    let intervalId = setInterval(checkUnreadMessages, 20000);
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            clearInterval(intervalId);
+        } else {
+            intervalId = setInterval(checkUnreadMessages, 20000);
+            checkUnreadMessages();
+        }
+    });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
