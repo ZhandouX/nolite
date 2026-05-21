@@ -2,10 +2,10 @@
     class="z-[9999] fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-[340px] md:max-w-md p-6 relative">
 
-       {{-- CLOSE --}}
+        {{-- CLOSE --}}
         <button type="button" onclick="closeModal('productBeliModal-{{ $item->id }}')"
             class="absolute w-8 h-8 md:w-10 md:h-10 rounded-full -top-2 -right-2 md:-top-4 md:-right-4 bg-red-900 text-gray-50 hover:bg-red-700 hover:text-gray-50">
-                <i class="fa-solid fa-xmark text-[16px] md:text-xl"></i>
+            <i class="fa-solid fa-xmark text-[16px] md:text-xl"></i>
         </button>
 
         {{-- CARD PRODUK --}}
@@ -40,9 +40,7 @@
                         @endphp
                         <div class="flex flex-col items-start gap-0">
                             <p class="flex items-baseline gap-0">
-                                <span class="text-xs font-medium text-gray-500">
-                                    Rp
-                                </span>
+                                <span class="text-xs font-medium text-gray-500">Rp</span>
                                 <span class="text-lg md:text-base font-bold text-red-900">
                                     {{ number_format($hargaDiskon, 0, ',', '.') }}
                                 </span>
@@ -53,9 +51,7 @@
                         </div>
                     @else
                         <p class="flex items-baseline gap-0 text-left text-black font-bold">
-                            <span class="text-xs font-medium text-gray-500">
-                                Rp
-                            </span>
+                            <span class="text-xs font-medium text-gray-500">Rp</span>
                             <span class="text-lg font-bold text-gray-900">
                                 {{ number_format($item->harga, 0, ',', '.') }}
                             </span>
@@ -74,9 +70,11 @@
             {{-- PILIHAN WARNA --}}
             <div class="mb-4 color-section">
                 <div class="text-left">
-                    <p class="font-semibold mb-2">Warna</p>
+                    <p class="font-semibold mb-2">
+                        Warna
+                        <span class="text-xs text-gray-400 font-normal ml-1">— pilih salah satu</span>
+                    </p>
                 </div>
-
                 <div class="flex flex-wrap gap-2">
                     @foreach ($item->warna as $w)
                         <button type="button"
@@ -86,17 +84,18 @@
                         </button>
                     @endforeach
                 </div>
-
-                <input type="hidden" name="warna" id="selectedColor-{{ $item->id }}"
-                    value="{{ $item->warna[0] ?? '' }}">
+                {{--  value dikosongkan agar validasi bekerja --}}
+                <input type="hidden" name="warna" id="selectedColor-{{ $item->id }}" value="">
             </div>
 
             {{-- PILIHAN UKURAN --}}
             <div class="mb-4 size-section">
                 <div class="text-left">
-                    <p class="font-semibold mb-2">Ukuran</p>
+                    <p class="font-semibold mb-2">
+                        Ukuran
+                        <span class="text-xs text-gray-400 font-normal ml-1">— pilih salah satu</span>
+                    </p>
                 </div>
-
                 <div class="flex flex-wrap gap-2">
                     @foreach ($item->ukuran as $u)
                         <button type="button"
@@ -106,15 +105,13 @@
                         </button>
                     @endforeach
                 </div>
-
-                <input type="hidden" name="ukuran" id="selectedSize-{{ $item->id }}"
-                    value="{{ $item->ukuran[0] ?? '' }}">
+                {{--  value dikosongkan agar validasi bekerja --}}
+                <input type="hidden" name="ukuran" id="selectedSize-{{ $item->id }}" value="">
             </div>
 
             {{-- JUMLAH PRODUK --}}
             <div class="flex flex-col space-y-3 border-t border-gray-200 pt-4">
                 <label class="text-sm font-semibold text-gray-800 text-center">Jumlah</label>
-
                 <div class="flex items-center justify-center gap-6">
                     <button type="button" onclick="updateQty(this, -1)"
                         class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 bg-white hover:bg-gray-100">
@@ -137,21 +134,22 @@
                         </svg>
                     </button>
                 </div>
-
                 <p class="text-xs text-gray-500 text-center">Stok: <span class="font-bold">{{ $item->jumlah }}</span></p>
             </div>
 
+            {{-- HINT --}}
+            <p class="text-xs text-center text-gray-400">Pilih warna dan ukuran untuk melanjutkan</p>
+
             {{-- TOMBOL BELI --}}
             @auth
-                <button type="submit"
-                    class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-2 rounded-lg transition">
-                    Beli Sekarang
-                </button>
-            @else
-                <button type="button" onclick="openLoginModal()"
-                    class="w-full bg-gray-600 hover:bg-gray-400 text-white font-semibold py-2 rounded-lg transition">
-                    Beli Sekarang
-                </button>
+                {{--  tombol tampil tapi disabled sebelum pilih warna & ukuran --}}
+<button type="button"
+    id="btnBeli-{{ $item->id }}"
+    onclick="submitBeliForm('{{ $item->id }}')"
+    disabled
+    class="w-full bg-gray-300 cursor-not-allowed text-white font-semibold py-2 rounded-lg transition disabled:opacity-70">
+    Beli Sekarang
+</button>
             @endauth
         </form>
     </div>

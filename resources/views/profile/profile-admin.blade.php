@@ -200,9 +200,9 @@
                             </div>
                         </div>
 
-                        <div class="space-y-6">
+                        {{-- <div class="space-y-6"> --}}
                             <!-- Email Verification -->
-                            <div
+                            {{-- <div
                                 class="flex items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900/20 rounded-2xl border border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center">
                                     <div
@@ -227,7 +227,7 @@
                                         <i class="fa-solid fa-exclamation"></i> Belum Verifikasi
                                     </span>
                                 @endif
-                            </div>
+                            </div> --}}
 
                             <!-- Password Strength -->
                             <div

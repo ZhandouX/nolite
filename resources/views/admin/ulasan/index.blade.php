@@ -94,14 +94,37 @@
                             </td>
 
                             {{-- Foto Ulasan --}}
-                            <td class="p-3">
-                                <div class="flex gap-2">
-                                    @foreach ($ulasan->fotos as $foto)
-                                        <img src="{{ asset('storage/' . $foto->foto) }}"
-                                            class="w-16 h-16 object-cover rounded cursor-pointer border hover:opacity-75"
-                                            onclick="openPreview('{{ asset('storage/' . $foto->foto) }}')">
-                                    @endforeach
-                                </div>
+                            <td class="px-6 py-4">
+                                @if ($ulasan->fotos->isNotEmpty())
+                                    <div class="flex -space-x-2">
+
+                                        @foreach ($ulasan->fotos->take(3) as $index => $foto)
+                                            <img src="{{ asset('storage/' . $foto->foto) }}"
+                                                onclick="openPreview('{{ asset('storage/' . $foto->foto) }}')"
+                                                class="w-10 h-10 rounded-lg border-2 border-white dark:border-gray-800
+                                                    object-cover shadow-sm cursor-pointer
+                                                    hover:z-10 hover:scale-110 transition-transform duration-200"
+                                                alt="Foto {{ $index + 1 }}"
+                                                title="Foto Ulasan">
+                                        @endforeach
+
+                                        @if ($ulasan->fotos->count() > 3)
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-orange-500 border-2 border-white dark:border-gray-800
+                                                    flex items-center justify-center text-xs font-medium text-white shadow-sm">
+                                                +{{ $ulasan->fotos->count() - 3 }}
+                                            </div>
+                                        @endif
+
+                                    </div>
+                                @else
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                            bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                                        <i class="fa-solid fa-image mr-1"></i>
+                                        Tidak ada foto
+                                    </span>
+                                @endif
                             </td>
 
                             {{-- Balasan Admin --}}

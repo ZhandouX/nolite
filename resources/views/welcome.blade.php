@@ -441,6 +441,16 @@
 
     @stack('script')
 
+    <script>
+        window.Navbar = {
+            routes: {
+                searchProduk: "{{ route('produk.search') }}"
+            }
+        };
+    </script>
+
+    <script src="/assets/js/user/header.js"></script>
+
 </body>
 
 </html>

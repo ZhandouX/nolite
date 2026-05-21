@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </span>
                             <span class="text-sm font-bold text-gray-900">
                                 ${formatRupiah(harga)}
-                            </span>    
+                            </span>
                         </p>`;
             }
 
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const card = `
                     <div class="product-cards bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 w-full text-center">
                         <div class="relative overflow-hidden">
-                            <img src="${foto}" alt="${nama}" 
+                            <img src="${foto}" alt="${nama}"
                                 class="w-full h-40 max-h-40 object-cover group-hover:scale-105 transition-transform duration-300">
                             ${diskon > 0 ? `
                                 <div class="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
@@ -182,12 +182,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                             ${jumlah > 0 ? `
                                 <div class="flex gap-1 mt-2 justify-center">
-                                    <button onclick="openModal('${modalCartId}')" 
+                                    <button onclick="openModal('${modalCartId}')"
                                         class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-3 rounded-lg text-xs transition-all duration-200 flex items-center justify-center gap-1">
                                         <i class="fa-solid fa-cart-plus text-xs"></i>
                                         Keranjang
                                     </button>
-                                    <button onclick="openModal('${modalBeliId}')" 
+                                    <button onclick="openModal('${modalBeliId}')"
                                         class="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-medium py-2 px-3 rounded-lg text-xs transition-all duration-200">
                                         Beli
                                     </button>

@@ -169,7 +169,7 @@
 
                         <div class="space-y-4">
                             {{-- Email Verification --}}
-                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
+                            {{-- <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
                                         <i class="fa-solid fa-envelope text-blue-600"></i>
@@ -188,7 +188,7 @@
                                         <i class="fa-solid fa-exclamation mr-1"></i> Belum Verifikasi
                                     </span>
                                 @endif
-                            </div>
+                            </div> --}}
 
                             {{-- Password Strength --}}
                             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">

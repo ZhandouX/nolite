@@ -65,7 +65,7 @@
         <!-- CONTENT -->
         <div class="max-h-[70vh] overflow-y-auto">
 
-            <!-- LOADING -->
+
             <!-- LOADING -->
             <div id="loadingState" class="hidden flex items-center justify-center py-12 w-full">
 

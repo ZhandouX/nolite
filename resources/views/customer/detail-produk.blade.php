@@ -575,24 +575,102 @@
     </script>
     <script src="/assets/js/detail-product/addCart-wishlist.js"></script>
     <script src="/assets/js/detail-product/checkout.js"></script>
+
     <script>
         window.reviewData = {
-                @foreach ($produk->ulasan as $u)
-                    "{{ $u->id }}": {
-                        userName: @json(optional($u->user)->name ?? 'Anonymous'),
-                        userInitial: @json(substr(optional($u->user)->name ?? 'A', 0, 1)),
-                        variant: @json($u->orderItem ? $u->orderItem->warna . ($u->orderItem->ukuran ? ' • Size: ' . $u->orderItem->ukuran : '') : ''),
+            @foreach ($produk->ulasan as $u)
+                "{{ $u->id }}": {
+                    userName: @json(optional($u->user)->name ?? 'Anonymous'),
+                    userInitial: @json(substr(optional($u->user)->name ?? 'A', 0, 1)),
+                    variant: @json($u->orderItem ? $u->orderItem->warna . ($u->orderItem->ukuran ? ' • Size: ' . $u->orderItem->ukuran : '') : ''),
+                    date: @json($u->created_at->format('d M Y')),
+                    comment: @json($u->komentar),
+                    rating: {{ $u->rating }},
+                    photos: [
+                        @foreach ($u->fotos as $f)
+                            @json(asset('storage/' . $f->foto)),
+                        @endforeach
+                    ]
+                },
+            @endforeach
+        };
 
-                        date: @json($u->created_at->format('d M Y')),
-                        comment: @json($u->komentar),
-                        rating: {{ $u->rating }},
-                        photos: [
-                            @foreach ($u->fotos as $f)
-                                @json(asset('storage/' . $f->foto)),
-                            @endforeach
-                        ]
-                    },
-                @endforeach
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterBtns = document.querySelectorAll('.filter-star');
+            const ulasanItems = [...document.querySelectorAll('#ulasanContainer [data-rating]')];
+            const ITEMS_PER_PAGE = 2;
+            let activeStar = 'all';
+            let showAll = false;
+
+            function getFilteredItems() {
+                return ulasanItems.filter(item => {
+                    if (activeStar === 'all') return true;
+                    return parseInt(item.dataset.rating) === parseInt(activeStar);
+                });
+            }
+
+            function renderUlasan() {
+                const filtered = getFilteredItems();
+
+                filtered.forEach((item, index) => {
+                    if (activeStar !== 'all') {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = (showAll || index < ITEMS_PER_PAGE) ? '' : 'none';
+                    }
+                });
+
+                ulasanItems.forEach(item => {
+                    if (!filtered.includes(item)) {
+                        item.style.display = 'none';
+                    }
+                });
+
+                const ulasanContainer = document.getElementById('ulasanContainer');
+                const existing = document.getElementById('emptyFilterMsg');
+                if (existing) existing.remove();
+
+                if (filtered.length === 0) {
+                    const msg = document.createElement('div');
+                    msg.id = 'emptyFilterMsg';
+                    msg.className = 'text-center py-8 text-gray-500 text-sm';
+                    msg.textContent = 'Tidak ada ulasan untuk rating ini.';
+                    ulasanContainer.appendChild(msg);
+                }
+            }
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-gray-600', 'text-white', 'bg-gray-300');
+                        b.classList.add('bg-white', 'text-gray-600');
+                    });
+                    this.classList.remove('bg-white', 'text-gray-600');
+                    this.classList.add('bg-gray-600', 'text-white');
+
+                    const star = this.dataset.star;
+
+                    if (star === 'all') {
+                        showAll = !showAll;
+                    } else {
+                        showAll = false;
+                    }
+
+                    activeStar = star;
+                    renderUlasan();
+                });
+            });
+
+            const allBtn = document.querySelector('.filter-star[data-star="all"]');
+            if (allBtn) {
+                allBtn.classList.remove('bg-white', 'text-gray-600');
+                allBtn.classList.add('bg-gray-600', 'text-white');
+            }
+
+            renderUlasan();
+        });
     </script>
+
+
     <script src="/assets/js/detail-product/ulasan-modal.js"></script>
 @endpush

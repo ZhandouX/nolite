@@ -60,14 +60,37 @@
                         </div>
 
                         <div class="py-1 px-2 md:px-4 mb-2 md:p-5">
+                         @if ($order->status === 'selesai')
+
+                                    <div class="flex justify-center mb-3">
+                                        <div
+                                            class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-xl
+                                                bg-gradient-to-r from-orange-500 to-orange-400
+                                                text-white text-[10px] md:text-xs font-semibold
+                                                shadow-md shadow-orange-500/20
+                                                border border-orange-300/40
+                                                backdrop-blur-sm
+                                                group-hover:scale-105 transition-all duration-300">
+
+                                            <i class="fa-regular fa-comment-dots text-[11px] md:text-sm"></i>
+
+                                            <span>
+                                                Klik Untuk Beri Ulasan
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
                             <div class="flex items-center justify-between mb-1 md:mb-3">
                                 <h3 class="font-bold text-gray-800 text-xs md:text-base truncate">
                                     {{ $firstItem->nama_produk }}
                                     @if ($order->items->count() > 1)
-                                        <span class="font-medium">+{{ $order->items->count() - 1 }}
-                                            more</span>
+                                        <span class="font-medium">
+                                            +{{ $order->items->count() - 1 }} more
+                                        </span>
                                     @endif
                                 </h3>
+
                                 <i class="fa-solid fa-chevron-right text-gray-400 group-hover:text-red-900"></i>
                             </div>
                             <div class="space-y-2">
