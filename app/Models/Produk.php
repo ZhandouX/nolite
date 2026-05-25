@@ -27,6 +27,30 @@ class Produk extends Model
         'ukuran' => 'array',
     ];
 
+    /**
+     * 🔥 AUTO UPDATE SEARCH VECTOR
+     */
+    protected static function booted()
+    {
+        static::saved(function ($produk) {
+
+            DB::statement("
+                UPDATE produks
+                SET search_vector =
+                    to_tsvector(
+                        'indonesian',
+                        coalesce(nama_produk,'') || ' ' ||
+                        coalesce(deskripsi,'') || ' ' ||
+                        coalesce(harga::text,'') || ' ' ||
+                        coalesce(warna::text,'') || ' ' ||
+                        coalesce(ukuran::text,'')
+                    )
+                WHERE id = ?
+            ", [$produk->id]);
+
+        });
+    }
+
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
