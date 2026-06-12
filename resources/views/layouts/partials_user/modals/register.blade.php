@@ -21,8 +21,8 @@
                     <!-- Name -->
                     <div class="form-group">
                         <div class="input-container">
-                            <input id="registerName" type="text" name="name" required placeholder=" " class="form-input"
-                                value="{{ old('name') }}" autofocus />
+                            <input id="registerName" type="text" name="name" required placeholder=" "
+                                class="form-input" value="{{ old('name') }}" autofocus />
                             <label for="registerName" class="floating-label">Nama Lengkap*</label>
                         </div>
                         @error('name')
@@ -66,7 +66,8 @@
                         <div class="input-container">
                             <input id="registerPasswordConfirmation" type="password" name="password_confirmation"
                                 required placeholder=" " class="form-input" />
-                            <label for="registerPasswordConfirmation" class="floating-label">Konfirmasi Password*</label>
+                            <label for="registerPasswordConfirmation" class="floating-label">Konfirmasi
+                                Password*</label>
                         </div>
                         @error('password_confirmation')
                             <div class="input-error">{{ $message }}</div>
@@ -75,10 +76,8 @@
 
                     {{-- ===== hCAPTCHA ===== --}}
                     <div class="form-group">
-                        <div id="hcaptcha-register" class="h-captcha"
-                             data-sitekey="{{ env('HCAPTCHA_SITEKEY') }}"
-                             data-theme="light"
-                             data-size="normal">
+                        <div id="hcaptcha-register" class="h-captcha" data-sitekey="{{ env('HCAPTCHA_SITEKEY') }}"
+                            data-theme="light" data-size="normal">
                         </div>
                         @error('h-captcha-response')
                             <div class="input-error">{{ $message }}</div>
@@ -102,14 +101,25 @@
                 </form>
             </div>
         </div>
-
-        <!-- Pesan Sukses -->
-        <div class="success-message hidden" id="registerSuccess">
-            <i class="fas fa-check-circle"></i>
-            <span>Akun berhasil dibuat!</span>
-        </div>
     </div>
 </div>
+
+@if (session('register_success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Registrasi Berhasil',
+                text: '{{ session('register_success') }}',
+                confirmButtonText: 'Login Sekarang'
+            }).then(() => {
+                openLoginModal();
+            });
+
+        });
+    </script>
+@endif
 
 {{-- hCaptcha CDN --}}
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
@@ -128,7 +138,7 @@
             setTimeout(() => {
                 if (typeof hcaptcha !== 'undefined') {
                     hcaptcha.render('hcaptcha-register', {
-                        sitekey: '{{ env("HCAPTCHA_SITEKEY") }}'
+                        sitekey: '{{ env('HCAPTCHA_SITEKEY') }}'
                     });
                     hcaptchaRendered = true;
                 }

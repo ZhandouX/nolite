@@ -3,13 +3,23 @@
 @section('content')
     <div class="p-6">
 
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Manajemen Ulasan</h1>
+        <div class="flex items-center justify-between mb-6">
 
-            {{-- Badge jumlah belum dibalas --}}
+            <div class="flex items-center gap-4">
+                <div
+                    class="shrink-0 h-12 w-12 rounded-tl-xl rounded-br-xl bg-primary-500 flex items-center justify-center shadow-sm">
+                    <i data-lucide="star" class="text-white text-lg"></i>
+                </div>
+
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    Manajemen Ulasan
+                </h1>
+            </div>
+
             <span class="px-3 py-1 bg-red-500 text-white text-sm rounded">
                 Belum dibalas: {{ $jumlahBelumDibalas }}
             </span>
+
         </div>
 
         {{-- SEARCH + FILTER --}}
@@ -17,10 +27,11 @@
 
             {{-- Search --}}
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari user / produk..."
-                class="border rounded px-3 py-2 w-full">
+                class="bg-white dark:bg-gray-800 border border-gray-800 dark:border-gray-500 rounded-lg px-3 py-2 w-full">
 
             {{-- Filter Rating --}}
-            <select name="rating" class="border rounded px-3 py-2">
+            <select name="rating"
+                class="bg-white dark:bg-gray-800 border border-gray-800 dark:border-gray-500 text-gray-900 dark:text-gray-400 rounded-lg px-3 py-2">
                 <option value="">Semua Rating</option>
                 @for ($i = 1; $i <= 5; $i++)
                     <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>
@@ -30,30 +41,32 @@
             </select>
 
             {{-- Filter Balasan --}}
-            <select name="reply" class="border rounded px-3 py-2">
+            <select name="reply"
+                class="bg-white dark:bg-gray-800 border border-gray-800 dark:border-gray-500 text-gray-900 dark:text-gray-400 rounded-lg px-3 py-2">
                 <option value="">Semua Status</option>
                 <option value="belum" {{ request('reply') == 'belum' ? 'selected' : '' }}>Belum dibalas</option>
                 <option value="sudah" {{ request('reply') == 'sudah' ? 'selected' : '' }}>Sudah dibalas</option>
             </select>
 
-            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <button class="bg-blue-600 font-semibold text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                 Terapkan
             </button>
         </form>
 
         {{-- TABEL ULASAN --}}
-        <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+        <div
+            class="bg-white dark:bg-gray-800 shadow border border-gray-900 dark:border-gray-500 rounded-lg p-4 overflow-x-auto">
 
             <table class="w-full border-collapse min-w-[900px]">
                 <thead>
-                    <tr class="bg-gray-100 border-b text-left">
-                        <th class="p-3">User</th>
-                        <th class="p-3">Produk</th>
-                        <th class="p-3">Rating</th>
-                        <th class="p-3">Komentar</th>
-                        <th class="p-3">Foto</th>
-                        <th class="p-3">Balasan Admin</th>
-                        <th class="p-3">Aksi</th>
+                    <tr class="bg-transparent border-b text-left">
+                        <th class="text-black dark:text-white p-3">User</th>
+                        <th class="text-black dark:text-white p-3">Produk</th>
+                        <th class="text-black dark:text-white p-3">Rating</th>
+                        <th class="text-black dark:text-white p-3">Komentar</th>
+                        <th class="text-black dark:text-white p-3">Foto</th>
+                        <th class="text-black dark:text-white p-3">Balasan Admin</th>
+                        <th class="text-black dark:text-white p-3">Aksi</th>
                     </tr>
                 </thead>
 
@@ -104,8 +117,7 @@
                                                 class="w-10 h-10 rounded-lg border-2 border-white dark:border-gray-800
                                                     object-cover shadow-sm cursor-pointer
                                                     hover:z-10 hover:scale-110 transition-transform duration-200"
-                                                alt="Foto {{ $index + 1 }}"
-                                                title="Foto Ulasan">
+                                                alt="Foto {{ $index + 1 }}" title="Foto Ulasan">
                                         @endforeach
 
                                         @if ($ulasan->fotos->count() > 3)
@@ -139,48 +151,46 @@
                             </td>
 
                             <td class="p-3 relative">
-    <div class="relative inline-block text-left">
+                                <div class="relative inline-block text-left">
 
-        {{-- Button Dropdown --}}
-        <button onclick="toggleDropdown({{ $ulasan->id }})"
-            class="inline-flex items-center px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition">
-            Aksi
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    stroke-width="2" d="M19 9l-7 7-7-7">
-                </path>
-            </svg>
-        </button>
+                                    {{-- Button Dropdown --}}
+                                    <button onclick="toggleDropdown({{ $ulasan->id }})"
+                                        class="inline-flex items-center px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition">
+                                        Aksi
+                                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7">
+                                            </path>
+                                        </svg>
+                                    </button>
 
-        {{-- Dropdown Menu --}}
-        <div id="dropdown-{{ $ulasan->id }}"
-            class="hidden absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
+                                    {{-- Dropdown Menu --}}
+                                    <div id="dropdown-{{ $ulasan->id }}"
+                                        class="hidden absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
 
-            {{-- Detail --}}
-            <a href="{{ route('admin.ulasan.show', $ulasan->id) }}"
-                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
-                Lihat Detail
-            </a>
+                                        {{-- Detail --}}
+                                        <a href="{{ route('admin.ulasan.show', $ulasan->id) }}"
+                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
+                                            Lihat Detail
+                                        </a>
 
-            {{-- Hapus --}}
-            <form action="{{ route('admin.ulasan.destroy', $ulasan->id) }}"
-                method="POST"
-                onsubmit="return confirm('Yakin ingin menghapus ulasan ini?')">
+                                        {{-- Hapus --}}
+                                        <form action="{{ route('admin.ulasan.destroy', $ulasan->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin ingin menghapus ulasan ini?')">
 
-                @csrf
-                @method('DELETE')
+                                            @csrf
+                                            @method('DELETE')
 
-                <button type="submit"
-                    class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                    <i data-lucide="trash-2" class="w-4 h-4 mr-2"></i>
-                    Hapus
-                </button>
-            </form>
-        </div>
-    </div>
-</td>
+                                            <button type="submit"
+                                                class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                                <i data-lucide="trash-2" class="w-4 h-4 mr-2"></i>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
 
 
                         </tr>
@@ -220,27 +230,27 @@
     </script>
 
     <script>
-    function toggleDropdown(id) {
-        const dropdown = document.getElementById(`dropdown-${id}`);
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(`dropdown-${id}`);
 
-        // tutup semua dropdown lain
-        document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
-            if (el.id !== `dropdown-${id}`) {
-                el.classList.add('hidden');
+            // tutup semua dropdown lain
+            document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
+                if (el.id !== `dropdown-${id}`) {
+                    el.classList.add('hidden');
+                }
+            });
+
+            dropdown.classList.toggle('hidden');
+        }
+
+        // klik luar dropdown = tutup
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.relative')) {
+                document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
+                    el.classList.add('hidden');
+                });
             }
         });
-
-        dropdown.classList.toggle('hidden');
-    }
-
-    // klik luar dropdown = tutup
-    window.addEventListener('click', function(e) {
-        if (!e.target.closest('.relative')) {
-            document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
-                el.classList.add('hidden');
-            });
-        }
-    });
-</script>
+    </script>
 
 @endsection

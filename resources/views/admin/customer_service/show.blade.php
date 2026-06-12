@@ -19,7 +19,7 @@
                 </a>
             </div>
 
-            @if(session('success'))
+            @if (session('success'))
                 <div
                     class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg mb-6 flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -39,8 +39,8 @@
                         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                             <h2 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                 </svg>
@@ -60,7 +60,7 @@
                                         <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl px-4 py-3">
                                             <p class="text-gray-800 dark:text-gray-200 text-sm">{{ $msg->message }}</p>
                                         </div>
-                                        @if($msg->reply)
+                                        @if ($msg->reply)
                                             <div
                                                 class="ml-8 mt-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl px-4 py-3">
                                                 <p class="text-blue-800 dark:text-blue-300 text-sm">
@@ -68,18 +68,23 @@
                                                 </p>
                                             </div>
                                         @endif
-                                        <div class="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-400 space-x-3">
+                                        <div
+                                            class="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-400 space-x-3">
                                             <span class="inline-flex items-center">
-                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
                                                 {{ $msg->created_at->diffForHumans() }}
                                             </span>
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-                                                                                                        {{ $msg->status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                ($msg->status === 'read' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400') }}">
+                                            <span
+                                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                                                                                        {{ $msg->status === 'pending'
+                                                                                                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                                                                                                            : ($msg->status === 'read'
+                                                                                                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                                                                                                                : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400') }}">
                                                 {{ ucfirst($msg->status) }}
                                             </span>
                                         </div>
@@ -103,8 +108,8 @@
                         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                             <h2 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                 </svg>
@@ -146,8 +151,8 @@
                         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                             <h2 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
@@ -161,7 +166,8 @@
                                     {{ substr($user->name, 0, 1) }}
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $user->name }}
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                        {{ $user->name }}
                                     </p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $user->email }}</p>
                                 </div>
@@ -169,10 +175,11 @@
 
                             <div class="mb-6">
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Status Akun:</p>
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
-                                                {{ $user->status === 'aktif' ?
-        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-        'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }}">
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                                {{ $user->status === 'aktif'
+                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }}">
                                     <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -183,29 +190,41 @@
                             </div>
 
                             <div class="space-y-3">
-                                <form action="{{ route('admin.users.activate', $user->id) }}" method="POST" class="w-full">
-                                    @csrf @method('PATCH')
-                                    <button type="submit"
-                                        class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Aktifkan Akun
-                                    </button>
-                                </form>
 
-                                <form action="{{ route('admin.users.nonaktif', $user->id) }}" method="POST" class="w-full">
-                                    @csrf @method('PATCH')
-                                    <button type="submit"
-                                        class="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Nonaktifkan Akun
-                                    </button>
-                                </form>
+                                @if ($user->status === 'aktif')
+                                    <form action="{{ route('admin.users.nonaktif', $user->id) }}" method="POST"
+                                        class="w-full">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <button type="submit"
+                                            class="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Nonaktifkan Akun
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('admin.users.activate', $user->id) }}" method="POST"
+                                        class="w-full">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <button type="submit"
+                                            class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Aktifkan Akun
+                                        </button>
+                                    </form>
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -225,7 +244,8 @@
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600 dark:text-gray-400">Total Pesan:</span>
-                                    <span class="text-gray-900 dark:text-white font-medium">{{ $messages->count() }}</span>
+                                    <span
+                                        class="text-gray-900 dark:text-white font-medium">{{ $messages->count() }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600 dark:text-gray-400">Pesan Tertanggapi:</span>

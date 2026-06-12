@@ -48,7 +48,7 @@
                                 <option value="keuangan">🧾 Keuangan</option>
                                 <option value="stok">📦 Stok</option>
                                 <option value="ulasan">⭐ Ulasan</option>
-                                <option value="aktivitas">📈 Aktivitas Admin</option>
+
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                 <i class="fa-solid fa-chevron-down text-gray-400"></i>
@@ -310,7 +310,8 @@
                 }
 
                 chart = new Chart(ctx, {
-                    type: jenis === 'keuangan' ? 'doughnut' : 'bar',
+                    type: jenis === 'keuangan' ? 'doughnut' : jenis === 'penjualan' ? 'line' : jenis ===
+                        'pesanan' ? 'pie' : 'bar',
                     data: {
                         labels: chartData.labels,
                         datasets: [{
@@ -337,7 +338,8 @@
                 }
 
                 fullscreenChart = new Chart(ctx, {
-                    type: jenis === 'keuangan' ? 'doughnut' : 'bar',
+                    type: jenis === 'keuangan' ? 'doughnut' : jenis === 'penjualan' ? 'line' : jenis ===
+                        'pesanan' ? 'pie' : 'bar',
                     data: {
                         labels: chartData.labels,
                         datasets: [{
@@ -369,19 +371,19 @@
             }
 
             // Form Submission
-            document.getElementById('formFilter').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const jenis = document.getElementById('jenis').value;
+            document.getElementById('formFilter').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const jenis = document.getElementById('jenis').value;
 
-                if (!jenis) {
-                    showNotification('Pilih jenis laporan terlebih dahulu', 'error');
-                    return;
-                }
+                    if (!jenis) {
+                        showNotification('Pilih jenis laporan terlebih dahulu', 'error');
+                        return;
+                    }
 
-                const formData = new FormData(this);
+                    const formData = new FormData(this);
 
-                // Show loading state
-                document.getElementById('hasilLaporan').innerHTML = `
+                    // Show loading state
+                    document.getElementById('hasilLaporan').innerHTML = `
                         <div class="text-center py-12">
                             <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
                                 <i class="fa-solid fa-spinner fa-spin text-primary-600 dark:text-primary-400 text-xl"></i>
@@ -395,109 +397,115 @@
                         </div>
                     `;
 
-                fetch("{{ route('admin.laporan.getData') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    },
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const { data: resultData, chart: chartData } = data;
+                    fetch("{{ route('admin.laporan.getData') }}", {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
+                            body: formData
+                        })
 
-                        // Update Chart
-                        if (chartData && chartData.labels && chartData.values) {
-                            document.getElementById('chartContainer').classList.remove('hidden');
-                            document.getElementById('chartTitle').textContent = chartData.title;
-                            document.getElementById('fullscreenChartTitle').textContent = chartData.title;
-                            initChart(jenis, chartData);
-                        } else {
-                            document.getElementById('chartContainer').classList.add('hidden');
-                        }
+                        .then(response => response.json())
+                        .then(data => {
+                                const {
+                                    data: resultData,
+                                    chart: chartData
+                                } = data;
 
-                        // Update Table
-                        let html = '';
-                        if (!resultData || (Array.isArray(resultData) && resultData.length === 0)) {
-                            html = `
-                                <div class="text-center py-12">
-                                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                                        <i class="fa-solid fa-search text-gray-400 text-xl"></i>
-                                    </div>
-                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                                        Tidak ada data ditemukan
-                                    </h3>
-                                    <p class="text-gray-500 dark:text-gray-400">
-                                        Tidak ada data yang sesuai dengan filter yang dipilih.
-                                    </p>
-                                </div>
-                            `;
-                        } else if (Array.isArray(resultData)) {
-                            html = `
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead class="bg-gray-50 dark:bg-gray-700">
-                                            <tr>
-                                                ${Object.keys(resultData[0]).map(key =>
+                                // Update Chart
+                                if (chartData && chartData.labels && chartData.values) {
+                                    document.getElementById('chartContainer').classList.remove('hidden');
+                                    document.getElementById('chartTitle').textContent = chartData.title;
+                                    document.getElementById('fullscreenChartTitle').textContent = chartData
+                                        .title;
+                                    initChart(jenis, chartData);
+                                } else {
+                                    document.getElementById('chartContainer').classList.add('hidden');
+                                }
+
+                                // ✅ Normalisasi: pastikan selalu array
+                                let rows = [];
+                                if (Array.isArray(resultData)) {
+                                    rows = resultData;
+                                } else if (resultData && typeof resultData === 'object') {
+                                    // fallback untuk object (keuangan lama / edge case)
+                                    rows = Object.entries(resultData).map(([k, v]) => ({
+                                        'Keterangan': k,
+                                        'Nilai': v
+                                    }));
+                                }
+
+                                let html = '';
+
+                                if (!rows || rows.length === 0) {
+                                    html = `
+            <div class="text-center py-12">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                    <i class="fa-solid fa-search text-gray-400 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    Tidak ada data ditemukan
+                </h3>
+                <p class="text-gray-500 dark:text-gray-400">
+                    Tidak ada data yang sesuai dengan filter yang dipilih.
+                </p>
+            </div>
+        `;
+                                } else {
+
+                                    const skipFormatKeys = ['Total (Rp)', 'Total Pendapatan (Rp)',
+                                        'Pajak 10% (Rp)',
+                                        'Pendapatan Bersih (Rp)', 'Total Pembelian (Rp)', 'Nilai'
+                                    ];
+
+                                    html =
+                                        `
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            ${Object.keys(rows[0]).map(key =>
                                 `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                                        ${key.replace(/_/g, ' ').toUpperCase()}
-                                                    </th>`
+                                            ${key}
+                                        </th>`
                             ).join('')}
-                                            </tr>
-                                        </thead>
-                                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            ${resultData.map(row => `
-                                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
-                                                    ${Object.entries(row).map(([key, value]) => {
-                                let displayValue = value;
-                                if (key.includes('harga') || key.includes('subtotal') || key.includes('total')) {
-                                    displayValue = formatRupiah(value);
-                                } else if (key.includes('created_at') || key.includes('updated_at')) {
-                                    displayValue = formatTanggal(value);
-                                } else if (value === null || value === undefined) {
-                                    displayValue = '-';
-                                }
-                                return `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${displayValue}</td>`;
-                            }).join('')}
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            `;
-                        } else if (typeof resultData === 'object') {
-                            html = `
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            ${Object.entries(resultData).map(([key, value]) => {
-                                let displayValue = value;
-                                if (key.includes('harga') || key.includes('total')) {
-                                    displayValue = formatRupiah(value);
-                                }
-                                return `
-                                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
-                                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700">
-                                                            ${key.replace(/_/g, ' ').toUpperCase()}
-                                                        </th>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                                                            ${displayValue}
-                                                        </td>
-                                                    </tr>
-                                                `;
-                            }).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            `;
-                        }
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        ${rows.map(row => `
+    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
+        ${Object.entries(row).map(([key, value]) => {
+            let displayValue = (value === null || value === undefined || value === '') ? '-' : value;
 
-                        document.getElementById('hasilLaporan').innerHTML = html;
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        document.getElementById('hasilLaporan').innerHTML = `
+            if (
+                !skipFormatKeys.includes(key) &&
+                (key.toLowerCase().includes('harga') ||
+                 key.toLowerCase().includes('subtotal')) &&
+                typeof value === 'number'
+            ) {
+                displayValue = formatRupiah(value);
+            }
+
+            return `
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    ${displayValue}
+                </td>
+            `;
+        }).join('')}
+    </tr>
+`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+                }
+
+                document.getElementById('hasilLaporan').innerHTML = html;
+            })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('hasilLaporan').innerHTML = `
                             <div class="text-center py-12">
                                 <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
                                     <i class="fa-solid fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
@@ -510,77 +518,77 @@
                                 </p>
                             </div>
                         `;
-                        document.getElementById('chartContainer').classList.add('hidden');
-                    });
-            });
+            document.getElementById('chartContainer').classList.add('hidden');
+        });
+        });
 
-            // Export PDF
-            document.getElementById('btnPdf').addEventListener('click', function () {
-                const jenis = document.getElementById('jenis').value;
-                const tanggalAwal = document.getElementById('tanggal_awal').value;
-                const tanggalAkhir = document.getElementById('tanggal_akhir').value;
+        // Export PDF
+        document.getElementById('btnPdf').addEventListener('click', function() {
+            const jenis = document.getElementById('jenis').value;
+            const tanggalAwal = document.getElementById('tanggal_awal').value;
+            const tanggalAkhir = document.getElementById('tanggal_akhir').value;
 
-                if (!jenis) {
-                    showNotification('Pilih jenis laporan terlebih dahulu', 'error');
-                    return;
-                }
+            if (!jenis) {
+                showNotification('Pilih jenis laporan terlebih dahulu', 'error');
+                return;
+            }
 
-                let url = "{{ url('admin/laporan/export-pdf') }}/" + jenis;
-                url += `?tanggal_awal=${tanggalAwal}&tanggal_akhir=${tanggalAkhir}`;
-                window.open(url, '_blank');
-            });
+            let url = "{{ url('admin/laporan/export-pdf') }}/" + jenis;
+            url += `?tanggal_awal=${tanggalAwal}&tanggal_akhir=${tanggalAkhir}`;
+            window.open(url, '_blank');
+        });
 
-            // Export Excel
-            document.getElementById('btnExcel').addEventListener('click', function () {
-                const jenis = document.getElementById('jenis').value;
-                const tanggalAwal = document.getElementById('tanggal_awal').value;
-                const tanggalAkhir = document.getElementById('tanggal_akhir').value;
+        // Export Excel
+        document.getElementById('btnExcel').addEventListener('click', function() {
+            const jenis = document.getElementById('jenis').value;
+            const tanggalAwal = document.getElementById('tanggal_awal').value;
+            const tanggalAkhir = document.getElementById('tanggal_akhir').value;
 
-                if (!jenis) {
-                    showNotification('Pilih jenis laporan terlebih dahulu', 'error');
-                    return;
-                }
+            if (!jenis) {
+                showNotification('Pilih jenis laporan terlebih dahulu', 'error');
+                return;
+            }
 
-                let url = "{{ url('admin/laporan/export-excel') }}/" + jenis;
-                url += `?tanggal_awal=${tanggalAwal}&tanggal_akhir=${tanggalAkhir}`;
-                window.location.href = url;
-            });
+            let url = "{{ url('admin/laporan/export-excel') }}/" + jenis;
+            url += `?tanggal_awal=${tanggalAwal}&tanggal_akhir=${tanggalAkhir}`;
+            window.location.href = url;
+        });
 
-            // Fullscreen Chart
-            document.getElementById('chartFullscreen').addEventListener('click', function () {
-                const chartContainer = document.getElementById('chartContainer');
-                if (chartContainer.classList.contains('hidden')) return;
+        // Fullscreen Chart
+        document.getElementById('chartFullscreen').addEventListener('click', function() {
+            const chartContainer = document.getElementById('chartContainer');
+            if (chartContainer.classList.contains('hidden')) return;
 
-                const jenis = document.getElementById('jenis').value;
-                const chartTitle = document.getElementById('chartTitle').textContent;
+            const jenis = document.getElementById('jenis').value;
+            const chartTitle = document.getElementById('chartTitle').textContent;
 
-                document.getElementById('fullscreenChartTitle').textContent = chartTitle;
-                document.getElementById('fullscreenModal').classList.remove('hidden');
+            document.getElementById('fullscreenChartTitle').textContent = chartTitle;
+            document.getElementById('fullscreenModal').classList.remove('hidden');
 
-                // Reinitialize chart for fullscreen
-                setTimeout(() => {
-                    const chartData = {
-                        labels: chart.data.labels,
-                        values: chart.data.datasets[0].data,
-                        label: chart.data.datasets[0].label
-                    };
-                    initFullscreenChart(jenis, chartData);
-                }, 100);
-            });
+            // Reinitialize chart for fullscreen
+            setTimeout(() => {
+                const chartData = {
+                    labels: chart.data.labels,
+                    values: chart.data.datasets[0].data,
+                    label: chart.data.datasets[0].label
+                };
+                initFullscreenChart(jenis, chartData);
+            }, 100);
+        });
 
-            // Close Fullscreen
-            document.getElementById('closeFullscreen').addEventListener('click', function () {
-                document.getElementById('fullscreenModal').classList.add('hidden');
-            });
+        // Close Fullscreen
+        document.getElementById('closeFullscreen').addEventListener('click', function() {
+            document.getElementById('fullscreenModal').classList.add('hidden');
+        });
 
-            // Notification Function
-            function showNotification(message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform transition-all duration-300 ${type === 'error' ? 'bg-red-500 text-white' :
+        // Notification Function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform transition-all duration-300 ${type === 'error' ? 'bg-red-500 text-white' :
                     type === 'success' ? 'bg-green-500 text-white' :
                         'bg-blue-500 text-white'
                     }`;
-                notification.innerHTML = `
+            notification.innerHTML = `
                         <div class="flex items-center">
                             <i class="fa-solid ${type === 'error' ? 'fa-exclamation-circle' :
                         type === 'success' ? 'fa-check-circle' :
@@ -590,27 +598,27 @@
                         </div>
                     `;
 
-                document.body.appendChild(notification);
+            document.body.appendChild(notification);
 
+            setTimeout(() => {
+                notification.classList.add('opacity-0');
                 setTimeout(() => {
-                    notification.classList.add('opacity-0');
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 300);
-                }, 3000);
-            }
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
 
-            // Add fade-in animation
-            document.addEventListener('DOMContentLoaded', function () {
-                const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
-                elements.forEach((el, index) => {
-                    el.classList.add('opacity-0', 'translate-y-4');
-                    setTimeout(() => {
-                        el.classList.add('transition-all', 'duration-500');
-                        el.classList.remove('opacity-0', 'translate-y-4');
-                    });
-                });
+        // Add fade-in animation
+        document.addEventListener('DOMContentLoaded', function() {
+        const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
+        elements.forEach((el, index) => {
+            el.classList.add('opacity-0', 'translate-y-4');
+            setTimeout(() => {
+                el.classList.add('transition-all', 'duration-500');
+                el.classList.remove('opacity-0', 'translate-y-4');
             });
+        });
+        });
         });
     </script>
 
@@ -653,7 +661,7 @@
 
     <script>
         // Add custom scrollbar to tables
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const tables = document.querySelectorAll('table');
             tables.forEach(table => {
                 table.closest('.overflow-x-auto')?.classList.add('custom-scrollbar');

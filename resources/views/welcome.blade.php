@@ -91,7 +91,7 @@
         </button>
 
         <!-- WRAPPER CHATBOT -->
-        <div class="relative flex items-center gap-3">
+        {{-- <div class="relative flex items-center gap-3">
 
             <!-- WRAPPER TOOLTIP -->
             <div class="absolute inline-block right-16 pointer-events-none">
@@ -124,10 +124,10 @@
                 <span
                     class="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full border-2 border-white animate-pulse"></span>
             </button>
-        </div>
+        </div> --}}
 
         {{-- CHATBOT MODAL (MOBILE) --}}
-        @include('layouts.partials_user.modals.chatbot')
+        {{-- @include('layouts.partials_user.modals.chatbot') --}}
 
         {{-- KERANJANG POPUP (MOBILE) --}}
         <div id="cartPopupMobile"
@@ -142,7 +142,7 @@
         </div>
     </div>
 
-    {{-- MODAL --}}
+    {{-- ===================================> MODAL <======================================= --}}
     @include('layouts.partials_user.modals.tentangkami')
     @foreach ($produkTerbaru as $item)
         @include('layouts.partials_user.modal-beli', ['item' => $item])
@@ -236,7 +236,7 @@
 
         window.openModal = async function(modalId) {
 
-            // ✅ TAMBAHAN INI (WAJIB)
+            // TAMBAHAN INI
             if (!modalId.match(/\d+/)) {
                 return originalOpenModal(modalId);
             }

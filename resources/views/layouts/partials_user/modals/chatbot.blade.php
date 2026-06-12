@@ -90,28 +90,6 @@
 
             </div>
         </div>
-
-        {{-- ================= INPUT ================= --}}
-        <div
-            class="p-4 border-t border-gray-200 dark:border-gray-700
-                    bg-white dark:bg-gray-800 shrink-0">
-
-            <form id="chatForm" class="flex items-center gap-2">
-
-                <input type="text" id="message"
-                    class="flex-1 px-4 py-3 text-sm rounded-xl
-                           bg-gray-100 dark:bg-gray-700
-                           text-gray-700 dark:text-gray-300
-                           focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    placeholder="Ketik pertanyaanmu...">
-
-                <button type="submit" class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-700">
-
-                    <i class="fa-solid fa-paper-plane text-sm"></i>
-                </button>
-
-            </form>
-        </div>
     </div>
 
     {{-- ================= HISTORY ================= --}}
@@ -139,6 +117,28 @@
                    p-4 space-y-3 text-sm
                    overscroll-contain">
         </div>
+    </div>
+
+    {{-- ================= INPUT ================= --}}
+    <div
+        class="p-4 border-t border-gray-200 dark:border-gray-700
+                    bg-white dark:bg-gray-800 shrink-0">
+
+        <form id="chatForm" class="flex items-center gap-2">
+
+            <input type="text" id="message"
+                class="flex-1 px-4 py-3 text-sm rounded-xl
+                           bg-gray-100 dark:bg-gray-700
+                           text-gray-700 dark:text-gray-300
+                           focus:outline-none focus:ring-2 focus:ring-gray-500"
+                placeholder="Ketik pertanyaanmu...">
+
+            <button type="submit" class="bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-700">
+
+                <i class="fa-solid fa-paper-plane text-sm"></i>
+            </button>
+
+        </form>
     </div>
 
 </div>

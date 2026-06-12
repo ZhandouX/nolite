@@ -68,19 +68,56 @@ class LaporanController extends Controller
                 break;
 
             case 'keuangan':
-                $orders = Order::where('status_pembayaran', 'success')->get();
-                $total = $orders->sum('subtotal');
-                $pajak = $total * 0.1;
-                $bersih = $total - $pajak;
-                $data = [[
-                    'Total Pendapatan (Rp)' => number_format($total, 0, ',', '.'),
-                    'Pajak (10%) (Rp)' => number_format($pajak, 0, ',', '.'),
-                    'Pendapatan Bersih (Rp)' => number_format($bersih, 0, ',', '.'),
-                ]];
+                $orders = Order::where('status', 'selesai')
+                    ->whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])
+                    ->get();
+
+                $totalPendapatan = $orders->sum('subtotal');
+                $jumlahTransaksi = $orders->count();
+                $rataRata = $jumlahTransaksi > 0
+                    ? $totalPendapatan / $jumlahTransaksi
+                    : 0;
+
+                $transaksiTertinggi = $orders->max('subtotal') ?? 0;
+                $transaksiTerendah = $orders->min('subtotal') ?? 0;
+
+                $data = collect([
+                    [
+                        'Keterangan' => 'Total Pendapatan',
+                        'Nilai' => 'Rp ' . number_format($totalPendapatan, 0, ',', '.')
+                    ],
+                    [
+                        'Keterangan' => 'Jumlah Transaksi',
+                        'Nilai' => $jumlahTransaksi
+                    ],
+                    [
+                        'Keterangan' => 'Rata-rata Transaksi',
+                        'Nilai' => 'Rp ' . number_format($rataRata, 0, ',', '.')
+                    ],
+                    [
+                        'Keterangan' => 'Transaksi Tertinggi',
+                        'Nilai' => 'Rp ' . number_format($transaksiTertinggi, 0, ',', '.')
+                    ],
+                    [
+                        'Keterangan' => 'Transaksi Terendah',
+                        'Nilai' => 'Rp ' . number_format($transaksiTerendah, 0, ',', '.')
+                    ],
+                ]);
+
                 $chart = [
-                    'labels' => ['Pajak', 'Pendapatan Bersih'],
-                    'values' => [$pajak, $bersih],
-                    'title' => 'Distribusi Keuangan',
+                    'labels' => [
+                        'Total Pendapatan',
+                        'Rata-rata Transaksi',
+                        'Transaksi Tertinggi',
+                        'Transaksi Terendah'
+                    ],
+                    'values' => [
+                        $totalPendapatan,
+                        $rataRata,
+                        $transaksiTertinggi,
+                        $transaksiTerendah
+                    ],
+                    'title' => 'Ringkasan Keuangan'
                 ];
                 break;
 
@@ -103,35 +140,67 @@ class LaporanController extends Controller
                 break;
 
             case 'stok':
-                $produk = Produk::orderBy('jumlah')->take(10)->get(['nama_produk', 'jumlah'])
-                    ->map(fn($p) => ['Nama Produk' => $p->nama_produk, 'Jumlah Stok' => $p->jumlah]);
+                $produkStok = Produk::orderBy('jumlah')->take(10)->get(['nama_produk', 'jumlah']);
                 $chart = [
-                    'labels' => $produk->pluck('Nama Produk'),
-                    'values' => $produk->pluck('Jumlah Stok'),
-                    'title' => '10 Produk dengan Stok Terendah',
+                    'labels' => $produkStok->pluck('nama_produk')->values(),
+                    'values' => $produkStok->pluck('jumlah')->values(),
+                    'title'  => '10 Produk dengan Stok Terendah',
                 ];
-                $data = $produk;
+                $data = $produkStok->map(fn($p) => [
+                    'Nama Produk' => $p->nama_produk,
+                    'Jumlah Stok' => $p->jumlah,
+                ])->values();
                 break;
 
             case 'pesanan':
-                $data = Order::latest()->get(['id', 'user_id', 'subtotal', 'status'])
+
+                $data = Order::whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])
+                    ->select('id', 'nama_penerima', 'status', 'created_at')
+                    ->latest()
+                    ->get()
                     ->map(fn($o) => [
                         'ID Pesanan' => $o->id,
-                        'ID Pengguna' => $o->user_id,
-                        'Total Pembelian (Rp)' => number_format($o->subtotal, 0, ',', '.'),
+                        'Pelanggan' => $o->nama_penerima,
                         'Status' => ucfirst($o->status),
+                        'Tanggal' => Carbon::parse($o->created_at)->translatedFormat('d F Y'),
                     ]);
+
+                $chartStatus = Order::whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])
+                    ->selectRaw('status, COUNT(*) as total')
+                    ->groupBy('status')
+                    ->get();
+
+                $chart = [
+                    'labels' => $chartStatus->pluck('status')->map(function ($status) {
+                        return match ($status) {
+                            'pending' => 'Menunggu',
+                            'diproses' => 'Diproses',
+                            'dikirim' => 'Dikirim',
+                            'selesai' => 'Selesai',
+                            default => ucfirst($status)
+                        };
+                    }),
+                    'values' => $chartStatus->pluck('total'),
+                    'title' => 'Distribusi Status Pesanan',
+                ];
+
                 break;
 
             case 'ulasan':
-                $data = Ulasan::with('user', 'produk')->latest()->get()
-                    ->map(fn($u) => [
-                        'Nama Pengguna' => $u->user->name ?? '-',
-                        'Produk' => $u->produk->nama_produk ?? '-',
-                        'Rating' => $u->rating,
-                        'Komentar' => $u->komentar,
-                        'Tanggal' => Carbon::parse($u->created_at)->translatedFormat('d F Y'),
-                    ]);
+                $ulasanList = Ulasan::with('user', 'produk')->latest()->get();
+                $ratingCount = $ulasanList->groupBy('rating')->map->count();
+                $chart = [
+                    'labels' => collect([1, 2, 3, 4, 5])->map(fn($r) => $r . ' Bintang'),
+                    'values' => collect([1, 2, 3, 4, 5])->map(fn($r) => $ratingCount->get($r, 0)),
+                    'title'  => 'Distribusi Rating Ulasan',
+                ];
+                $data = $ulasanList->map(fn($u) => [
+                    'Nama Pengguna' => optional($u->user)->name        ?? '-',
+                    'Produk'        => optional($u->produk)->nama_produk ?? '-',
+                    'Rating'        => $u->rating . ' ★',
+                    'Komentar'      => $u->komentar ?? '-',
+                    'Tanggal'       => Carbon::parse($u->created_at)->translatedFormat('d F Y'),
+                ])->values();
                 break;
 
             case 'aktivitas':

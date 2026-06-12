@@ -1,5 +1,5 @@
 <div id="loginModal"
-    class="fixed inset-0 flex bg-black/60 backdrop-blur-sm hidden items-center justify-center z-[9999] transition-opacity duration-300">
+    class="fixed inset-0 flex bg-black/60 backdrop-blur-sm hidden items-center justify-center z-[9998] transition-opacity duration-300">
     <div class="bg-transparent relative md:w-full md:max-w-md p-0">
 
         <!-- Tombol Close -->
@@ -21,8 +21,8 @@
                     <!-- Email -->
                     <div class="form-group">
                         <div class="input-container">
-                            <input id="loginEmail" type="email" name="email" required placeholder=" " class="form-input"
-                                value="{{ old('email') }}" autofocus />
+                            <input id="loginEmail" type="email" name="email" required placeholder=" "
+                                class="form-input" value="{{ old('email') }}" autofocus />
                             <label for="loginEmail" class="floating-label">Email*</label>
                         </div>
                         @error('email')
@@ -70,11 +70,37 @@
                 </form>
             </div>
         </div>
-
-        <!-- Pesan Sukses -->
-        <div class="success-message hidden" id="loginSuccess">
-            <i class="fas fa-check-circle"></i>
-            <span>Login berhasil!</span>
-        </div>
     </div>
 </div>
+
+@if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                timer: 2500,
+                showConfirmButton: false
+            });
+        });
+    </script>
+@endif
+
+@if ($errors->has('email'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Gagal',
+                text: 'Email atau password salah.',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            }).then(() => {
+                openLoginModal();
+            });
+
+        });
+    </script>
+@endif

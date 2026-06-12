@@ -55,6 +55,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     chatForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        if (!historyBox.classList.contains("hidden")) {
+            historyBox.classList.add("hidden");
+            historyBox.classList.remove("flex");
+
+            document.getElementById("chat-main").classList.remove("hidden");
+        }
+
         const msg = messageInput.value.trim();
         if (!msg) return;
 

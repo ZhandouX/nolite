@@ -58,9 +58,7 @@ class RegisteredUserController extends Controller
         // Event Pendaftaran
         event(new Registered($user));
 
-        return redirect('/')->with([
-            'showLoginModal' => true,
-            'success' => 'Akun berhasil dibuat, silakan login.'
-        ]);
+        return redirect('/')
+            ->with('register_success', 'Akun berhasil dibuat. Silakan login menggunakan akun Anda.');
     }
 }
