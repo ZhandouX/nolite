@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
+use App\Models\Order;
 use App\Models\ProdukFoto;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -29,7 +30,13 @@ class DashboardController extends Controller
             ->where('diskon', '>', 0)
             ->take(6);
 
-        return view('customer.dashboard', compact('produk', 'produkDiskon'));
+        // NOTIFIKASI SAAT PEMBAYARAN MASIH DALAM STATUS PENDING
+        $pendingOrder = Order::where('user_id', auth()->id())
+            ->where('payment_status', 'pending')
+            ->latest()
+            ->first();
+
+        return view('customer.dashboard', compact('produk', 'produkDiskon', 'pendingOrder'));
     }
 
     // DETAIL PRODUK

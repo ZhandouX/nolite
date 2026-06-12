@@ -37,7 +37,7 @@
     </div>
 
     <div class="extra-icons">
-         <div class="icon-box" onclick="openModal('aboutModal')">
+        <div class="icon-box" onclick="openModal('aboutModal')">
             <i data-lucide="info"></i>
             <span>Tentang Kami</span>
         </div>
@@ -72,4 +72,6 @@
             });
         });
     </script>
+
+  
 @endpush

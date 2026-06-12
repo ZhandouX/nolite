@@ -127,4 +127,17 @@ class MidtransController extends Controller
             'message' => 'OK'
         ], 200);
     }
+
+
+    // METHOD RUSUME-PAYMENT
+    public function resumePayment(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return response()->json([
+            'snap_token' => $order->snap_token
+        ]);
+    }
 }

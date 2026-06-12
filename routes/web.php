@@ -150,13 +150,13 @@ Route::middleware(['auth', 'role:admin', 'two_factor'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/{user}', 'show')->name('show');
-                Route::patch('/{user}/block', 'block')->name('block');
-                Route::patch('/{user}/activate', 'activate')->name('activate');
-                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
-                Route::delete('/{user}', 'destroy')->name('destroy');
-            });
+            Route::get('/', 'index')->name('index');
+            Route::get('/{user}', 'show')->name('show');
+            Route::patch('/{user}/block', 'block')->name('block');
+            Route::patch('/{user}/activate', 'activate')->name('activate');
+            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
+            Route::delete('/{user}', 'destroy')->name('destroy');
+        });
 
         // ==========================
         // 💬 CUSTOMER SERVICE (ADMIN)
@@ -205,6 +205,11 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         '/checkout/payment/{id}/update-method',
         [MidtransController::class, 'updatePaymentMethod']
     )->name('customer.checkout.update-payment-method');
+
+    // Route::get(
+    //     '/order/{order}/resume-payment',
+    //     [MidtransController::class, 'resumePayment']
+    // );
 
     // ORDER
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');

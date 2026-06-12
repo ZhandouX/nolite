@@ -98,7 +98,7 @@
                 <div class="mt-5 bg-blue-50 border border-blue-200 rounded-md px-4 py-3 text-sm text-blue-700">
                     💡 Metode pembayaran akan dipilih saat proses pembayaran berlangsung.
                 </div>
-            </div> {{-- END DETAIL ALAMAT --}}
+            </div>
         </form>
 
         {{-- RINGKASAN PESANAN DI KANAN --}}
@@ -171,6 +171,10 @@
         data-client-key="{{ config('midtrans.client_key') }}"></script>
 
     <script>
+        const dashboardUrl = "{{ route('customer.dashboard') }}";
+    </script>
+
+    <script>
         document.getElementById('pay-button').addEventListener('click', function () {
 
             let button = this;
@@ -214,15 +218,16 @@
 
                         onSuccess: function (result) {
                             updatePayment(result, data.order_id);
-                            alert("Pembayaran berhasil!");
+
                             window.location.href = `/checkout/success/${data.order_id}`;
                         },
 
                         onPending: function (result) {
+
                             updatePayment(result, data.order_id);
-                            alert("Mohon selesaikan pembayaran Anda!");
-                            button.disabled = false;
-                            button.innerText = "Bayar Sekarang";
+
+                            window.location.href = dashboardUrl;
+
                         },
 
                         onError: function (result) {
@@ -233,9 +238,9 @@
                         },
 
                         onClose: function () {
-                            alert("Mohon selesaikan pembayaran Anda!");
-                            button.disabled = false;
-                            button.innerText = "Bayar Sekarang";
+
+                            window.location.href = dashboardUrl;
+
                         }
                     });
 

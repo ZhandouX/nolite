@@ -14,6 +14,7 @@ use App\Models\Produk;
 use App\Http\Controllers\Customer\LokasiController;
 use Illuminate\Support\Facades\DB;
 use App\Services\MidtransService;
+use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
@@ -274,7 +275,11 @@ class CheckoutController extends Controller
                 throw new \Exception('Stok produk tidak mencukupi.');
             }
 
-            $midtransOrderId = 'ORDER-' . time();
+            $midtransOrderId =
+                'ORDER-' .
+                now()->format('YmdHis') .
+                '-' .
+                Str::random(6);
 
             // 🔥 CREATE ORDER
             $order = Order::create([
@@ -320,6 +325,10 @@ class CheckoutController extends Controller
             // 🔥 MIDTRANS SNAP
             $midtrans = new MidtransService();
             $snapData = $midtrans->createSnapToken($order);
+
+            $order->update([
+                'snap_token' => $snapData['snap_token']
+            ]);
 
             // 🔥 NOTIF ADMIN
             $data = app(NotificationService::class)->get();
