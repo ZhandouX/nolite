@@ -6,8 +6,8 @@
     <div class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8 px-4 pt-20 lg:pt-0">
         <div class="max-w-4xl mx-auto">
             {{-- HEADER SECTION --}}
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Pengaturan Akun Profil</h1>
+            <div class="text-center mb-8 mt-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Pengaturan Akun</h1>
                 <p class="text-gray-600">Kelola informasi akun dan keamanan Anda</p>
             </div>
 
@@ -39,6 +39,8 @@
 
                         {{-- QUICK ACTIONS --}}
                         <div class="border-t border-gray-200 p-4 space-y-2">
+
+                            {{-- Update Profile --}}
                             <button onclick="openModals('updateProfileModal')"
                                 class="w-full flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200 group">
                                 <div
@@ -51,6 +53,7 @@
                                 </div>
                             </button>
 
+                            {{-- Update Password --}}
                             <button onclick="openModals('updatePasswordModal')"
                                 class="w-full flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200 group">
                                 <div
@@ -58,11 +61,12 @@
                                     <i class="fa-solid fa-lock text-amber-600 text-sm"></i>
                                 </div>
                                 <div class="text-left">
-                                    <div class="font-medium text-gray-900">Update Kata Sandi</div>
+                                    <div class="font-medium text-gray-900">Ganti Kata Sandi</div>
                                     <div class="text-xs text-gray-500">Perbarui kata sandi akun</div>
                                 </div>
                             </button>
 
+                            {{-- Delete Account --}}
                             <button onclick="openDeleteModal()"
                                 class="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 group">
                                 <div
@@ -75,6 +79,7 @@
                                 </div>
                             </button>
 
+                            {{-- Logout Account --}}
                             <form id="logoutForm" method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
@@ -169,7 +174,8 @@
 
                         <div class="space-y-4">
                             {{-- Email Verification --}}
-                            {{-- <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
+                            {{-- <div
+                                class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
                                         <i class="fa-solid fa-envelope text-blue-600"></i>
@@ -180,13 +186,13 @@
                                     </div>
                                 </div>
                                 @if($user->hasVerifiedEmail())
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full font-medium">
-                                        <i class="fa-solid fa-check mr-1"></i> Terverifikasi
-                                    </span>
+                                <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full font-medium">
+                                    <i class="fa-solid fa-check mr-1"></i> Terverifikasi
+                                </span>
                                 @else
-                                    <span class="px-3 py-1 bg-amber-100 text-amber-700 text-sm rounded-full font-medium">
-                                        <i class="fa-solid fa-exclamation mr-1"></i> Belum Verifikasi
-                                    </span>
+                                <span class="px-3 py-1 bg-amber-100 text-amber-700 text-sm rounded-full font-medium">
+                                    <i class="fa-solid fa-exclamation mr-1"></i> Belum Verifikasi
+                                </span>
                                 @endif
                             </div> --}}
 

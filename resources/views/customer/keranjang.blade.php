@@ -148,10 +148,6 @@
                         <span class="text-gray-600">Subtotal</span>
                         <span id="subtotal" class="font-medium">Rp0</span>
                     </div>
-                    <!-- <div class="flex justify-between text-sm">
-                        <span class="text-gray-600">Biaya Layanan</span>
-                        <span class="font-medium">Rp0</span>
-                    </div> -->
                 </div>
                 
                 <div class="flex justify-between text-base font-bold border-t border-gray-200 pt-3">

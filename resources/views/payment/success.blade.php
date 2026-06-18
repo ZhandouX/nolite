@@ -1,4 +1,4 @@
-@extends('layouts.app_user')
+@extends('layouts.user_app')
 
 @section('title', 'Pembayaran Berhasil')
 

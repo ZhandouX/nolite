@@ -1109,3 +1109,197 @@ input[type=number] {
     padding: 12px 22px;
     z-index: 9999;
 }
+
+.notyf {
+    z-index: 99999;
+    margin-top: 50px;
+}
+
+/* ================================
+   PREMIUM COMPACT GLASS TOAST
+================================ */
+.notyf__toast {
+    border-radius: 14px !important;
+
+    /* 🔥 lebih compact (INI KUNCI TINGGI) */
+    padding: 0px 10px !important;
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* glass effect */
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    /* soft premium shadow */
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.08),
+        0 1px 1px rgba(0, 0, 0, 0.04);
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+
+    transition: all 0.22s ease;
+}
+
+/* hover premium feel */
+.notyf__toast:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 14px 35px rgba(0, 0, 0, 0.12),
+        0 2px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* icon lebih rapat & clean */
+.notyf__icon {
+    margin-right: 10px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 24px !important;
+}
+
+/* text clean & modern */
+.notyf__message {
+    color: #111827;
+    line-height: 1.3;
+}
+
+/* entry animation lebih smooth & premium */
+.notyf__toast {
+    animation: toastSlideIn 0.28s ease-out;
+}
+
+.notyf__toast--error {
+    animation: errorPulse 0.4s ease-out;
+    background: rgba(255, 255, 255, 0.72) !important;
+
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border-radius: 14px !important;
+
+    box-shadow:
+        0 12px 30px rgba(239, 68, 68, 0.12),
+        0 2px 2px rgba(0, 0, 0, 0.04);
+
+    color: #991b1b !important; /* deep red elegant */
+
+    font-weight: 500;
+
+    margin-top: -20px;
+}
+
+/* icon khusus error */
+.notyf__toast--error .notyf__icon {
+    color: #ef4444 !important;
+    transform: scale(0.95);
+}
+
+.notyf__toast--status {
+    animation: statusPulse 0.4s ease-out;
+    background: rgba(255, 255, 255, 0.72) !important;
+
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border-radius: 14px !important;
+
+    box-shadow:
+        0 12px 30px rgba(139, 92, 246, 0.12),
+        0 2px 2px rgba(0, 0, 0, 0.04);
+
+    color: #5b21b6 !important;
+
+    font-weight: 500;
+
+    margin-top: -20px;
+}
+
+/* icon khusus status */
+.notyf__toast--status .notyf__icon {
+    color: #8b5cf6 !important;
+    transform: scale(0.95);
+}
+
+.notyf__toast--password {
+    animation: passwordPulse 0.4s ease-out;
+    background: rgba(255, 255, 255, 0.72) !important;
+
+    border: 1px solid rgba(99, 102, 241, 0.25) !important;
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border-radius: 14px !important;
+
+    box-shadow:
+        0 12px 30px rgba(99, 102, 241, 0.12),
+        0 2px 2px rgba(0, 0, 0, 0.04);
+
+    color: #3730a3 !important;
+
+    font-weight: 500;
+
+    margin-top: -20px;
+}
+
+/* Icon */
+.notyf__toast--password .notyf__icon {
+    color: #6366f1 !important;
+    transform: scale(0.95);
+}
+
+@keyframes passwordPulse {
+    0% {
+        transform: translateX(20px) scale(0.95);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes statusPulse {
+    0% {
+        transform: translateX(20px) scale(0.95);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(25px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes errorPulse {
+    0% {
+        transform: translateX(20px) scale(0.95);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}

@@ -110,7 +110,7 @@
                             <div class="flex flex-col sm:flex-row sm:items-center">
                                 <span class="text-gray-500 font-medium w-40 mb-1 sm:mb-0">Total Pembayaran</span>
                                 <span class="text-gray-800 font-bold text-xl flex-1">
-                                    IDR {{ number_format($order->subtotal, 0, ',', '.') }}
+                                    Rp {{ number_format($order->subtotal, 0, ',', '.') }}
                                 </span>
                             </div>
                         </div>
@@ -169,15 +169,15 @@
                                                     @endphp
                                                     <div class="flex flex-col">
                                                         <span class="text-gray-400 text-xs line-through">
-                                                            IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                                            Rp {{ number_format($produk->harga, 0, ',', '.') }}
                                                         </span>
                                                         <span class="text-red-900 font-bold text-sm sm:text-base">
-                                                            IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                                            Rp {{ number_format($hargaDiskon, 0, ',', '.') }}
                                                         </span>
                                                     </div>
                                                 @else
                                                     <span class="text-gray-800 font-bold text-sm sm:text-base">
-                                                        IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                                        Rp {{ number_format($produk->harga, 0, ',', '.') }}
                                                     </span>
                                                 @endif
                                             </div>
@@ -328,15 +328,15 @@
                                             @endphp
                                             <div class="flex flex-col">
                                                 <span class="text-gray-400 text-xs line-through">
-                                                    IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                                    Rp {{ number_format($produk->harga, 0, ',', '.') }}
                                                 </span>
                                                 <span class="text-gray-800 font-bold text-sm sm:text-base">
-                                                    IDR {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                                    Rp {{ number_format($hargaDiskon, 0, ',', '.') }}
                                                 </span>
                                             </div>
                                         @else
                                             <span class="text-gray-800 font-bold text-sm sm:text-base">
-                                                IDR {{ number_format($produk->harga, 0, ',', '.') }}
+                                                Rp {{ number_format($produk->harga, 0, ',', '.') }}
                                             </span>
                                         @endif
 

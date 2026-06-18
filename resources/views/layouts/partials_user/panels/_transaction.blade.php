@@ -98,37 +98,37 @@
 
                                 <!-- Payment Status -->
                                 <span class="
-                                            px-3 py-1 rounded-full text-xs font-semibold
+                                                    px-3 py-1 rounded-full text-xs font-semibold
 
-                                            @if($order->payment_status === 'paid')
-                                                bg-green-100 text-green-700
-                                            @elseif($order->payment_status === 'pending')
-                                                bg-yellow-100 text-yellow-700
-                                            @elseif($order->payment_status === 'failed')
-                                                bg-red-100 text-red-700
-                                            @else
-                                                bg-gray-100 text-gray-700
-                                            @endif
-                                        ">
+                                                    @if($order->payment_status === 'paid')
+                                                        bg-green-100 text-green-700
+                                                    @elseif($order->payment_status === 'pending')
+                                                        bg-yellow-100 text-yellow-700
+                                                    @elseif($order->payment_status === 'failed')
+                                                        bg-red-100 text-red-700
+                                                    @else
+                                                        bg-gray-100 text-gray-700
+                                                    @endif
+                                                ">
                                     {{ ucfirst($order->payment_status) }}
                                 </span>
 
                                 <!-- Order Status -->
                                 <span class="
-                                            px-3 py-1 rounded-full text-xs font-semibold
+                                                    px-3 py-1 rounded-full text-xs font-semibold
 
-                                            @if($order->status === 'diproses')
-                                                bg-blue-100 text-blue-700
-                                            @elseif($order->status === 'dikirim')
-                                                bg-purple-100 text-purple-700
-                                            @elseif($order->status === 'selesai')
-                                                bg-green-100 text-green-700
-                                            @elseif($order->status === 'dibatalkan')
-                                                bg-red-100 text-red-700
-                                            @else
-                                                bg-gray-100 text-gray-700
-                                            @endif
-                                        ">
+                                                    @if($order->status === 'diproses')
+                                                        bg-blue-100 text-blue-700
+                                                    @elseif($order->status === 'dikirim')
+                                                        bg-purple-100 text-purple-700
+                                                    @elseif($order->status === 'selesai')
+                                                        bg-green-100 text-green-700
+                                                    @elseif($order->status === 'dibatalkan')
+                                                        bg-red-100 text-red-700
+                                                    @else
+                                                        bg-gray-100 text-gray-700
+                                                    @endif
+                                                ">
                                     {{ ucfirst($order->status) }}
                                 </span>
 
@@ -142,11 +142,13 @@
                             <!-- Button -->
                             <div class="flex gap-2">
 
-                                <a href="#"
+                                {{-- DETAIL --}}
+                                <a href="{{ route('customer.order.success', $order->id) }}"
                                     class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-100 transition">
                                     Detail
                                 </a>
 
+                                {{-- BAYAR --}}
                                 @if($order->payment_status === 'pending')
                                     <a href="{{ $order->payment_url }}"
                                         class="px-4 py-2 text-sm font-medium rounded-lg bg-red-900 text-white hover:bg-red-800 transition">

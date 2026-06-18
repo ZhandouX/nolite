@@ -221,6 +221,9 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         return view('customer.checkout_success', compact('order'));
     })->name('customer.order.success');
 
+    Route::get('/invoice/{id}/download', [OrderController::class, 'downloadInvoice'])
+    ->name('customer.invoice.download');
+
     // ULASAN
     Route::prefix('ulasan')->group(function () {
         Route::post('/', [UlasanController::class, 'store'])->name('customer.ulasan.store');

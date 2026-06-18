@@ -122,13 +122,17 @@
                 <i class="fa-solid fa-key"></i>
                 Perbarui Kata Sandi
             </button>
-
-            @if (session('status') === 'password-updated')
-                <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2500)"
-                    class="flex items-center gap-2 text-sm text-green-600 font-semibold bg-green-50 px-3 py-2 rounded-lg">
-                    <i class="fa-solid fa-circle-check"></i> Kata Sandi berhasil diperbarui
-                </p>
-            @endif
         </div>
     </form>
 </div>
+
+@if (session('notyf_password'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.notyfProfile.open({
+                type: 'password',
+                message: "{{ session('notyf_password') }}"
+            });
+        });
+    </script>
+@endif

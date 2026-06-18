@@ -241,17 +241,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // ADD TO CART
     // =======================
     window.addToCart = function (id) {
+
         const warna = document.querySelector(`#selectedColor-${id}`)?.value;
         const ukuran = document.querySelector(`#selectedSize-${id}`)?.value;
         const qty = parseInt(document.querySelector(`#qty-${id}`)?.value || 1);
 
+        // Validasi varian
         if (!warna || !ukuran) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Pilih Varian Dulu!',
-                text: 'Silakan pilih warna dan ukuran sebelum menambahkan ke keranjang.',
-                confirmButtonColor: '#3b82f6'
+
+            window.notyf.open({
+                type: 'warning',
+                message: 'Pilih warna dan ukuran terlebih dahulu'
             });
+
             return;
         }
 
@@ -261,25 +263,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": window.Laravel.csrfToken
             },
-            body: JSON.stringify({ produk_id: id, warna: warna, ukuran: ukuran, jumlah: qty })
+            body: JSON.stringify({
+                produk_id: id,
+                warna: warna,
+                ukuran: ukuran,
+                jumlah: qty
+            })
         })
             .then(res => res.json())
             .then(data => {
+
                 if (data.error) {
-                    Swal.fire({ icon: 'error', title: 'Gagal!', text: data.error, confirmButtonColor: '#ef4444' });
-                } else {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: data.message,
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        toast: true,
-                        position: 'top-end'
-                    });
-                    closeModal(`productModal-${id}`);
-                    refreshCartPopup();
+
+                    window.notyfError.error(
+                        data.error || "Gagal menambahkan produk ke keranjang"
+                    );
+
+                    return;
                 }
+
+                // Success
+                window.notyf.success(
+                    data.message || "Produk berhasil ditambahkan ke keranjang"
+                );
+
+                closeModal(`productModal-${id}`);
+
+                refreshCartPopup();
+            })
+            .catch(() => {
+
+                window.notyfError.error(
+                    "Terjadi kesalahan. Silakan coba lagi."
+                );
+
             });
     };
 
@@ -350,6 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     window.hapusKeranjang = function (id) {
+
         Swal.fire({
             title: 'Hapus item ini?',
             text: "Produk akan dihapus dari keranjangmu.",
@@ -360,28 +378,40 @@ document.addEventListener("DOMContentLoaded", function () {
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal'
         }).then(result => {
+
             if (result.isConfirmed) {
+
                 fetch(`${window.Laravel.routes.keranjangBase}/${id}`, {
                     method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken, 'Accept': 'application/json' }
+                    headers: {
+                        'X-CSRF-TOKEN': window.Laravel.csrfToken,
+                        'Accept': 'application/json'
+                    }
                 })
                     .then(res => res.json())
                     .then(data => {
+
                         if (data.success) {
+
                             const itemEl = document.querySelector(`.item-keranjang[data-id='${id}']`);
                             if (itemEl) itemEl.remove();
+
                             updateTotal();
                             refreshCartPopup();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Dihapus!',
-                                text: data.message,
-                                showConfirmButton: false,
-                                timer: 1500,
-                                toast: true,
-                                position: 'top-end'
-                            });
+
+                            // ✅ SUCCESS NOTIFY (Notyf)
+                            window.notyf.success(data.message || "Item berhasil dihapus");
+
+                        } else {
+
+                            // ❌ ERROR NOTIFY (Notyf)
+                            window.notyfError.error(data.message || "Gagal menghapus item");
                         }
+                    })
+                    .catch(() => {
+
+                        // ❌ ERROR NETWORK (Notyf)
+                        window.notyfError.error("Terjadi kesalahan server");
                     });
             }
         });

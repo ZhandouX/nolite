@@ -21,6 +21,8 @@
     },
     "dependencies": {
         "lucide": "^0.553.0",
-        "slider-verify": "^1.1.2"
+        "notyf": "^3.10.0",
+        "slider-verify": "^1.1.2",
+        "sonner": "^2.0.7"
     }
 }

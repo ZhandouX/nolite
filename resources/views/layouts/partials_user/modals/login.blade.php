@@ -8,7 +8,7 @@
             &times;
         </button>
 
-        <!-- ===== Konten Login ===== -->
+        {{-- KONTEN LOGIN --}}
         <div class="form-container">
             <div class="form-header">
                 <h1 class="text-2xl font-bold mb-2">Login</h1>
@@ -18,7 +18,7 @@
                 <form id="loginForm" method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    <!-- Email -->
+                    <!-- Email --> 
                     <div class="form-group">
                         <div class="input-container">
                             <input id="loginEmail" type="email" name="email" required placeholder=" "
@@ -45,7 +45,7 @@
                         @enderror
                     </div>
 
-                    <!-- Remember & Forgot -->
+                    <!-- Forgot Password -->
                     <div class="remember-forgot">
                         <div class="remember-me">
                             <input type="checkbox" id="remember" name="remember">
@@ -54,10 +54,10 @@
                         <a href="{{ route('password.request') }}" class="forgot-password">Lupa Password?</a>
                     </div>
 
-                    <!-- Tombol Login -->
+                    <!-- Login Button -->
                     <button type="submit" class="submit-btn">Masuk</button>
 
-                    <!-- Link ke Register -->
+                    <!-- Link Register -->
                     <div class="register-link">
                         <p class="text-sm text-gray-600">
                             Belum punya akun?
@@ -73,16 +73,10 @@
     </div>
 </div>
 
-@if (session('success'))
+@if (session('notyf_success'))
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: '{{ session('success') }}',
-                timer: 2500,
-                showConfirmButton: false
-            });
+        document.addEventListener('DOMContentLoaded', function () {
+            window.notyf.success("{{ session('notyf_success') }}");
         });
     </script>
 @endif
@@ -91,16 +85,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Login Gagal',
-                text: 'Email atau password salah.',
-                confirmButtonText: 'OK',
-                allowOutsideClick: false
-            }).then(() => {
+            setTimeout(() => {
+                window.notyfError.error("Email atau password salah.");
                 openLoginModal();
-            });
-
+            }, 200);
         });
     </script>
 @endif

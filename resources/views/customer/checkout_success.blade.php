@@ -34,10 +34,32 @@
                 @endforeach
             </ul>
 
+            <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                <div class="mt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
+
+                    <!-- Detail Pesanan -->
+                    <a href="{{ route('customer.orders.show', $order->id) }}"
+                        class="w-full sm:w-auto bg-transparent hover:text-orange-500 text-gray-700 px-5 py-2 rounded-md font-semibold text-sm transition-all">
+                        <i class="fa-solid fa-receipt mr-0"></i>
+                        Detail Pesanan
+                    </a>
+
+                    <!-- Download Invoice -->
+                    <a href="{{ route('customer.invoice.download', $order->id) }}"
+                        class="w-full sm:w-auto bg-transparent hover:text-green-500 text-blue-600 px-5 py-2 rounded-md font-semibold text-sm transition-all">
+                        <i class="fa-solid fa-download mr-2"></i>
+                        Download
+                    </a>
+
+                </div>
+            </ul>
+
+            <!-- Kembali -->
             <a href="{{ route('customer.dashboard') }}"
                 class="inline-block bg-gray-700 hover:bg-gray-500 text-white px-6 py-2 rounded-md font-semibold text-sm transition-all">
-                Kembali ke Dashboard
+                Kembali ke Dashboard 
             </a>
+
         </div>
     </div>
 @endsection

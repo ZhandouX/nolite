@@ -11,17 +11,13 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
+    // DISPLAY LOGIN
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
+    // HANDLE REQUEST
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -35,25 +31,26 @@ class AuthenticatedSessionController extends Controller
             if (!$user->two_factor_secret || !$user->two_factor_enabled) {
                 return redirect()
                     ->route('2fa.setup')
-                    ->with('success', 'Login berhasil!');
+                    ->with('notyf_success', 'Silahkan selesaikan pengaturan autentikasi dua faktor.');
             }
 
             // Sudah setup → langsung minta OTP setiap login
             return redirect()
                 ->route('2fa.verify')
-                ->with('success', 'Login berhasil!');
+                ->with('notyf_success', 'Masukkan kode autentikasi untuk melanjutkan.');
         }
 
         if ($user->hasRole('customer')) {
             return redirect()
                 ->route('customer.dashboard')
-                ->with('success', 'Login berhasil!');
+                ->with('notyf_success', 'Anda berhasil login!');
         }
 
         Auth::logout();
         return redirect('/')->with('showLoginModal', true);
     }
 
+    // HANDLE 2FA (BEFORE LOGOUT)
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
@@ -64,6 +61,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')
+            ->with('notyf_success', 'Anda berhasil logout!');
     }
 }
