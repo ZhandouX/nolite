@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('email')->nullable();
             $table->string('metode_pembayaran')->nullable();
             $table->decimal('subtotal', 15, 2)->default(0);
-            $table->enum('status', ['menunggu', 'diproses', 'dikirim', 'selesai'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'diproses', 'dikirim', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->timestamps();
         });
     }

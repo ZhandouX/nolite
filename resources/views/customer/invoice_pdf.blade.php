@@ -45,6 +45,7 @@
         table.items td {
             border: 1px solid #ddd;
             padding: 8px;
+            vertical-align: top;
         }
 
         table.items th {
@@ -54,6 +55,43 @@
 
         .text-right {
             text-align: right;
+        }
+
+        .product-box {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .img-main {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .thumbs {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .thumb {
+            width: 20px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        .product-name {
+            font-weight: bold;
+        }
+
+        .product-meta {
+            font-size: 10px;
+            color: #666;
         }
 
         .total-box {
@@ -70,11 +108,6 @@
             padding: 5px;
         }
 
-        .grand-total {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
         .footer {
             margin-top: 40px;
             text-align: center;
@@ -86,16 +119,29 @@
             font-weight: bold;
             text-transform: capitalize;
         }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px auto;
+            display: block;
+            border: 2px solid #7f1d1d;
+        }
     </style>
 </head>
 
 <body>
 
+    {{-- HEADER --}}
     <div class="header">
+        <img src="{{ public_path('assets/images/logo/logonolite.png') }}" class="logo">
         <h1>Nolite Aspiciens</h1>
         <p>Invoice Pembelian</p>
     </div>
 
+    {{-- INFO --}}
     <div class="invoice-info">
         <table>
             <tr>
@@ -121,6 +167,7 @@
         </table>
     </div>
 
+    {{-- ITEMS --}}
     <table class="items">
         <thead>
             <tr>
@@ -128,18 +175,58 @@
                 <th>Produk</th>
                 <th width="15%">Warna</th>
                 <th width="15%">Ukuran</th>
-                <th width="10%">Qty</th>
+                <th width="10%">Jumlah</th>
                 <th width="20%" class="text-right">Subtotal</th>
             </tr>
         </thead>
+
         <tbody>
-            @foreach($order->items as $index => $item)
+            @foreach ($order->items as $index => $item)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->nama_produk }}</td>
+
+                    {{-- PRODUCT --}}
+                    <td>
+                        <div class="product-box">
+
+                            @php
+                                $fotos = $item->produk?->fotos ?? collect();
+                                $main = $fotos->first();
+                            @endphp
+
+                            {{-- MAIN IMAGE --}}
+                            @if ($main)
+                                <img src="{{ public_path('storage/' . $main->foto) }}" class="img-main">
+                            @else
+                                <img src="{{ public_path('assets/images/no-image.png') }}" class="img-main">
+                            @endif
+
+                            {{-- THUMBNAILS --}}
+                            <div class="thumbs">
+                                @foreach ($fotos->take(5) as $foto)
+                                    <img src="{{ public_path('storage/' . $foto->foto) }}" class="thumb">
+                                @endforeach
+                            </div>
+
+                            {{-- TEXT --}}
+                            <div>
+                                <div class="product-name">
+                                    {{ $item->nama_produk }}
+                                </div>
+
+                                <div class="product-meta">
+                                    Warna: {{ $item->warna }}<br>
+                                    Ukuran: {{ $item->ukuran }}
+                                </div>
+                            </div>
+
+                        </div>
+                    </td>
+
                     <td>{{ $item->warna }}</td>
                     <td>{{ $item->ukuran }}</td>
-                    <td>{{ $item->qty }}</td>
+                    <td>{{ $item->jumlah ?? $item->qty }}</td>
+
                     <td class="text-right">
                         Rp {{ number_format($item->subtotal, 0, ',', '.') }}
                     </td>
@@ -148,6 +235,7 @@
         </tbody>
     </table>
 
+    {{-- TOTAL --}}
     <div class="total-box">
         <table>
             <tr>
@@ -156,13 +244,14 @@
                     Rp {{ number_format($order->subtotal, 0, ',', '.') }}
                 </td>
             </tr>
+        </table>
     </div>
 
+    {{-- FOOTER --}}
     <div class="footer">
         <p>Terima kasih telah berbelanja di Nolite Aspiciens.</p>
         <p>Invoice ini dibuat secara otomatis oleh sistem.</p>
     </div>
 
 </body>
-
 </html>

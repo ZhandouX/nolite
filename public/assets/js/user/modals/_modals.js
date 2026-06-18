@@ -1,3 +1,21 @@
+ function hideToast(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        setTimeout(() => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(-10px)';
+            el.style.transition = '0.3s ease';
+
+            setTimeout(() => {
+                el.remove();
+            }, 300);
+        }, 2500);
+    }
+
+    hideToast('toast-success');
+    hideToast('toast-error');
+
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {

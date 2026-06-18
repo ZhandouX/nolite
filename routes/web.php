@@ -150,13 +150,13 @@ Route::middleware(['auth', 'role:admin', 'two_factor'])
             ->prefix('users')
             ->name('users.')
             ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/{user}', 'show')->name('show');
-            Route::patch('/{user}/block', 'block')->name('block');
-            Route::patch('/{user}/activate', 'activate')->name('activate');
-            Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
-            Route::delete('/{user}', 'destroy')->name('destroy');
-        });
+                Route::get('/', 'index')->name('index');
+                Route::get('/{user}', 'show')->name('show');
+                Route::patch('/{user}/block', 'block')->name('block');
+                Route::patch('/{user}/activate', 'activate')->name('activate');
+                Route::patch('/{user}/nonaktif', 'nonaktif')->name('nonaktif');
+                Route::delete('/{user}', 'destroy')->name('destroy');
+            });
 
         // ==========================
         // 💬 CUSTOMER SERVICE (ADMIN)
@@ -195,6 +195,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/dashboard/checkout', [CheckoutController::class, 'indexDashboard'])->name('customer.checkout.dashboard');
     Route::post('/dashboard/checkout/proses', [CheckoutController::class, 'prosesDashboard'])->name('customer.checkout.dashboard.proses');
 
+
     Route::get(
         '/checkout/payment/{id}',
         [MidtransController::class, 'paymentPage']
@@ -213,7 +214,10 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     // ORDER
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
-    Route::delete('/{id}', [OrderController::class, 'destroy'])->name('remove');
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])
+    ->name('customer.orders.cancel');
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])
+    ->name('customer.orders.destroy');
 
     // SUCCESS PAGE
     Route::get('/checkout/success/{id}', function ($id) {
@@ -222,7 +226,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     })->name('customer.order.success');
 
     Route::get('/invoice/{id}/download', [OrderController::class, 'downloadInvoice'])
-    ->name('customer.invoice.download');
+        ->name('customer.invoice.download');
 
     // ULASAN
     Route::prefix('ulasan')->group(function () {

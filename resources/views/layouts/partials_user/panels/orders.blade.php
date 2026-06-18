@@ -1,3 +1,18 @@
+@if (session('success'))
+    <div id="toast-success"
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+        z-[99999] bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl text-center min-w-[250px]">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div id="toast-error"
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+        z-[99999] bg-red-600 text-white px-6 py-4 rounded-xl shadow-2xl text-center min-w-[250px]">
+        {{ session('error') }}
+    </div>
+@endif
 <div id="orders" class="tab-content block">
     @if ($orders->isEmpty())
         <div class="flex flex-col items-center justify-center py-16 px-4">
@@ -46,7 +61,7 @@
                                         {{ $order->status === 'diproses' ? 'bg-blue-500/90 text-white' : '' }}
                                         {{ $order->status === 'dikirim' ? 'bg-purple-500/90 text-white' : '' }}
                                         {{ $order->status === 'batal' ? 'bg-red-500/90 text-white' : '' }}">
-                                        {{ ucfirst($order->status) }}
+                                    {{ ucfirst($order->status) }}
                                 </span>
                             </div>
 
@@ -60,26 +75,57 @@
                         </div>
 
                         <div class="py-1 px-2 md:px-4 mb-2 md:p-5">
-                         @if ($order->status === 'selesai')
+                            {{-- ========================= --}}
+                            {{-- TOMBOL BERGANTIAN --}}
+                            {{-- ========================= --}}
 
-                                    <div class="flex justify-center mb-3">
-                                        <div
-                                            class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-xl
-                                                bg-gradient-to-r from-orange-500 to-orange-400
-                                                text-white text-[10px] md:text-xs font-semibold
-                                                shadow-md shadow-orange-500/20
-                                                border border-orange-300/40
-                                                backdrop-blur-sm
-                                                group-hover:scale-105 transition-all duration-300">
+                            @if ($order->status === 'menunggu')
+                                {{-- ❌ BELUM BAYAR → BATAL --}}
+                                <form action="{{ route('customer.orders.cancel', $order->id) }}" method="POST"
+                                    class="flex justify-center mb-3" onclick="event.stopPropagation()">
+                                    @csrf
+                                    <button type="submit"
+                                        onclick="event.stopPropagation(); return confirm('Yakin ingin membatalkan pesanan ini?')"
+                                        class="px-4 py-2 bg-red-600 text-white text-xs md:text-sm rounded-lg hover:bg-red-700 transition">
+                                        Batalkan Pesanan
+                                    </button>
+                                </form>
+                            @elseif ($order->status === 'selesai' && $order->ulasan->isEmpty())
+                                {{-- ⭐ SUDAH SELESAI + BELUM ULASAN --}}
+                                <div class="flex justify-center mb-3">
+                                    <div class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-xl
+            bg-gradient-to-r from-orange-500 to-orange-400
+            text-white text-[10px] md:text-xs font-semibold
+            shadow-md cursor-pointer hover:scale-105 transition"
+                                        onclick="openOrderModal({{ $order->id }})">
 
-                                            <i class="fa-regular fa-comment-dots text-[11px] md:text-sm"></i>
-
-                                            <span>
-                                                Klik Untuk Beri Ulasan
-                                            </span>
-                                        </div>
+                                        <i class="fa-regular fa-comment-dots"></i>
+                                        <span>Beri Ulasan</span>
                                     </div>
-                                @endif
+                                </div>
+                            @elseif ($order->status === 'selesai' && !$order->ulasan->isEmpty())
+                                {{-- ✅ SUDAH ULASAN --}}
+                                <div class="flex justify-center mb-3">
+                                    <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                                        Sudah Diberi Ulasan
+                                    </span>
+                                </div>
+                            @endif
+
+                            {{-- HAPUS PESANAN (SOFT DELETE) --}}
+                            @if ($order->status === 'dibatalkan' || $order->status === 'selesai')
+                                <form action="{{ route('customer.orders.destroy', $order->id) }}" method="POST"
+                                    class="flex justify-center mt-2" onclick="event.stopPropagation()">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                        onclick="event.stopPropagation(); return confirm('Hapus pesanan dari daftar?')"
+                                        class="px-4 py-2 bg-red-700 text-white text-xs md:text-sm rounded-lg hover:bg-gray-800 transition">
+                                        Hapus Pesanan
+                                    </button>
+                                </form>
+                            @endif
 
                             <div class="flex items-center justify-between mb-1 md:mb-3">
                                 <h3 class="font-bold text-gray-800 text-xs md:text-base truncate">
@@ -122,23 +168,26 @@
                                     'produk' => [
                                         'id' => $item->produk->id,
                                         'nama_produk' => $item->produk->nama_produk,
-                                        'foto' => $item->produk->fotos->first()->foto ?? null
+                                        'foto' => $item->produk->fotos->first()->foto ?? null,
                                     ],
                                     'ulasan_id' => $item->ulasan->id ?? null,
-                                    'ulasan_data' => $item->ulasan ? [
-                                        'id' => $item->ulasan->id,
-                                        'rating' => $item->ulasan->rating,
-                                        'komentar' => $item->ulasan->komentar,
-                                        'fotos' => $item->ulasan->fotos->map(function ($foto) {
-                                            return ['id' => $foto->id, 'foto' => $foto->foto];
-                                        })
-                                    ] : null
+                                    'ulasan_data' => $item->ulasan
+                                        ? [
+                                            'id' => $item->ulasan->id,
+                                            'rating' => $item->ulasan->rating,
+                                            'komentar' => $item->ulasan->komentar,
+                                            'fotos' => $item->ulasan->fotos->map(function ($foto) {
+                                                return ['id' => $foto->id, 'foto' => $foto->foto];
+                                            }),
+                                        ]
+                                        : null,
                                 ];
                             });
                         @endphp
 
-                        <div class="order-data hidden" data-id="{{ $order->id }}" data-status="{{ $order->status }}"
-                            data-subtotal="{{ $order->subtotal }}" data-items='@json($itemsData)'>
+                        <div class="order-data hidden" data-id="{{ $order->id }}"
+                            data-status="{{ $order->status }}" data-subtotal="{{ $order->subtotal }}"
+                            data-items='@json($itemsData)'>
                         </div>
 
                     </div>
@@ -237,17 +286,20 @@
                                 <div id="uploadArea"
                                     class="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center transition-all duration-300 hover:border-red-400 hover:bg-red-50 cursor-pointer">
                                     <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-400 mb-3"></i>
-                                    <p class="text-sm font-medium text-gray-700 mb-1">Klik atau drag & drop foto di sini
+                                    <p class="text-sm font-medium text-gray-700 mb-1">Klik atau drag & drop foto di
+                                        sini
                                     </p>
                                     <p class="text-xs text-gray-500">Format: JPG, PNG, JPEG (Maks. 5MB per gambar)</p>
-                                   <input type="file" name="fotos[]" multiple accept="image/*" class="hidden" id="fileInput">
+                                    <input type="file" name="fotos[]" multiple accept="image/*" class="hidden"
+                                        id="fileInput">
                                 </div>
 
                                 {{-- Image Previews --}}
                                 <div id="imagePreviews" class="grid grid-cols-3 gap-3 mt-4 hidden"></div>
 
                                 {{-- Upload Info --}}
-                                <div id="uploadInfo" class="flex items-center gap-2 mt-3 text-xs text-gray-500 hidden">
+                                <div id="uploadInfo"
+                                    class="flex items-center gap-2 mt-3 text-xs text-gray-500 hidden">
                                     <i class="fa-solid fa-circle-info"></i>
                                     <span>Anda dapat mengupload maksimal 5 foto</span>
                                 </div>
