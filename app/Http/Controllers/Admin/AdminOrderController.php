@@ -38,8 +38,13 @@ class AdminOrderController extends Controller
 
     public function updateStatus(Request $request, Order $order)
     {
+        // ❌ LOCK kalau sudah dibatalkan
+        if ($order->status === 'dibatalkan') {
+            return redirect()->back()->with('error', 'Pesanan sudah dibatalkan dan tidak bisa diubah lagi.');
+        }
+
         $request->validate([
-            'status' => 'required|in:menunggu,diproses,dikirim,selesai',
+            'status' => 'required|in:menunggu,diproses,dikirim,selesai,dibatalkan',
         ]);
 
         $order->status = $request->status;
@@ -47,12 +52,12 @@ class AdminOrderController extends Controller
 
         return redirect()->back()->with('success', 'Status order berhasil diperbarui.');
     }
-   public function destroy(Order $order)
-{
-    $order->delete();
+    public function destroy(Order $order)
+    {
+        $order->delete();
 
-    return redirect()
-        ->route('admin.order.index')
-        ->with('success', 'Pesanan berhasil dihapus.');
-}
+        return redirect()
+            ->route('admin.order.index')
+            ->with('success', 'Pesanan berhasil dihapus.');
+    }
 }

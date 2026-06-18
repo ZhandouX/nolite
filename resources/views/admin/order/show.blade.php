@@ -17,7 +17,8 @@
                             Detail Pesanan
                         </h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Informasi lengkap pesanan <span class="bg-primary-500/20 font-bold ml-2 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-bl-lg rounded-tr-lg">#NA-ORD-{{ $order->id }}</span>
+                            Informasi lengkap pesanan <span
+                                class="bg-primary-500/20 font-bold ml-2 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-bl-lg rounded-tr-lg">#NA-ORD-{{ $order->id }}</span>
                         </p>
                     </div>
                 </div>
@@ -108,9 +109,12 @@
                                             'menunggu' => ['color' => 'yellow', 'icon' => 'fa-clock'],
                                             'diproses' => ['color' => 'blue', 'icon' => 'fa-cog'],
                                             'dikirim' => ['color' => 'purple', 'icon' => 'fa-truck'],
-                                            'selesai' => ['color' => 'green', 'icon' => 'fa-check-circle']
+                                            'selesai' => ['color' => 'green', 'icon' => 'fa-check-circle'],
                                         ];
-                                        $config = $statusConfig[$order->status] ?? ['color' => 'gray', 'icon' => 'fa-question'];
+                                        $config = $statusConfig[$order->status] ?? [
+                                            'color' => 'gray',
+                                            'icon' => 'fa-question',
+                                        ];
                                     @endphp
                                     <span
                                         class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-{{ $config['color'] }}-100 dark:bg-{{ $config['color'] }}-900 text-{{ $config['color'] }}-800 dark:text-{{ $config['color'] }}-200 capitalize">
@@ -123,14 +127,14 @@
                                 <div class="space-y-3">
                                     <span class="text-sm font-medium text-gray-600 dark:text-gray-400 block">Timeline</span>
                                     <div class="space-y-2">
-                                        @foreach(['menunggu', 'diproses', 'dikirim', 'selesai'] as $status)
+                                        @foreach (['menunggu', 'diproses', 'dikirim', 'selesai'] as $status)
                                             <div class="flex items-center">
-                                                <div class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center 
-                                                        @if(array_search($order->status, ['menunggu', 'diproses', 'dikirim', 'selesai']) >= array_search($status, ['menunggu', 'diproses', 'dikirim', 'selesai']))
-                                                            bg-primary-500 text-white
+                                                <div
+                                                    class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center
+                                                        @if (array_search($order->status, ['menunggu', 'diproses', 'dikirim', 'selesai']) >=
+                                                                array_search($status, ['menunggu', 'diproses', 'dikirim', 'selesai'])) bg-primary-500 text-white
                                                         @else
-                                                            bg-gray-200 dark:bg-gray-700 text-gray-400
-                                                        @endif">
+                                                            bg-gray-200 dark:bg-gray-700 text-gray-400 @endif">
                                                     <i class="fa-solid fa-check text-xs"></i>
                                                 </div>
                                                 <span
@@ -187,7 +191,7 @@
                                                 </span>
                                                 <span class="flex items-center">
                                                     <i class="fa-solid fa-tag mr-1.5"></i>
-                                                    @if(!empty($item->diskon) && $item->diskon > 0)
+                                                    @if (!empty($item->diskon) && $item->diskon > 0)
                                                         <span class="line-through text-gray-400 mr-1">
                                                             Rp{{ number_format($item->harga, 0, ',', '.') }}
                                                         </span>
@@ -201,7 +205,7 @@
                                                     @endif
                                                 </span>
                                             </div>
-                                            @if(!empty($item->diskon) && $item->diskon > 0)
+                                            @if (!empty($item->diskon) && $item->diskon > 0)
                                                 <div class="mt-1">
                                                     <span
                                                         class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
@@ -268,11 +272,19 @@
                         </a>
 
                         <div class="flex gap-3 order-1 sm:order-2">
-                            <button onclick="openModal('modal-{{ $order->id }}')"
-                                class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                                <i class="fa-solid fa-pen-to-square mr-2"></i>
-                                Ubah Status
-                            </button>
+                            @if ($order->status !== 'dibatalkan')
+                                <button onclick="openModal('modal-{{ $order->id }}')"
+                                    class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                                    <i class="fa-solid fa-pen-to-square mr-2"></i>
+                                    Ubah Status
+                                </button>
+                            @else
+                                <div
+                                    class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-red-100 text-red-600 font-medium rounded-lg">
+                                    <i class="fa-solid fa-ban mr-2"></i>
+                                    Pesanan Dibatalkan
+                                </div>
+                            @endif
 
                             <a href="{{ route('admin.order.index') }}"
                                 class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
@@ -377,7 +389,7 @@
         }
 
         // Close modal with Escape key
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const modals = document.querySelectorAll('[id^="modal-"]');
                 modals.forEach(modal => {
@@ -389,7 +401,7 @@
         });
 
         // Add fade-in animation
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
             elements.forEach((el, index) => {
                 el.classList.add('opacity-0', 'translate-y-4');

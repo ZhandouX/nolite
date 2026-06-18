@@ -202,185 +202,191 @@
                                         </span>
                                     </td>
 
-                                   <!-- Aksi -->
-<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-    <div class="flex items-center justify-end space-x-2">
+                                    <!-- Aksi -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end space-x-2">
 
-        <!-- Dropdown -->
-        <div class="relative" x-data="{ open: false }">
+                                            <!-- Dropdown -->
+                                            <div class="relative" x-data="{ open: false }">
 
-            <!-- Button -->
-            <button type="button"
-                @click="open = !open"
-                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200">
+                                                <!-- Button -->
+                                                <button type="button" @click="open = !open"
+                                                    class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200">
 
-                Aksi
-                <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
-            </button>
+                                                    Aksi
+                                                    <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
+                                                </button>
 
-            <!-- Menu -->
-            <div x-show="open"
-                @click.away="open = false"
-                x-transition:enter="transition ease-out duration-100"
-                x-transition:enter-start="transform opacity-0 scale-95"
-                x-transition:enter-end="transform opacity-100 scale-100"
-                x-transition:leave="transition ease-in duration-75"
-                x-transition:leave-start="transform opacity-100 scale-100"
-                x-transition:leave-end="transform opacity-0 scale-95"
-                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-10">
+                                                <!-- Menu -->
+                                                <div x-show="open" @click.away="open = false"
+                                                    x-transition:enter="transition ease-out duration-100"
+                                                    x-transition:enter-start="transform opacity-0 scale-95"
+                                                    x-transition:enter-end="transform opacity-100 scale-100"
+                                                    x-transition:leave="transition ease-in duration-75"
+                                                    x-transition:leave-start="transform opacity-100 scale-100"
+                                                    x-transition:leave-end="transform opacity-0 scale-95"
+                                                    class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-10">
 
-                <div class="py-1" role="menu">
+                                                    <div class="py-1" role="menu">
 
-                    <!-- Update Status -->
-                    <button type="button"
-                        onclick="openModal('modal-{{ $order->id }}')"
-                        class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
+                                                        @if ($order->status !== 'dibatalkan')
+                                                            <!-- Update Status -->
+                                                            <button type="button"
+                                                                onclick="openModal('modal-{{ $order->id }}')"
+                                                                class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
 
-                        <i class="fa-solid fa-pen-to-square mr-2 text-blue-500"></i>
-                        Update Status
-                    </button>
+                                                                <i class="fa-solid fa-pen-to-square mr-2 text-blue-500"></i>
+                                                                Update Status
+                                                            </button>
+                                                        @else
+                                                            <!-- Tidak muncul sama sekali / atau bisa dihapus -->
+                                                            <div class="px-4 py-2 text-xs text-red-500 font-semibold">
+                                                                ❌ Pesanan dibatalkan
+                                                            </div>
+                                                        @endif
 
-                    <!-- Detail -->
-                    <a href="{{ route('admin.order.show', $order->id) }}"
-                        class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
+                                                        <!-- Detail -->
+                                                        <a href="{{ route('admin.order.show', $order->id) }}"
+                                                            class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
 
-                        <i class="fa-solid fa-eye mr-2 text-green-500"></i>
-                        Lihat Detail
-                    </a>
+                                                            <i class="fa-solid fa-eye mr-2 text-green-500"></i>
+                                                            Lihat Detail
+                                                        </a>
 
-                    <!-- Delete -->
-                    <form action="{{ route('admin.order.destroy', $order->id) }}"
-                        method="POST"
-                        onsubmit="return confirm('Yakin anda ingin menghapus pesanan ini?')"
-                        class="border-t border-gray-200 dark:border-gray-600">
+                                                        <!-- Delete -->
+                                                        <form action="{{ route('admin.order.destroy', $order->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Yakin anda ingin menghapus pesanan ini?')"
+                                                            class="border-t border-gray-200 dark:border-gray-600">
 
-                        @csrf
-                        @method('DELETE')
+                                                            @csrf
+                                                            @method('DELETE')
 
-                        <button type="submit"
-                            class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
+                                                            <button type="submit"
+                                                                class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
 
-                            <i data-lucide="trash-2" class="w-5 h-5 mr-2"></i>
-                            Hapus Pesanan
-                        </button>
-                    </form>
+                                                                <i data-lucide="trash-2" class="w-5 h-5 mr-2"></i>
+                                                                Hapus Pesanan
+                                                            </button>
+                                                        </form>
 
-                </div>
-            </div>
-        </div>
-    </div>
-</td>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
 
-<!-- Modal Update Status -->
-<div id="modal-{{ $order->id }}"
-    class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 transition-opacity duration-300 p-4">
+                                    <!-- Modal Update Status -->
+                                    <div id="modal-{{ $order->id }}"
+                                        class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 transition-opacity duration-300 p-4">
 
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-95">
+                                        <div
+                                            class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-95">
 
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                <i class="fa-solid fa-edit text-primary-500 mr-2"></i>
-                Ubah Status Order
-            </h3>
+                                            <div class="flex items-center justify-between mb-4">
+                                                <h3
+                                                    class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                                                    <i class="fa-solid fa-edit text-primary-500 mr-2"></i>
+                                                    Ubah Status Order
+                                                </h3>
 
-            <button type="button"
-                onclick="closeModal('modal-{{ $order->id }}')"
-                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200">
+                                                <button type="button" onclick="closeModal('modal-{{ $order->id }}')"
+                                                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200">
 
-                <i class="fa-solid fa-times text-xl"></i>
-            </button>
-        </div>
+                                                    <i class="fa-solid fa-times text-xl"></i>
+                                                </button>
+                                            </div>
 
-        <div class="mb-4">
-            <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div class="mb-4">
+                                                <div
+                                                    class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
 
-                <div
-                    class="shrink-0 h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                                                    <div
+                                                        class="shrink-0 h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
 
-                    <i class="fa-solid fa-receipt text-primary-600 dark:text-primary-400"></i>
-                </div>
+                                                        <i
+                                                            class="fa-solid fa-receipt text-primary-600 dark:text-primary-400"></i>
+                                                    </div>
 
-                <div>
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                        Order #{{ $order->id }}
-                    </div>
+                                                    <div>
+                                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                            Order #{{ $order->id }}
+                                                        </div>
 
-                    <div class="text-xs text-gray-500 dark:text-gray-400">
-                        {{ $order->nama_penerima }}
-                    </div>
-                </div>
-            </div>
-        </div>
+                                                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                            {{ $order->nama_penerima }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-        <form action="{{ route('admin.order.updateStatus', $order->id) }}"
-            method="POST"
-            class="space-y-4">
+                                            <form action="{{ route('admin.order.updateStatus', $order->id) }}"
+                                                method="POST" class="space-y-4">
 
-            @csrf
-<form action="{{ route('admin.order.updateStatus', $order->id) }}"
-    method="POST"
-    class="space-y-4">
+                                                @csrf
+                                                <form action="{{ route('admin.order.updateStatus', $order->id) }}"
+                                                    method="POST" class="space-y-4">
 
-    @csrf
+                                                    @csrf
 
-            <div class="relative">
+                                                    <div class="relative">
 
-                <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                        <label
+                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
 
-                    Status Pesanan
-                </label>
+                                                            Status Pesanan
+                                                        </label>
 
-                <select name="status"
-                    class="statusSelect w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 appearance-none">
+                                                        <select name="status"
+                                                            class="statusSelect w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 appearance-none">
 
-                    <option value="menunggu"
-                        {{ $order->status == 'menunggu' ? 'selected' : '' }}>
-                        🕐 Menunggu
-                    </option>
+                                                            <option value="menunggu"
+                                                                {{ $order->status == 'menunggu' ? 'selected' : '' }}>
+                                                                🕐 Menunggu
+                                                            </option>
 
-                    <option value="diproses"
-                        {{ $order->status == 'diproses' ? 'selected' : '' }}>
-                        ⚙️ Diproses
-                    </option>
+                                                            <option value="diproses"
+                                                                {{ $order->status == 'diproses' ? 'selected' : '' }}>
+                                                                ⚙️ Diproses
+                                                            </option>
 
-                    <option value="dikirim"
-                        {{ $order->status == 'dikirim' ? 'selected' : '' }}>
-                        🚚 Dikirim
-                    </option>
+                                                            <option value="dikirim"
+                                                                {{ $order->status == 'dikirim' ? 'selected' : '' }}>
+                                                                🚚 Dikirim
+                                                            </option>
 
-                    <option value="selesai"
-                        {{ $order->status == 'selesai' ? 'selected' : '' }}>
-                        ✅ Selesai
-                    </option>
-                </select>
+                                                            <option value="selesai"
+                                                                {{ $order->status == 'selesai' ? 'selected' : '' }}>
+                                                                ✅ Selesai
+                                                            </option>
+                                                        </select>
 
-                <!-- Icon -->
-                <div
-                    class="dropdownIcon pointer-events-none absolute right-3 bottom-3 text-gray-500 dark:text-gray-300 transition-all duration-200">
+                                                        <!-- Icon -->
+                                                        <div
+                                                            class="dropdownIcon pointer-events-none absolute right-3 bottom-3 text-gray-500 dark:text-gray-300 transition-all duration-200">
 
-                    <i class="fa-solid fa-chevron-down text-sm"></i>
-                </div>
-            </div>
+                                                            <i class="fa-solid fa-chevron-down text-sm"></i>
+                                                        </div>
+                                                    </div>
 
-            <div class="flex justify-end space-x-3 pt-4">
+                                                    <div class="flex justify-end space-x-3 pt-4">
 
-                <button type="button"
-                    onclick="closeModal('modal-{{ $order->id }}')"
-                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                                        <button type="button"
+                                                            onclick="closeModal('modal-{{ $order->id }}')"
+                                                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
 
-                    Batal
-                </button>
+                                                            Batal
+                                                        </button>
 
-                <button type="submit"
-                    class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                                                        <button type="submit"
+                                                            class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
 
-                    Simpan Perubahan
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+                                                            Simpan Perubahan
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                        </div>
+                                    </div>
                             @endforeach
                         </tbody>
                     </table>
@@ -525,21 +531,21 @@
             }
         });
     </script>
-  <script>
-    document.querySelectorAll('.statusSelect').forEach(select => {
+    <script>
+        document.querySelectorAll('.statusSelect').forEach(select => {
 
-        const icon = select.parentElement.querySelector('.dropdownIcon i');
+            const icon = select.parentElement.querySelector('.dropdownIcon i');
 
-        select.addEventListener('focus', () => {
-            icon.classList.remove('fa-chevron-down');
-            icon.classList.add('fa-chevron-up');
+            select.addEventListener('focus', () => {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            });
+
+            select.addEventListener('blur', () => {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            });
+
         });
-
-        select.addEventListener('blur', () => {
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
-        });
-
-    });
-</script>
+    </script>
 @endsection
