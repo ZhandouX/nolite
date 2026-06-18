@@ -37,11 +37,6 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Relasi ke ULASAN
-     * Setiap pesanan hanya memiliki SATU ulasan.
-     * Pastikan kolomnya: order_id di tabel ulasans
-     */
     public function ulasan()
     {
         return $this->hasOne(Ulasan::class, 'order_id');

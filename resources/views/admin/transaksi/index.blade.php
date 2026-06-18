@@ -58,23 +58,23 @@
                             </option>
 
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
-                                Pending
+                                Menunggu
                             </option>
 
                             <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>
-                                Paid
+                                Telah Dibayar
                             </option>
 
                             <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>
-                                Failed
+                                Gagal
                             </option>
 
                             <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>
-                                Expired
+                                Kadaluarsa
                             </option>
 
                             <option value="cancel" {{ request('status') == 'cancel' ? 'selected' : '' }}>
-                                Cancel
+                                Dibatalkan
                             </option>
 
                         </select>
@@ -279,16 +279,16 @@
                                             <span class="
                                                         inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
 
-                                                        @if($order->payment_status === 'paid')
+                                                        @if($order->payment_status === 'dibayar')
                                                             bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300
 
-                                                        @elseif($order->payment_status === 'pending')
+                                                        @elseif($order->payment_status === 'menunggu')
                                                             bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300
 
-                                                        @elseif($order->payment_status === 'failed')
+                                                        @elseif($order->payment_status === 'gagal')
                                                             bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300
 
-                                                        @elseif($order->payment_status === 'expired')
+                                                        @elseif($order->payment_status === 'kadaluarsa')
                                                             bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300
 
                                                         @else

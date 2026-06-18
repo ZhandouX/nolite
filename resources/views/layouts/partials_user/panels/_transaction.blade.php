@@ -100,11 +100,11 @@
                                 <span class="
                                                     px-3 py-1 rounded-full text-xs font-semibold
 
-                                                    @if($order->payment_status === 'paid')
+                                                    @if($order->payment_status === 'dibayar')
                                                         bg-green-100 text-green-700
-                                                    @elseif($order->payment_status === 'pending')
+                                                    @elseif($order->payment_status === 'menunggu')
                                                         bg-yellow-100 text-yellow-700
-                                                    @elseif($order->payment_status === 'failed')
+                                                    @elseif($order->payment_status === 'gagal')
                                                         bg-red-100 text-red-700
                                                     @else
                                                         bg-gray-100 text-gray-700

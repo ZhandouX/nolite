@@ -87,7 +87,7 @@ class MidtransController extends Controller
             case 'capture':
             case 'settlement':
 
-                $order->payment_status = 'paid';
+                $order->payment_status = 'dibayar';
 
                 // order mulai diproses admin
                 if ($order->status === 'menunggu') {
@@ -98,25 +98,25 @@ class MidtransController extends Controller
 
             case 'pending':
 
-                $order->payment_status = 'pending';
+                $order->payment_status = 'menunggu';
 
                 break;
 
             case 'deny':
 
-                $order->payment_status = 'failed';
+                $order->payment_status = 'gagal';
 
                 break;
 
             case 'expire':
 
-                $order->payment_status = 'expired';
+                $order->payment_status = 'kadaluarsa';
 
                 break;
 
             case 'cancel':
 
-                $order->payment_status = 'cancel';
+                $order->payment_status = 'dibatalkan';
 
                 break;
         }
