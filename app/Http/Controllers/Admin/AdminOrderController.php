@@ -9,9 +9,21 @@ use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('items.produk.fotos')->orderBy('created_at', 'desc')->paginate(10);
+        $orders = Order::with([
+            'items.produk.fotos'
+        ])
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $query->where('status', $request->status);
+            })
+            ->when($request->filled('payment_status'), function ($query) use ($request) {
+                $query->where('payment_status', $request->payment_status);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.order.index', compact('orders'));
     }
 

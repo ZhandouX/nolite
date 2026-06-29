@@ -66,11 +66,51 @@
                                     <span
                                         class="text-sm text-gray-900 dark:text-white font-medium">{{ $order->nama_penerima ?? '-' }}</span>
                                 </div>
+                                @php
+                                    // Format nomor ke standar WhatsApp
+                                    $waNumber = preg_replace('/[^0-9]/', '', $order->no_hp);
+
+                                    if (substr($waNumber, 0, 1) == '0') {
+                                        $waNumber = '62' . substr($waNumber, 1);
+                                    }
+
+                                    if (substr($waNumber, 0, 2) != '62') {
+                                        $waNumber = '62' . ltrim($waNumber, '0');
+                                    }
+
+                                    // Pesan otomatis WhatsApp
+                                    $message = urlencode(
+                                        "Halo {$order->nama_penerima},\n\n" .
+                                        "Terima kasih telah berbelanja di Nolite Store.\n\n" .
+                                        "Kami ingin menghubungi Anda terkait pesanan #NA-ORD-{$order->id}."
+                                    );
+                                @endphp
+
                                 <div
                                     class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700">
-                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Nomor Telepon</span>
-                                    <span
-                                        class="text-sm text-gray-900 dark:text-white font-medium">{{ $order->no_hp ?? '-' }}</span>
+
+                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                        Nomor Telepon
+                                    </span>
+
+                                    <div class="flex items-center gap-3">
+
+                                        <span class="text-sm text-gray-900 dark:text-white font-medium">
+                                            {{ $order->no_hp ?? '-' }}
+                                        </span>
+
+                                        @if ($order->no_hp)
+                                            <a href="https://wa.me/{{ $waNumber }}?text={{ $message }}"
+                                                class="inline-flex items-center px-3 py-1.5 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-medium transition">
+
+                                                <i class="fa-brands fa-whatsapp mr-1.5"></i>
+                                                Hubungi
+
+                                            </a>
+                                        @endif
+
+                                    </div>
+
                                 </div>
                                 <div class="py-2">
                                     <span class="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-2">Alamat
@@ -123,18 +163,19 @@
                                     </span>
                                 </div>
 
-                                <!-- Timeline Status -->
+                                <!-- Tahapan -->
                                 <div class="space-y-3">
-                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-400 block">Timeline</span>
                                     <div class="space-y-2">
                                         @foreach (['menunggu', 'diproses', 'dikirim', 'selesai'] as $status)
                                             <div class="flex items-center">
                                                 <div
                                                     class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center
-                                                        @if (array_search($order->status, ['menunggu', 'diproses', 'dikirim', 'selesai']) >=
-                                                                array_search($status, ['menunggu', 'diproses', 'dikirim', 'selesai'])) bg-primary-500 text-white
-                                                        @else
-                                                            bg-gray-200 dark:bg-gray-700 text-gray-400 @endif">
+                                                                                @if (
+                                                                                        array_search($order->status, ['menunggu', 'diproses', 'dikirim', 'selesai']) >=
+                                                                                        array_search($status, ['menunggu', 'diproses', 'dikirim', 'selesai'])
+                                                                                    ) bg-primary-500 text-white
+                                                                                @else
+                                                                                bg-gray-200 dark:bg-gray-700 text-gray-400 @endif">
                                                     <i class="fa-solid fa-check text-xs"></i>
                                                 </div>
                                                 <span
@@ -258,6 +299,52 @@
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                                     <i class="fa-solid fa-wallet mr-1.5"></i>
                                     {{ $order->metode_pembayaran }}
+                                </span>
+                            </div>
+
+                            @php
+                                $paymentConfig = [
+                                    'pending' => [
+                                        'color' => 'yellow',
+                                        'icon' => 'fa-hourglass-half',
+                                        'text' => 'Menunggu',
+                                    ],
+                                    'paid' => [
+                                        'color' => 'green',
+                                        'icon' => 'fa-circle-check',
+                                        'text' => 'Dibayar',
+                                    ],
+                                    'expire' => [
+                                        'color' => 'orange',
+                                        'icon' => 'fa-clock-rotate-left',
+                                        'text' => 'Kadaluarsa',
+                                    ],
+                                    'failed' => [
+                                        'color' => 'red',
+                                        'icon' => 'fa-circle-xmark',
+                                        'text' => 'Gagal',
+                                    ],
+                                ];
+
+                                $payment = $paymentConfig[$order->payment_status] ?? [
+                                    'color' => 'gray',
+                                    'icon' => 'fa-question',
+                                    'text' => ucfirst($order->payment_status),
+                                ];
+                            @endphp
+
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-gray-600 dark:text-gray-400">
+                                    Status Pembayaran
+                                </span>
+
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                    bg-{{ $payment['color'] }}-100 dark:bg-{{ $payment['color'] }}-900
+                    text-{{ $payment['color'] }}-800 dark:text-{{ $payment['color'] }}-200">
+
+                                    <i class="fa-solid {{ $payment['icon'] }} mr-1.5"></i>
+                                    {{ $payment['text'] }}
+
                                 </span>
                             </div>
                         </div>
@@ -389,7 +476,7 @@
         }
 
         // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 const modals = document.querySelectorAll('[id^="modal-"]');
                 modals.forEach(modal => {
@@ -401,7 +488,7 @@
         });
 
         // Add fade-in animation
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const elements = document.querySelectorAll('.bg-white, .bg-gray-50');
             elements.forEach((el, index) => {
                 el.classList.add('opacity-0', 'translate-y-4');

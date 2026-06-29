@@ -21,8 +21,8 @@
                     <!-- Name -->
                     <div class="form-group">
                         <div class="input-container">
-                            <input id="registerName" type="text" name="name" required placeholder=" "
-                                class="form-input" value="{{ old('name') }}" autofocus />
+                            <input id="registerName" type="text" name="name" required placeholder=" " class="form-input"
+                                value="{{ old('name') }}" autofocus />
                             <label for="registerName" class="floating-label">Nama Lengkap*</label>
                         </div>
                         @error('name')
@@ -86,7 +86,9 @@
                     {{-- ===== END hCAPTCHA ===== --}}
 
                     <!-- Tombol Register -->
-                    <button type="submit" class="submit-btn">Buat Akun Baru</button>
+                    <button id="registerSubmit" type="submit" class="submit-btn">
+                        Buat Akun Baru
+                    </button>
 
                     <!-- Link ke Login -->
                     <div class="login-link">
@@ -104,27 +106,60 @@
     </div>
 </div>
 
+{{-- ================= REGISTER SUCCESS ================= --}}
 @if (session('register_success'))
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Registrasi Berhasil',
-                text: '{{ session('register_success') }}',
-                confirmButtonText: 'Login Sekarang'
-            }).then(() => {
-                openLoginModal();
+            window.notyf.open({
+                type: 'success',
+                message: @json(session('register_success'))
             });
+
+            setTimeout(() => {
+                openLoginModal();
+            }, 1800);
 
         });
     </script>
 @endif
 
+{{-- ================= REGISTER ERROR ================= --}}
+@if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // buka kembali modal register
+            openRegisterModal();
+
+            // tampilkan semua error menggunakan Notyf
+            setTimeout(() => {
+
+                @foreach ($errors->all() as $error)
+                    window.notyfError.open({
+                        type: 'error',
+                        message: @json($error)
+                    });
+                @endforeach
+
+                                    }, 500);
+
+        });
+    </script>
+@endif
+
+
+
 {{-- hCaptcha CDN --}}
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
 <script>
+    const registerForm = document.getElementById('registerForm');
+    const passwordInput = document.getElementById('registerPassword');
+    const confirmPasswordInput = document.getElementById('registerPasswordConfirmation');
+
+    const strengthBar = document.getElementById('passwordStrength');
+    const strengthText = document.getElementById('passwordText');
     // ===== RENDER hCaptcha saat modal dibuka =====
     let hcaptchaRendered = false;
 
@@ -151,4 +186,123 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
+
+    // ================= PASSWORD STRENGTH =================
+
+    function checkPasswordStrength() {
+
+        const password = passwordInput.value;
+
+        const hasMinLength = password.length >= 8;
+        const hasLower = /[a-z]/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSymbol = /[\W_]/.test(password);
+
+        if (password.length === 0) {
+
+            strengthBar.style.width = "0%";
+            strengthBar.style.background = "#e5e7eb";
+            strengthText.innerHTML = "Status Password";
+
+            return;
+        }
+
+        const isStrong =
+            hasMinLength &&
+            hasLower &&
+            hasUpper &&
+            hasNumber &&
+            hasSymbol;
+
+        if (isStrong) {
+
+            strengthBar.style.width = "100%";
+            strengthBar.style.background = "#22c55e";
+            strengthText.innerHTML = "🟢 Password Kuat";
+
+        } else {
+
+            strengthBar.style.width = "50%";
+            strengthBar.style.background = "#ef4444";
+            strengthText.innerHTML = "🔴 Password Lemah";
+
+        }
+
+    }
+
+    passwordInput.addEventListener('input', checkPasswordStrength);
+
+    // ================= VALIDASI SUBMIT =================
+
+    registerForm.addEventListener('submit', function (e) {
+
+        const password = passwordInput.value;
+        const confirm = confirmPasswordInput.value;
+
+        let score = 0;
+
+        const hasMinLength = password.length >= 8;
+        const hasLower = /[a-z]/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSymbol = /[\W_]/.test(password);
+
+        if (password.length < 8) {
+
+            e.preventDefault();
+
+            window.notyfError.open({
+
+                type: 'error',
+
+                message: 'Password minimal harus 8 karakter.'
+
+            });
+
+            return;
+
+        }
+
+        if (!hasMinLength) {
+
+            e.preventDefault();
+
+            window.notyfError.open({
+                type: 'error',
+                message: 'Password minimal harus 8 karakter.'
+            });
+
+            return;
+        }
+
+        if (!hasLower || !hasUpper || !hasNumber || !hasSymbol) {
+
+            e.preventDefault();
+
+            window.notyfError.open({
+                type: 'error',
+                message: 'Password harus mengandung huruf besar, huruf kecil, angka, dan simbol.'
+            });
+
+            return;
+        }
+
+        if (password !== confirm) {
+
+            e.preventDefault();
+
+            window.notyfError.open({
+
+                type: 'error',
+
+                message: 'Konfirmasi password tidak cocok.'
+
+            });
+
+            return;
+
+        }
+
+    });
 </script>

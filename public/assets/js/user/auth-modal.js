@@ -62,22 +62,55 @@ regToggle.addEventListener('click', () => {
     regIcon.classList.toggle('fa-eye-slash');
 });
 
-// Password Strength Indicator
+// ================= PASSWORD STRENGTH =================
 const bar = document.getElementById('passwordStrength');
 const text = document.getElementById('passwordText');
+
 regInput.addEventListener('input', () => {
+
     const val = regInput.value;
-    let strength = 0;
-    if (val.length >= 8) strength++;
-    if (/[A-Z]/.test(val)) strength++;
-    if (/[0-9]/.test(val)) strength++;
-    if (/[^A-Za-z0-9]/.test(val)) strength++;
-    const colors = ['#e53e3e', '#ed8936', '#38a169', '#1a1a1a'];
-    const texts = ['Lemah', 'Cukup', 'Baik', 'Sangat Kuat'];
-    bar.style.width = strength * 25 + '%';
-    bar.style.backgroundColor = colors[strength - 1] || '#333';
-    text.textContent = texts[strength - 1] || 'Status Password';
-    text.style.color = colors[strength - 1] || '#333';
+
+    const hasMinLength = val.length >= 8;
+    const hasLower = /[a-z]/.test(val);
+    const hasUpper = /[A-Z]/.test(val);
+    const hasNumber = /[0-9]/.test(val);
+    const hasSymbol = /[^A-Za-z0-9]/.test(val);
+
+    // Reset
+    if (val.length === 0) {
+        bar.style.width = "0%";
+        bar.style.backgroundColor = "#e5e7eb";
+        text.textContent = "Status Password";
+        text.style.color = "#6b7280";
+        return;
+    }
+
+    // Password kuat jika memenuhi semua syarat
+    const isStrong =
+        hasMinLength &&
+        hasLower &&
+        hasUpper &&
+        hasNumber &&
+        hasSymbol;
+
+    if (isStrong) {
+
+        bar.style.width = "100%";
+        bar.style.backgroundColor = "#22c55e";
+
+        text.textContent = "🟢 Password Kuat";
+        text.style.color = "#22c55e";
+
+    } else {
+
+        bar.style.width = "50%";
+        bar.style.backgroundColor = "#ef4444";
+
+        text.textContent = "🔴 Password Lemah";
+        text.style.color = "#ef4444";
+
+    }
+
 });
 
 // Loading Button

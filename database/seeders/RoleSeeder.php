@@ -11,24 +11,25 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        // Buat roles
-        $roleAdmin = Role::create(['name' => 'admin']);
-        $roleCustomer = Role::create(['name' => 'customer']);
+        $roleAdmin = Role::findOrCreate('admin');
+        $roleCustomer = Role::findOrCreate('customer');
 
-        // Buat akun Admin
-        $userAdmin = User::create([
-            'name' => 'Admin Toko',
-            'email' => 'winboydev25@gmail.com',
-            'password' => Hash::make('password'),
-        ]);
+        $userAdmin = User::firstOrCreate(
+            ['email' => 'winboydev25@gmail.com'],
+            [
+                'name' => 'Admin Toko',
+                'password' => Hash::make('password'),
+            ]
+        );
         $userAdmin->assignRole($roleAdmin);
 
-        // Buat akun Customer
-        $userCustomer = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('password'),
-        ]);
+        $userCustomer = User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => Hash::make('password'),
+            ]
+        );
         $userCustomer->assignRole($roleCustomer);
     }
 }

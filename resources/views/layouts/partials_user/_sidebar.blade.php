@@ -19,7 +19,7 @@
             <ul class="space-y-1">
                 <!-- BERANDA -->
                 <li class="sidebar-bordered">
-                    <a href="{{ route('customer.dashboard') }}"
+                    <a href="{{ auth()->check() ? route('customer.dashboard') : url('/') }}"
                         class="flex items-center gap-3 px-4 py-1 md:px-4 md:py-3 text-[15px] md:text-sm text-gray-700 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition">
                         <i class="fa-solid fa-house text-[14px] md:text-base"></i>
                         <span>Beranda</span>

@@ -90,7 +90,7 @@
                                         Batalkan Pesanan
                                     </button>
                                 </form>
-                            @elseif ($order->status === 'selesai' && $order->ulasan->isEmpty())
+                            @elseif ($order->status === 'selesai' && is_null($order->ulasan))
                                 {{-- ⭐ SUDAH SELESAI + BELUM ULASAN --}}
                                 <div class="flex justify-center mb-3">
                                     <div class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-xl

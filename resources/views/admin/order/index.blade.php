@@ -5,7 +5,7 @@
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-8">
         <div class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
+            {{-- HEADER --}}
             <div class="mb-8">
                 <div class="flex items-center">
                     <div
@@ -14,16 +14,16 @@
                     </div>
                     <div class="ml-4">
                         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                            Manajemen Pesanan
+                            Kelola Pesanan
                         </h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Kelola dan pantau semua pesanan pelanggan
+                            Kelola dan monitoring semua pesanan pelanggan
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Alert Success -->
+            {{-- ALERT SUCCESS --}}
             @if (session('success'))
                 <div
                     class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl transition-all duration-300">
@@ -40,7 +40,7 @@
                 </div>
             @endif
 
-            <!-- Main Card -->
+            {{-- MAIN CARD --}}
             <div
                 class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300">
                 <!-- Header Card -->
@@ -58,7 +58,126 @@
                     </div>
                 </div>
 
-                <!-- Table -->
+                {{-- FILTER --}}
+                <div class="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-transparent p-5">
+
+                    <div class="flex flex-col lg:flex-row gap-4 items-end">
+
+                        <form method="GET" action="{{ route('admin.order.index') }}"
+                            class="flex flex-col lg:flex-row gap-4 w-full">
+
+                            <!-- Status Pesanan -->
+                            <div class="flex-1">
+                                <label for="status"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Status Pesanan
+                                </label>
+
+                                <div class="relative">
+                                    <select id="status" name="status" onchange="this.form.submit()"
+                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg
+                                               bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+                                               focus:outline-none focus:ring-2 focus:ring-primary-500
+                                               focus:border-transparent transition-colors duration-200 appearance-none">
+
+                                        <option value="">Semua Status</option>
+
+                                        <option value="menunggu"
+                                            {{ request('status') == 'menunggu' ? 'selected' : '' }}>
+                                            🕐 Menunggu
+                                        </option>
+
+                                        <option value="diproses"
+                                            {{ request('status') == 'diproses' ? 'selected' : '' }}>
+                                            ⚙️ Diproses
+                                        </option>
+
+                                        <option value="dikirim"
+                                            {{ request('status') == 'dikirim' ? 'selected' : '' }}>
+                                            🚚 Dikirim
+                                        </option>
+
+                                        <option value="selesai"
+                                            {{ request('status') == 'selesai' ? 'selected' : '' }}>
+                                            ✅ Selesai
+                                        </option>
+
+                                    </select>
+
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Status Pembayaran -->
+                            <div class="flex-1">
+                                <label for="payment_status"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Status Pembayaran
+                                </label>
+
+                                <div class="relative">
+                                    <select id="payment_status" name="payment_status"
+                                        onchange="this.form.submit()"
+                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg
+                                               bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+                                               focus:outline-none focus:ring-2 focus:ring-primary-500
+                                               focus:border-transparent transition-colors duration-200 appearance-none">
+
+                                        <option value="">Semua Pembayaran</option>
+
+                                        <option value="pending"
+                                            {{ request('payment_status') == 'pending' ? 'selected' : '' }}>
+                                            ⏳ Menunggu
+                                        </option>
+
+                                        <option value="paid"
+                                            {{ request('payment_status') == 'paid' ? 'selected' : '' }}>
+                                            ✅ Dibayar
+                                        </option>
+
+                                        <option value="expire"
+                                            {{ request('payment_status') == 'expire' ? 'selected' : '' }}>
+                                            ⌛ Kadaluarsa
+                                        </option>
+
+                                        <option value="failed"
+                                            {{ request('payment_status') == 'failed' ? 'selected' : '' }}>
+                                            ❌ Gagal
+                                        </option>
+
+                                    </select>
+
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reset -->
+                            <div class="lg:w-auto">
+                                <label class="block text-sm font-medium mb-2 invisible">
+                                    Reset
+                                </label>
+
+                                <a href="{{ route('admin.order.index') }}"
+                                    class="inline-flex items-center justify-center px-5 py-3 rounded-lg
+                                           bg-gray-600 hover:bg-gray-700 text-white transition-colors duration-200">
+
+                                    <i class="fa-solid fa-rotate-left mr-2"></i>
+                                    Reset
+
+                                </a>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                {{-- TABLE --}}
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700">
@@ -92,7 +211,7 @@
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($orders as $order)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
-                                    <!-- ID Order -->
+                                    {{-- ID ORDER --}}
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">
                                             #NA-ORD-{{ $order->id }}
@@ -102,25 +221,62 @@
                                         </div>
                                     </td>
 
-                                    <!-- Penerima -->
+                                    {{-- PENERIMA --}}
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
                                             <div
                                                 class="shrink-0 h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
                                                 <i class="fa-solid fa-user text-primary-600 dark:text-primary-400"></i>
                                             </div>
+
                                             <div class="ml-4">
+
                                                 <div class="text-sm font-medium text-gray-900 dark:text-white">
                                                     {{ $order->nama_penerima }}
                                                 </div>
+
                                                 <div class="text-xs text-gray-500 dark:text-gray-400">
                                                     {{ $order->no_hp }}
                                                 </div>
+
+                                                @if ($order->payment_status === 'paid')
+
+                                                    @php
+                                                        // Format nomor ke standar WhatsApp
+                                                        $waNumber = preg_replace('/[^0-9]/', '', $order->no_hp);
+
+                                                        if (substr($waNumber, 0, 1) == '0') {
+                                                            $waNumber = '62' . substr($waNumber, 1);
+                                                        }
+
+                                                        if (substr($waNumber, 0, 2) != '62') {
+                                                            $waNumber = '62' . ltrim($waNumber, '0');
+                                                        }
+
+                                                        // Pesan otomatis WhatsApp
+                                                        $message = urlencode(
+                                                            "Halo {$order->nama_penerima},\n\n" .
+                                                            "Terima kasih telah berbelanja di Nolite Store.\n\n" .
+                                                            "Kami ingin menghubungi Anda terkait pesanan #NA-ORD-{$order->id}."
+                                                        );
+                                                    @endphp
+
+                                                    <a href="https://wa.me/{{ $waNumber }}?text={{ $message }}"
+                                                        target="_blank"
+                                                        class="inline-flex items-center mt-2 px-3 py-1.5 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-medium transition">
+
+                                                        <i class="fa-brands fa-whatsapp mr-1.5 text-sm"></i>
+                                                        Hubungi
+
+                                                    </a>
+
+                                                @endif
+
                                             </div>
                                         </div>
                                     </td>
 
-                                    <!-- Alamat -->
+                                    {{-- ALAMAT --}}
                                     <td class="px-6 py-4">
                                         <div class="text-sm text-gray-900 dark:text-white max-w-xs">
                                             <div class="font-medium">{{ $order->provinsi }}, {{ $order->kota }}</div>
@@ -130,7 +286,7 @@
                                         </div>
                                     </td>
 
-                                    <!-- Pesanan -->
+                                    {{-- PESANAN --}}
                                     <td class="px-6 py-4">
                                         <div class="space-y-3">
                                             @foreach ($order->items as $item)
@@ -181,28 +337,79 @@
                                         </div>
                                     </td>
 
-                                    <!-- Status -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    {{-- STATUS --}}
+                                    <td class="px-6 py-4">
+
                                         @php
+                                            // Status Pesanan
                                             $statusConfig = [
                                                 'menunggu' => ['color' => 'yellow', 'icon' => 'fa-clock'],
                                                 'diproses' => ['color' => 'blue', 'icon' => 'fa-cog'],
                                                 'dikirim' => ['color' => 'purple', 'icon' => 'fa-truck'],
                                                 'selesai' => ['color' => 'green', 'icon' => 'fa-check-circle'],
                                             ];
-                                            $config = $statusConfig[$order->status] ?? [
+
+                                            $status = $statusConfig[$order->status] ?? [
                                                 'color' => 'gray',
                                                 'icon' => 'fa-question',
                                             ];
+
+                                            // Status Pembayaran
+                                            $paymentConfig = [
+                                                'pending' => ['color' => 'yellow', 'icon' => 'fa-hourglass-half', 'text' => 'Menunggu'],
+                                                'paid' => ['color' => 'green', 'icon' => 'fa-circle-check', 'text' => 'Dibayar'],
+                                                'expire' => ['color' => 'orange', 'icon' => 'fa-clock-rotate-left', 'text' => 'Kadaluarsa'],
+                                                'failed' => ['color' => 'red', 'icon' => 'fa-circle-xmark', 'text' => 'Gagal'],
+                                            ];
+
+                                            $payment = $paymentConfig[$order->payment_status] ?? [
+                                                'color' => 'gray',
+                                                'icon' => 'fa-question',
+                                                'text' => ucfirst($order->payment_status),
+                                            ];
                                         @endphp
-                                        <span
-                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-{{ $config['color'] }}-100 dark:bg-{{ $config['color'] }}-900 text-{{ $config['color'] }}-800 dark:text-{{ $config['color'] }}-200 capitalize">
-                                            <i class="fa-solid {{ $config['icon'] }} mr-1.5"></i>
-                                            {{ $order->status }}
-                                        </span>
+
+                                        <div class="space-y-3">
+
+                                            <!-- Status Pesanan -->
+                                            <div>
+                                                <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">
+                                                    Status Pesanan
+                                                </div>
+
+                                                <span
+                                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                                                    bg-{{ $status['color'] }}-100 dark:bg-{{ $status['color'] }}-900
+                                                    text-{{ $status['color'] }}-800 dark:text-{{ $status['color'] }}-200">
+
+                                                    <i class="fa-solid {{ $status['icon'] }} mr-1.5"></i>
+                                                    {{ ucfirst($order->status) }}
+
+                                                </span>
+                                            </div>
+
+                                            <!-- Status Pembayaran -->
+                                            <div>
+                                                <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">
+                                                    Pembayaran
+                                                </div>
+
+                                                <span
+                                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                                                    bg-{{ $payment['color'] }}-100 dark:bg-{{ $payment['color'] }}-900
+                                                    text-{{ $payment['color'] }}-800 dark:text-{{ $payment['color'] }}-200">
+
+                                                    <i class="fa-solid {{ $payment['icon'] }} mr-1.5"></i>
+                                                    {{ $payment['text'] }}
+
+                                                </span>
+                                            </div>
+
+                                        </div>
+
                                     </td>
 
-                                    <!-- Aksi -->
+                                    {{-- AKSI --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex items-center justify-end space-x-2">
 
@@ -276,7 +483,7 @@
                                         </div>
                                     </td>
 
-                                    <!-- Modal Update Status -->
+                                    {{-- MODAL UPDATE STATUS --}}
                                     <div id="modal-{{ $order->id }}"
                                         class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 transition-opacity duration-300 p-4">
 
@@ -392,7 +599,7 @@
                     </table>
                 </div>
 
-                <!-- Footer Tabel (Pagination) -->
+                {{-- FOOTER TABLE (PAGINATION) --}}
                 @if ($orders->hasPages())
                     <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                         <div class="flex items-center justify-between">
@@ -431,7 +638,7 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
+    {{-- JS --}}
     <script>
         // Modal Functions
         function openModal(id) {
